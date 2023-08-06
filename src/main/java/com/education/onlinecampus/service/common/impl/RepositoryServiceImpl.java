@@ -19,15 +19,23 @@ public class RepositoryServiceImpl implements RepositoryService {
 
     @Override
     public <E extends EntityMarker, T extends DTOMarker> E convertDTOToEntity(T dto) {
+        if (dto instanceof CommonCodeDTO)
+            return (E) CommonCodeMapper.INSTANCE.toEntity((CommonCodeDTO) dto);
         if (dto instanceof FileDTO)
             return (E) FileMapper.INSTANCE.toEntity((FileDTO) dto);
+        if (dto instanceof MemberDTO)
+            return (E) MemberMapper.INSTANCE.toEntity((MemberDTO) dto);
         return null;
     }
 
     @Override
     public <E extends EntityMarker, T extends DTOMarker> T convertEntityToDTO(E entity) {
+        if (entity instanceof CommonCode)
+            return (T) CommonCodeMapper.INSTANCE.toDTO((CommonCode) entity);
         if (entity instanceof File)
             return (T) FileMapper.INSTANCE.toDTO((File) entity);
+        if (entity instanceof Member)
+            return (T) MemberMapper.INSTANCE.toDTO((Member) entity);
         return null;
     }
 }
