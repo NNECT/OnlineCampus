@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CommonCodeDTO implements DTOMarker {
-    private String division;
     private String code;
+    private String division;
     private String name;
     private Boolean inUse;
     private Integer orderNumber;

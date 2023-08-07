@@ -46,8 +46,10 @@ public class Course implements EntityMarker {
     private LocalDateTime endDateTime;
 
     /** 강좌 진행 상태 */
-    @Column(
-            length = 10
+    @ManyToOne
+    @JoinColumn(
+            name = "statusCode",
+            referencedColumnName = "code"
     )
-    private String statusDivision;
+    private CommonCode statusCode;
 }
