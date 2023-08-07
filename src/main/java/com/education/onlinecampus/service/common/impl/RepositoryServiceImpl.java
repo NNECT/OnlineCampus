@@ -6,17 +6,21 @@ import com.education.onlinecampus.data.mapper.*;
 import com.education.onlinecampus.data.marker.DTOMarker;
 import com.education.onlinecampus.data.marker.EntityMarker;
 import com.education.onlinecampus.repository.FileRepository;
-import com.education.onlinecampus.repository.MemberRepository;
 import com.education.onlinecampus.service.common.RepositoryService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@Getter
 @RequiredArgsConstructor
 public class RepositoryServiceImpl implements RepositoryService {
     private final FileRepository fileRepository;
-    private final MemberRepository memberRepository;
-    @Override public MemberRepository getMemberRepository(){ return memberRepository;}
+
+    @Override public FileRepository getFileRepository() {
+        return fileRepository;
+    }
+
     @Override
     public <E extends EntityMarker, T extends DTOMarker> E convertDTOToEntity(T dto) {
         if (dto instanceof CommonCodeDTO)
@@ -38,6 +42,4 @@ public class RepositoryServiceImpl implements RepositoryService {
             return (T) MemberMapper.INSTANCE.toDTO((Member) entity);
         return null;
     }
-
-
 }
