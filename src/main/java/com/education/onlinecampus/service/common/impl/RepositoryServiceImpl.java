@@ -7,15 +7,17 @@ import com.education.onlinecampus.data.marker.DTOMarker;
 import com.education.onlinecampus.data.marker.EntityMarker;
 import com.education.onlinecampus.repository.FileRepository;
 import com.education.onlinecampus.service.common.RepositoryService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@Getter
 @RequiredArgsConstructor
 public class RepositoryServiceImpl implements RepositoryService {
     private final FileRepository fileRepository;
+
+    @Override public FileRepository getFileRepository() {
+        return fileRepository;
+    }
 
     @Override
     public <E extends EntityMarker, T extends DTOMarker> E convertDTOToEntity(T dto) {
