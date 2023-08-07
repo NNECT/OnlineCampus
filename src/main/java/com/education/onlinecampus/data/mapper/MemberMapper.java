@@ -10,8 +10,12 @@ import org.mapstruct.factory.Mappers;
 public interface MemberMapper {
     MemberMapper INSTANCE = Mappers.getMapper(MemberMapper.class);
 
+    @Mapping(source = "memberDivision", target = "memberDivision")
+    @Mapping(source = "genderCode", target = "genderCode")
     @Mapping(source = "pictureFile", target = "pictureFile")
     Member toEntity(MemberDTO memberDTO);
+    @Mapping(source = "memberDivision", target = "memberDivision")
+    @Mapping(source = "genderCode", target = "genderCode")
     @Mapping(source = "pictureFile", target = "pictureFile")
     MemberDTO toDTO(Member member);
 }

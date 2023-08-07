@@ -14,30 +14,20 @@ import java.io.Serializable;
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
 public class CommonCode implements EntityMarker {
-    /** CommonCode 복합키 */
-    @EmbeddedId
-    private CommonCodeCompositeKey commonCodeCompositeKey;
+    /** 공통코드 */
+    @Id
+    @Column(
+            length = 10,
+            nullable = false
+    )
+    private String code;
 
-    @Embeddable
-    @Getter
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @AllArgsConstructor(access = AccessLevel.PUBLIC)
-    @EqualsAndHashCode
-    public static class CommonCodeCompositeKey implements Serializable {
-        /** 공통코드 구분 */
-        @Column(
-                length = 10,
-                nullable = false
-        )
-        private String division;
-
-        /** 공통코드 */
-        @Column(
-                length = 10,
-                nullable = false
-        )
-        private String code;
-    }
+    /** 공통코드 구분 */
+    @Column(
+            length = 10,
+            nullable = false
+    )
+    private String division;
 
     /** 코드명 */
     @Column(

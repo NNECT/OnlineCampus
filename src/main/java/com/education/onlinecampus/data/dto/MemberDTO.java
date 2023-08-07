@@ -14,10 +14,10 @@ import java.time.LocalDate;
 @Builder
 public class MemberDTO implements DTOMarker {
     private String memberId;
-    private String memberDivision;
+    private CommonCodeDTO memberDivision;
     private String nameKor;
     private LocalDate birthDate;
-    private String genderDivision;
+    private CommonCodeDTO genderCode;
     private String email;
     private String loginId;
     private String password;

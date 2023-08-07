@@ -23,11 +23,12 @@ public class Member implements EntityMarker {
     private String memberSeq;
 
     /** 회원 구분 */
-    @Column(
-            length = 10,
-            nullable = false
+    @ManyToOne
+    @JoinColumn(
+            name = "memberDivisionCode",
+            referencedColumnName = "code"
     )
-    private String memberDivision;
+    private CommonCode memberDivision;
 
     /** 이름 */
     @Column(
@@ -41,10 +42,12 @@ public class Member implements EntityMarker {
     private LocalDate birthDate;
 
     /** 성별 */
-    @Column(
-            length = 10
+    @ManyToOne
+    @JoinColumn(
+            name = "genderCode",
+            referencedColumnName = "code"
     )
-    private String genderDivision;
+    private CommonCode genderCode;
 
     /** 이메일 */
     @Column(
