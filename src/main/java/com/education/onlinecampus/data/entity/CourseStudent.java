@@ -25,16 +25,20 @@ public class CourseStudent implements EntityMarker {
     @EqualsAndHashCode
     public static class CourseStudentCompositeKey implements Serializable {
         /** 강좌 ID */
-        private Integer courseId;
+        private Integer courseSeq;
         /** 수강생 ID */
-        private String studentId;
+        @Column(
+                length = 10,
+                nullable = false
+        )
+        private String studentSeq;
     }
 
     /** 강좌 외래키 */
     @ManyToOne
     @JoinColumn(
-            name = "courseId",
-            referencedColumnName = "courseId",
+            name = "courseSeq",
+            referencedColumnName = "courseSeq",
             insertable = false, updatable = false
     )
     private Course course;
@@ -42,8 +46,8 @@ public class CourseStudent implements EntityMarker {
     /** 수강생 외래키 */
     @ManyToOne
     @JoinColumn(
-            name = "studentId",
-            referencedColumnName = "memberId",
+            name = "studentSeq",
+            referencedColumnName = "memberSeq",
             insertable = false, updatable = false
     )
     private Member student;

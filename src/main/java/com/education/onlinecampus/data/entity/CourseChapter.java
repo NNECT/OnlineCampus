@@ -25,20 +25,20 @@ public class CourseChapter implements EntityMarker {
     @EqualsAndHashCode
     public static class CourseChapterCompositeKey implements Serializable {
         /** 강좌 ID */
-        private Integer courseId;
+        private Integer courseSeq;
 
         /** 챕터 ID */
         @Column(
                 nullable = false
         )
-        private Integer chapterId;
+        private Integer chapterSeq;
     }
 
     /** 강좌 외래키 */
     @ManyToOne
     @JoinColumn(
-            name = "courseId",
-            referencedColumnName = "courseId",
+            name = "courseSeq",
+            referencedColumnName = "courseSeq",
             insertable = false, updatable = false, nullable = false
     )
     private Course course;
@@ -59,16 +59,16 @@ public class CourseChapter implements EntityMarker {
     /** 콘텐츠 번호 */
     @OneToOne
     @JoinColumn(
-            name = "contentId",
-            referencedColumnName = "contentId"
+            name = "contentSeq",
+            referencedColumnName = "contentSeq"
     )
     private CourseChapterContent content;
 
     /** 보조자료 파일 번호 */
     @ManyToOne
     @JoinColumn(
-            name = "supplementaryFileId",
-            referencedColumnName = "fileId"
+            name = "supplementaryFileSeq",
+            referencedColumnName = "fileSeq"
     )
     private File supplementaryFile;
 

@@ -20,7 +20,7 @@ public class Member implements EntityMarker {
             length = 10,
             nullable = false
     )
-    private String memberId;
+    private String memberSeq;
 
     /** 회원 구분 */
     @Column(
@@ -90,8 +90,8 @@ public class Member implements EntityMarker {
     /** 사진 파일 번호 */
     @ManyToOne
     @JoinColumn(
-            name = "pictureFileId",
-            referencedColumnName = "fileId"
+            name = "pictureFileSeq",
+            referencedColumnName = "fileSeq"
     )
     private File pictureFile;
 }
