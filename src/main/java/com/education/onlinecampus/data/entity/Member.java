@@ -90,8 +90,8 @@ public class Member implements EntityMarker {
     /** 사진 파일 번호 */
     @ManyToOne
     @JoinColumn(
-            name = "pictureFileId",
-            referencedColumnName = "fileId"
+            name = "pictureFileSeq",
+            referencedColumnName = "fileSeq"
     )
     private File pictureFile;
 }

@@ -19,7 +19,7 @@ public class File implements EntityMarker {
     @Column(
             nullable = false
     )
-    private Integer fileId;
+    private Integer fileSeq;
 
     /** 원본 파일명 */
     @Column(

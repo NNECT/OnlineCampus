@@ -20,7 +20,7 @@ public class Course implements EntityMarker {
     @Column(
             nullable = false
     )
-    private Integer courseId;
+    private Integer courseSeq;
 
     /** 강좌명 */
     @Column(

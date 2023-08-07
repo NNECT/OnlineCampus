@@ -19,7 +19,7 @@ public class CourseChapterContent implements EntityMarker {
     @Column(
             nullable = false
     )
-    private Integer contentId;
+    private Integer contentSeq;
 
     /** 콘텐츠 이름 */
     @Column(
@@ -37,16 +37,16 @@ public class CourseChapterContent implements EntityMarker {
     /** 썸네일 파일 */
     @ManyToOne
     @JoinColumn(
-            name = "thumbnailFileId",
-            referencedColumnName = "fileId"
+            name = "thumbnailFileSeq",
+            referencedColumnName = "fileSeq"
     )
     private File thumbnailFile;
 
     /** 콘텐츠 파일 */
     @ManyToOne
     @JoinColumn(
-            name = "contentFileId",
-            referencedColumnName = "fileId",
+            name = "contentFileSeq",
+            referencedColumnName = "fileSeq",
             nullable = false
     )
     private File contentFile;
@@ -55,11 +55,11 @@ public class CourseChapterContent implements EntityMarker {
     @Column(
             length = 400
     )
-    private String videoId;
+    private String videoSeq;
 
     /** 강좌 상태 구분 공통 코드 */
     @Column(
-            columnDefinition = "varchar(10)"
+            length = 10
     )
     private String statusDivision;
 

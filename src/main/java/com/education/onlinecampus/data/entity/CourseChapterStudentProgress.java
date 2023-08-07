@@ -25,18 +25,18 @@ public class CourseChapterStudentProgress implements EntityMarker {
     @EqualsAndHashCode
     public static class CourseChapterStudentProgressCompositeKey implements Serializable {
         /** 강좌 ID */
-        private Integer courseId;
+        private Integer courseSeq;
         /** 챕터 ID */
-        private Integer chapterId;
+        private Integer chapterSeq;
         /** 수강생 ID */
-        private String studentId;
+        private String studentSeq;
     }
 
     /** 강좌 외래키 */
     @ManyToOne
     @JoinColumn(
-            name = "courseId",
-            referencedColumnName = "courseId",
+            name = "courseSeq",
+            referencedColumnName = "courseSeq",
             insertable = false, updatable = false
     )
     private Course course;
@@ -45,13 +45,13 @@ public class CourseChapterStudentProgress implements EntityMarker {
     @ManyToOne
     @JoinColumns({
             @JoinColumn(
-                    name = "courseId",
-                    referencedColumnName = "courseId",
+                    name = "courseSeq",
+                    referencedColumnName = "courseSeq",
                     insertable = false, updatable = false
             ),
             @JoinColumn(
-                    name = "chapterId",
-                    referencedColumnName = "chapterId",
+                    name = "chapterSeq",
+                    referencedColumnName = "chapterSeq",
                     insertable = false, updatable = false
             )
     })
@@ -61,13 +61,13 @@ public class CourseChapterStudentProgress implements EntityMarker {
     @ManyToOne
     @JoinColumns({
             @JoinColumn(
-                    name = "courseId",
-                    referencedColumnName = "courseId",
+                    name = "courseSeq",
+                    referencedColumnName = "courseSeq",
                     insertable = false, updatable = false
             ),
             @JoinColumn(
-                    name = "studentId",
-                    referencedColumnName = "studentId",
+                    name = "studentSeq",
+                    referencedColumnName = "studentSeq",
                     insertable = false, updatable = false
             )
     })
