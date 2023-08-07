@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl {
-    private final RepositoryServiceImpl repositoryService;
+    private final RepositoryService repositoryService;
     public List<Member> memberFromGender(CommonCode code){
         List<Member> byGenderDivision = repositoryService.getMemberRepository().findByGenderDivision(code);
         return byGenderDivision;
