@@ -58,10 +58,12 @@ public class CourseChapterContent implements EntityMarker {
     private String videoSeq;
 
     /** 강좌 상태 구분 공통 코드 */
-    @Column(
-            length = 10
+    @ManyToOne
+    @JoinColumn(
+            name = "statusCode",
+            referencedColumnName = "code"
     )
-    private String statusDivision;
+    private CommonCode statusCode;
 
     /** 동영상 길이 (초) */
     @Column
