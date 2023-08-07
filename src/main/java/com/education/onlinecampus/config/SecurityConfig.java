@@ -1,3 +1,4 @@
+/*
 package com.education.onlinecampus.config;
 
 import org.springframework.context.annotation.Bean;
@@ -32,4 +33,4 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/");	// logout에 성공하면 /로 redirect
         return http.build();
     }
-}
+}*/
