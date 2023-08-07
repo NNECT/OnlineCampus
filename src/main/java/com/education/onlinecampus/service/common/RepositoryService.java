@@ -3,6 +3,7 @@ package com.education.onlinecampus.service.common;
 import com.education.onlinecampus.data.marker.DTOMarker;
 import com.education.onlinecampus.data.marker.EntityMarker;
 import com.education.onlinecampus.repository.FileRepository;
+import com.education.onlinecampus.repository.MemberRepository;
 
 /**
  * RepositoryService 인터페이스
@@ -11,6 +12,8 @@ import com.education.onlinecampus.repository.FileRepository;
  * 또한 DTO와 Entity 상호간 변환을 위한 메서드를 정의한다.
  */
 public interface RepositoryService {
+    MemberRepository getMemberRepository();
+
     FileRepository getFileRepository();
 
     /**
