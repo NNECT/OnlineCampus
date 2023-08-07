@@ -41,6 +41,7 @@ public class CourseChapter implements EntityMarker {
             referencedColumnName = "courseSeq",
             insertable = false, updatable = false, nullable = false
     )
+
     private Course course;
 
     /** 순서 번호 */
