@@ -20,7 +20,7 @@ public class Member implements EntityMarker {
             length = 10,
             nullable = false
     )
-    private String memberId;
+    private String memberSeq;
 
     /** 회원 구분 */
     @Column(
