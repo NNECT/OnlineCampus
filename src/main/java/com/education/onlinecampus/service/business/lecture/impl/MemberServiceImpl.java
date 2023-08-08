@@ -14,8 +14,8 @@ public class MemberServiceImpl implements MemberService {
     private final RepositoryService repositoryService;
 
     @Override
-    public void MemberSave(Member member){
-        repositoryService.getMemberRepository().save(member);
+    public void MemberSave(MemberDTO memberDTO){
+        repositoryService.getMemberRepository().save(repositoryService.convertDTOToEntity(memberDTO));
     }
 
     

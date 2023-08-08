@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "CommonCode")
 @Getter
-@Setter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode

@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "File")
 @Getter
-@Setter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode

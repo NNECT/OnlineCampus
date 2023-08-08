@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "Member")
 @Getter
-@Setter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode

@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "CourseStudent")
 @Getter
-@Setter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
@@ -20,6 +20,7 @@ public class CourseStudent implements EntityMarker {
 
     @Embeddable
     @Getter
+    @Builder
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PUBLIC)
     @EqualsAndHashCode

@@ -35,7 +35,7 @@ public class MemberController {
         return "/lecture/MemberJoin";
     }
     @PostMapping("/Member_signup")
-    public String PostMemberSignup(@ModelAttribute Member member){
+    public String PostMemberSignup(@ModelAttribute MemberDTO member){
         System.out.println("받아와지나"+member.getPassword());
         String encodepassword = passwordEncoder.encode(member.getPassword());
         System.out.println("받아와지나1"+member.getPassword());
