@@ -23,11 +23,10 @@ public class MemberController {
     }
 
     @PostMapping("/Member_login")
-    public String PostMemberLogin(@RequestParam("username") String id,
-                                  @RequestParam("password") String pw){
-        System.out.println(id);
-        System.out.println(pw);
-        return "lecture/MemberLogin";
+    public String PostMemberLogin(@RequestParam("username") String username,
+                                  @RequestParam("password") String password){
+        System.out.println("로그인성공:"+password);
+        return "lecture/MemberMain";
     }
     @GetMapping("/Member_signup")
     public String GetMemberSignup(){
@@ -35,10 +34,8 @@ public class MemberController {
         return "/lecture/MemberJoin";
     }
     @PostMapping("/Member_signup")
-    public String PostMemberSignup(@ModelAttribute Member member){
-        System.out.println("받아와지나"+member.getPassword());
+    public String PostMemberSignup(@ModelAttribute MemberDTO member){
         String encodepassword = passwordEncoder.encode(member.getPassword());
-        System.out.println("받아와지나1"+member.getPassword());
         member.setPassword(encodepassword);
         memberService.MemberSave(member);
         return "/lecture/MemberLogin";

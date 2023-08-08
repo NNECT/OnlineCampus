@@ -2,6 +2,8 @@ package com.education.onlinecampus.data.entity;
 
 import com.education.onlinecampus.data.marker.EntityMarker;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,11 +15,12 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
+@EntityListeners(AuditingEntityListener.class)
 public class Member implements EntityMarker {
     /** 회원 번호 */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(length = 10, nullable = false)
+    @Column(length = 10)
     private Long memberSeq;
 
     /** 회원 구분 */
@@ -52,6 +55,7 @@ public class Member implements EntityMarker {
 
     /** 비밀번호 변경 날짜 */
     @Column
+    @CreatedDate
     private LocalDate passwordChangeDate;
 
     /** 비밀번호 변경 필요 여부 */
@@ -68,6 +72,7 @@ public class Member implements EntityMarker {
 
     /** 가입 날짜 */
     @Column
+    @CreatedDate
     private LocalDate registerDate;
 
     /** 사진 파일 번호 */
