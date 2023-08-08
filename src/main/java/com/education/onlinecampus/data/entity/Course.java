@@ -17,10 +17,8 @@ public class Course implements EntityMarker {
     /** 강좌 번호 */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(
-            nullable = false
-    )
-    private Integer courseSeq;
+    @Column
+    private Long courseSeq;
 
     /** 강좌명 */
     @Column(

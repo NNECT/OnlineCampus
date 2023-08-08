@@ -1,4 +1,4 @@
-package com.education.onlinecampus.repository;
+package com.education.onlinecampus.repository.lecture;
 
 import com.education.onlinecampus.data.entity.CommonCode;
 import com.education.onlinecampus.data.entity.Member;

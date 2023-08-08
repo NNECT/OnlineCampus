@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "CourseChapterStudentProgress")
 @Getter
-@Setter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
@@ -20,16 +20,17 @@ public class CourseChapterStudentProgress implements EntityMarker {
 
     @Embeddable
     @Getter
+    @Builder
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PUBLIC)
     @EqualsAndHashCode
     public static class CourseChapterStudentProgressCompositeKey implements Serializable {
         /** 강좌 ID */
-        private Integer courseSeq;
+        private Long courseSeq;
         /** 챕터 ID */
-        private Integer chapterSeq;
+        private Long chapterSeq;
         /** 수강생 ID */
-        private String studentSeq;
+        private Long studentSeq;
     }
 
     /** 강좌 외래키 */

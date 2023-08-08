@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "CourseChapter")
 @Getter
-@Setter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
@@ -20,18 +20,17 @@ public class CourseChapter implements EntityMarker {
 
     @Embeddable
     @Getter
+    @Builder
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PUBLIC)
     @EqualsAndHashCode
     public static class CourseChapterCompositeKey implements Serializable {
         /** 강좌 ID */
-        private Integer courseSeq;
+        private Long courseSeq;
 
         /** 챕터 ID */
-        @Column(
-                nullable = false
-        )
-        private Integer chapterSeq;
+        @Column(nullable = false)
+        private Long chapterSeq;
     }
 
     /** 강좌 외래키 */
@@ -41,20 +40,14 @@ public class CourseChapter implements EntityMarker {
             referencedColumnName = "courseSeq",
             insertable = false, updatable = false, nullable = false
     )
-
     private Course course;
 
     /** 순서 번호 */
-    @Column(
-            nullable = false
-    )
+    @Column(nullable = false)
     private Integer chapterOrder;
 
     /** 챕터 제목 */
-    @Column(
-            length = 150,
-            nullable = false
-    )
+    @Column(length = 150, nullable = false)
     private String chapterName;
 
     /** 콘텐츠 번호 */
@@ -74,8 +67,6 @@ public class CourseChapter implements EntityMarker {
     private File supplementaryFile;
 
     /** 챕터 설명 */
-    @Column(
-            length = 1000
-    )
+    @Column(length = 1000)
     private String chapterBrief;
 }
