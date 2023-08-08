@@ -5,6 +5,9 @@ import com.education.onlinecampus.data.entity.*;
 import com.education.onlinecampus.data.mapper.*;
 import com.education.onlinecampus.data.marker.*;
 import com.education.onlinecampus.repository.*;
+import com.education.onlinecampus.repository.lecture.MemberRepository;
+import com.education.onlinecampus.repository.manager.CourseChapterRepository;
+import com.education.onlinecampus.repository.manager.CourseRepository;
 import com.education.onlinecampus.service.common.RepositoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,10 +17,13 @@ import org.springframework.stereotype.Service;
 public class RepositoryServiceImpl implements RepositoryService {
     private final FileRepository fileRepository;
     private final MemberRepository memberRepository;
+    private final CourseRepository courseRepository;
+    private final CourseChapterRepository courseChapterRepository;
 
-    @Override public MemberRepository getMemberRepository(){return memberRepository;}
     @Override public FileRepository getFileRepository() {return fileRepository;}
-
+    @Override public MemberRepository getMemberRepository(){return memberRepository;}
+    @Override public CourseRepository getCourseRepository(){return courseRepository;}
+    @Override public CourseChapterRepository getCourseChapterRepository(){return courseChapterRepository;}
     @Override
     public <E extends EntityMarker, T extends DTOMarker> E convertDTOToEntity(T dto) {
         if (dto instanceof CommonCodeDTO)
@@ -28,7 +34,6 @@ public class RepositoryServiceImpl implements RepositoryService {
             return (E) MemberMapper.INSTANCE.toEntity((MemberDTO) dto);
         return null;
     }
-
     @Override
     public <E extends EntityMarker, T extends DTOMarker> T convertEntityToDTO(E entity) {
         if (entity instanceof CommonCode)
