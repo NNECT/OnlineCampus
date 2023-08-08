@@ -17,39 +17,27 @@ public class Course implements EntityMarker {
     /** 강좌 번호 */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(
-            nullable = false
-    )
+    @Column
     private Integer courseSeq;
 
     /** 강좌명 */
-    @Column(
-            length = 100,
-            nullable = false
-    )
+    @Column(length = 100, nullable = false)
     private String courseName;
 
     /** 강좌 소개 */
-    @Column(
-            length = 400
-    )
+    @Column(length = 400)
     private String courseBrief;
 
     /** 강좌 시작 일시 */
-    @Column(
-            nullable = false
-    )
+    @Column(nullable = false)
     private LocalDateTime startDateTime;
 
     /** 강좌 종료 일시 */
-    @Column
+    @Column(nullable = false)
     private LocalDateTime endDateTime;
 
     /** 강좌 진행 상태 */
     @ManyToOne
-    @JoinColumn(
-            name = "statusCode",
-            referencedColumnName = "code"
-    )
+    @JoinColumn(name = "statusCode", referencedColumnName = "code")
     private CommonCode statusCode;
 }

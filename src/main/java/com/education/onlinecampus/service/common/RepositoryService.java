@@ -3,7 +3,9 @@ package com.education.onlinecampus.service.common;
 import com.education.onlinecampus.data.marker.DTOMarker;
 import com.education.onlinecampus.data.marker.EntityMarker;
 import com.education.onlinecampus.repository.FileRepository;
-import com.education.onlinecampus.repository.MemberRepository;
+import com.education.onlinecampus.repository.lecture.MemberRepository;
+import com.education.onlinecampus.repository.manager.CourseChapterRepository;
+import com.education.onlinecampus.repository.manager.CourseRepository;
 
 /**
  * RepositoryService 인터페이스
@@ -13,8 +15,11 @@ import com.education.onlinecampus.repository.MemberRepository;
  */
 public interface RepositoryService {
     MemberRepository getMemberRepository();
-
     FileRepository getFileRepository();
+
+    CourseRepository getCourseRepository();
+
+    CourseChapterRepository getCourseChapterRepository();
 
     /**
      * DTO 객체를 Entity 객체로 변환

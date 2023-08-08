@@ -16,25 +16,17 @@ import java.time.LocalDate;
 public class Member implements EntityMarker {
     /** 회원 번호 */
     @Id
-    @Column(
-            length = 10,
-            nullable = false
-    )
-    private String memberSeq;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(length = 10, nullable = false)
+    private Long memberSeq;
 
     /** 회원 구분 */
     @ManyToOne
-    @JoinColumn(
-            name = "memberDivisionCode",
-            referencedColumnName = "code"
-    )
+    @JoinColumn(name = "memberDivisionCode", referencedColumnName = "code")
     private CommonCode memberDivision;
 
     /** 이름 */
-    @Column(
-            length = 30,
-            nullable = false
-    )
+    @Column(length = 30, nullable = false)
     private String nameKor;
 
     /** 생년월일 */
@@ -43,31 +35,19 @@ public class Member implements EntityMarker {
 
     /** 성별 */
     @ManyToOne
-    @JoinColumn(
-            name = "genderCode",
-            referencedColumnName = "code"
-    )
+    @JoinColumn(name = "genderCode", referencedColumnName = "code")
     private CommonCode genderCode;
 
     /** 이메일 */
-    @Column(
-            length = 100
-    )
+    @Column(length = 100)
     private String email;
 
     /** 로그인 아이디 */
-    @Column(
-            length = 40,
-            nullable = false,
-            unique = true
-    )
+    @Column(length = 40, nullable = false, unique = true)
     private String loginId;
 
     /** 비밀번호 */
-    @Column(
-            length = 50,
-            nullable = false
-    )
+    @Column(length = 150, nullable = false)
     private String password;
 
     /** 비밀번호 변경 날짜 */
@@ -92,9 +72,6 @@ public class Member implements EntityMarker {
 
     /** 사진 파일 번호 */
     @ManyToOne
-    @JoinColumn(
-            name = "pictureFileSeq",
-            referencedColumnName = "fileSeq"
-    )
+    @JoinColumn(name = "pictureFileSeq", referencedColumnName = "fileSeq")
     private File pictureFile;
 }

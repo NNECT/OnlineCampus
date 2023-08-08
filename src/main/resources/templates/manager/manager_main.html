@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강의 관리 페이지</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .search-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .search-bar-row {
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar select,
+        .search-bar input[type="text"] {
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        select, input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            color: #333; /* Change text color to make selected options visible */
+            background-color: white; /* Add background color for better visibility */
+        }
+
+        /* Style the selected option */
+        option:checked {
+            background-color: #555;
+            color: white;
+        }
+        select {
+            width: 20%;
+        }
+        input[type="text"] {
+            width: 50%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+        th {
+            background-color: #555;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .new-course-link {
+            display: inline-block;
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            float: right;
+        }
+        .new-course-link:hover {
+            background-color: #555;
+        }
+
+        select option:checked {
+            background-color: #555;
+            color: white;
+        }
+
+        /* Additional styles for improved alignment */
+        .search-bar-row {
+            margin: 10px 0;
+        }
+
+        .search-bar-row label {
+            width: 150px;
+        }
+
+        .search-bar-row select,
+        .search-bar-row input[type="text"] {
+            width: 130%; /* Adjust the width as needed */
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .search-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .search-bar-row {
+            display: flex;
+            align-items: center;
+            width: 33.33%; /* Divide into three equal parts for left, center, and right */
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+
+        .search-bar select,
+        .search-bar input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            color: #333;
+            background-color: white;
+        }
+
+        select, input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* Style the selected option */
+        option:checked {
+            background-color: #555;
+            color: white;
+        }
+
+        /* Additional styles for improved alignment */
+        .search-bar-row label {
+            width: 150px;
+        }
+
+        .search-bar-row select,
+        .search-bar-row input[type="text"] {
+            width: 70%; /* Adjust the width as needed */
+        }
+
+        .search-bar-row:last-child {
+            justify-content: flex-end;
+        }
+
+        .new-course-link {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .new-course-link:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h2>강의 관리 페이지</h2>
+</div>
+<div class="container">
+    <a href="/Course" class="new-course-link" style="margin-left: 10px">신규강의등록</a>
+    <a href="/Course" class="new-course-link" style="margin-left: 10px">강의삭제</a>
+    <a href="/Course" class="new-course-link" style="margin-left: 10px">강의조회</a><br><br>
+    <div class="search-bar">
+        <div class="search-bar-row">
+            <label for="courseName">온라인강좌구분</label>
+            <select name="courseName" id="courseName">
+                <option value="국어">국어</option>
+                <option value="영어">영어</option>
+                <option value="수학">수학</option>
+            </select>
+        </div>
+        <div class="search-bar-row">
+            <label for="courseSearch">온라인강좌명</label>
+            <input type="text" id="courseSearch" placeholder="강좌번호 또는 강좌명을 검색해주세요...">
+        </div>
+        <div class="search-bar-row">
+            <label for="courseStatus">강좌진행상태</label>
+            <select name="courseStatus" id="courseStatus">
+                <option value="전체">전체</option>
+                <option value="준비중">준비중</option>
+                <option value="운영중">운영중</option>
+                <option value="종료">종료</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Your content here -->
+
+    <div>
+        <h3>선수학습강좌
+            <small>검색결과: ??건</small>
+            <select>
+                <option>5</option>
+                <option>10</option>
+                <option>50</option>
+                <option>100</option>
+                <option>500</option>
+            </select>
+        </h3>
+        <table>
+            <tr>
+                <th>강좌번호</th>
+                <th>강좌명</th>
+                <th>강좌소개</th>
+                <th>강좌 시작일</th>
+                <th>강좌 종료일</th>
+                <th>강좌 진행상태</th>
+            </tr>
+            <tr>
+                <td>001</td>
+                <td>예쁘게 꾸며보기</td>
+                <td>HTML과 CSS로 페이지 스타일링하기</td>
+                <td>2023-08-15</td>
+                <td>2023-09-15</td>
+                <td>진행중</td>
+            </tr>
+        </table>
+    </div>
+
+    <div style="display: flex; justify-content: space-between;">
+        <div style="width: 48%;">
+        <h2>강좌차시정보 / 수강대상자</h2>
+        <h3>강좌차시정보
+            <small>검색결과: ??건</small>
+            <select>
+                <option>5</option>
+                <option>30</option>
+                <option>50</option>
+                <option>100</option>
+                <option>500</option>
+            </select>
+        </h3>
+        <table>
+            <tr>
+                <th><input type="checkbox"></th>
+                <th>차시순서</th>
+                <th>차시명</th>
+                <th>차시학습시간</th>
+            </tr>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td>001</td>
+                <td>예쁘게 꾸며보기</td>
+                <td>HTML과 CSS로 페이지 스타일링하기</td>
+            </tr>
+            <!-- Add more rows as needed -->
+        </table>
+    </div>
+
+    <div style="width: 48%;">
+    <div style="border: 1px solid black;">
+        <table>
+            <tr>
+                <td>차시관리번호</td>
+                <td>001</td>
+            </tr>
+            <tr>
+                <td>온라인강좌구분</td>
+                <td>001</td>
+            </tr>
+            <!-- Add more rows as needed -->
+        </table>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
