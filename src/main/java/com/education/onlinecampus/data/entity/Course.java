@@ -9,35 +9,52 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "Course")
 @Getter
-@Setter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
 public class Course implements EntityMarker {
-    /** 강좌 번호 */
+
+    /**
+     * 강좌 번호
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private Integer courseSeq;
 
-    /** 강좌명 */
+
+
+    /**
+     * 강좌명
+     */
     @Column(length = 100, nullable = false)
     private String courseName;
 
-    /** 강좌 소개 */
+    /**
+     * 강좌 소개
+     */
     @Column(length = 400)
     private String courseBrief;
 
-    /** 강좌 시작 일시 */
+    /**
+     * 강좌 시작 일시
+     */
     @Column(nullable = false)
     private LocalDateTime startDateTime;
 
-    /** 강좌 종료 일시 */
+    /**
+     * 강좌 종료 일시
+     */
     @Column(nullable = false)
     private LocalDateTime endDateTime;
 
-    /** 강좌 진행 상태 */
+    /**
+     * 강좌 진행 상태
+     */
     @ManyToOne
     @JoinColumn(name = "statusCode", referencedColumnName = "code")
     private CommonCode statusCode;
+
+
 }
