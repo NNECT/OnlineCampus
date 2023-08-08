@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class FileDTO implements DTOMarker {
-    private Integer fileId;
+    private Long fileSeq;
     private String originalFileName;
     private String fileName;
     private Integer fileSize;
