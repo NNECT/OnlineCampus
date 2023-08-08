@@ -16,22 +16,15 @@ public class CourseChapterContent implements EntityMarker {
     /** 콘텐츠 번호 */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(
-            nullable = false
-    )
+    @Column(nullable = false)
     private Long contentSeq;
 
     /** 콘텐츠 이름 */
-    @Column(
-            length = 100,
-            nullable = false
-    )
+    @Column(length = 100, nullable = false)
     private String contentName;
 
     /** 콘텐츠 설명 */
-    @Column(
-            length = 400
-    )
+    @Column(length = 400)
     private String contentBrief;
 
     /** 썸네일 파일 */
@@ -52,9 +45,7 @@ public class CourseChapterContent implements EntityMarker {
     private File contentFile;
 
     /** 유튜브 비디오 ID */
-    @Column(
-            length = 400
-    )
+    @Column(length = 400)
     private String videoId;
 
     /** 강좌 상태 구분 공통 코드 */

@@ -27,10 +27,7 @@ public class CourseStudent implements EntityMarker {
         /** 강좌 ID */
         private Long courseSeq;
         /** 수강생 ID */
-        @Column(
-                length = 10,
-                nullable = false
-        )
+        @Column(length = 10, nullable = false)
         private Long studentSeq;
     }
 

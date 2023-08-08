@@ -22,8 +22,8 @@ public class CourseServiceImpl implements CourseService {
     public void CourseDelete(Course course){ repositoryService.getCourseRepository().delete(course);}
 
     @Override
-    public Course CourseFind(Integer CourseSeq){
-        Course byId = repositoryService.getCourseRepository().findById(CourseSeq).orElseThrow();
+    public Course CourseFind(Long CourseSeq){
+        Course byId = repositoryService.getCourseRepository().findByCourseSeq(CourseSeq);
         return byId;
     }
 

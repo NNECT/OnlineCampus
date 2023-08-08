@@ -8,7 +8,7 @@ public interface CourseService {
 
     void CourseDelete(Course course);
 
-    Course CourseFind(Integer CourseSeq);
+    Course CourseFind(Long CourseSeq);
 
     void CourseChapterSave(CourseChapter courseChapter);
 

@@ -28,9 +28,7 @@ public class CourseChapter implements EntityMarker {
         private Long courseSeq;
 
         /** 챕터 ID */
-        @Column(
-                nullable = false
-        )
+        @Column(nullable = false)
         private Long chapterSeq;
     }
 
@@ -44,16 +42,11 @@ public class CourseChapter implements EntityMarker {
     private Course course;
 
     /** 순서 번호 */
-    @Column(
-            nullable = false
-    )
+    @Column(nullable = false)
     private Integer chapterOrder;
 
     /** 챕터 제목 */
-    @Column(
-            length = 150,
-            nullable = false
-    )
+    @Column(length = 150, nullable = false)
     private String chapterName;
 
     /** 콘텐츠 번호 */
@@ -73,8 +66,6 @@ public class CourseChapter implements EntityMarker {
     private File supplementaryFile;
 
     /** 챕터 설명 */
-    @Column(
-            length = 1000
-    )
+    @Column(length = 1000)
     private String chapterBrief;
 }
