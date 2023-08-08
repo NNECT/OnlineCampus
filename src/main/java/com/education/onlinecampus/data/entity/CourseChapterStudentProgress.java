@@ -25,11 +25,11 @@ public class CourseChapterStudentProgress implements EntityMarker {
     @EqualsAndHashCode
     public static class CourseChapterStudentProgressCompositeKey implements Serializable {
         /** 강좌 ID */
-        private Integer courseSeq;
+        private Long courseSeq;
         /** 챕터 ID */
-        private Integer chapterSeq;
+        private Long chapterSeq;
         /** 수강생 ID */
-        private String studentSeq;
+        private Long studentSeq;
     }
 
     /** 강좌 외래키 */

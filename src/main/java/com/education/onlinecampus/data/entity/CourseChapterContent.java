@@ -19,7 +19,7 @@ public class CourseChapterContent implements EntityMarker {
     @Column(
             nullable = false
     )
-    private Integer contentSeq;
+    private Long contentSeq;
 
     /** 콘텐츠 이름 */
     @Column(
@@ -55,7 +55,7 @@ public class CourseChapterContent implements EntityMarker {
     @Column(
             length = 400
     )
-    private String videoSeq;
+    private String videoId;
 
     /** 강좌 상태 구분 공통 코드 */
     @ManyToOne

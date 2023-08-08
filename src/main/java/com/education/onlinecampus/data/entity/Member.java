@@ -16,11 +16,11 @@ import java.time.LocalDate;
 public class Member implements EntityMarker {
     /** 회원 번호 */
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(
-            length = 10,
             nullable = false
     )
-    private String memberSeq;
+    private Long memberSeq;
 
     /** 회원 구분 */
     @ManyToOne
@@ -65,7 +65,7 @@ public class Member implements EntityMarker {
 
     /** 비밀번호 */
     @Column(
-            length = 50,
+            length = 150,
             nullable = false
     )
     private String password;

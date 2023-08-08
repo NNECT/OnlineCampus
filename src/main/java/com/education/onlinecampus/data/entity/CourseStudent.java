@@ -25,13 +25,13 @@ public class CourseStudent implements EntityMarker {
     @EqualsAndHashCode
     public static class CourseStudentCompositeKey implements Serializable {
         /** 강좌 ID */
-        private Integer courseSeq;
+        private Long courseSeq;
         /** 수강생 ID */
         @Column(
                 length = 10,
                 nullable = false
         )
-        private String studentSeq;
+        private Long studentSeq;
     }
 
     /** 강좌 외래키 */
