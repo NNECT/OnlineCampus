@@ -31,7 +31,6 @@ public class MemberController {
     }
     @GetMapping("/Member_signup")
     public String GetMemberSignup(){
-        System.out.println("구분선!!!!!!!!-");
         return "/lecture/MemberJoin";
     }
     @PostMapping("/Member_signup")
