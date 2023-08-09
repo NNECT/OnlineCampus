@@ -4,5 +4,5 @@ import com.education.onlinecampus.data.dto.MemberDTO;
 import com.education.onlinecampus.data.entity.Member;
 
 public interface MemberService {
-    void MemberSave(MemberDTO member);
+    void MemberSave(MemberDTO memberDTO);
 }

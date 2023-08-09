@@ -2,8 +2,6 @@ package com.education.onlinecampus.data.entity;
 
 import com.education.onlinecampus.data.marker.EntityMarker;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -11,7 +9,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "Member")
 @Getter
-@Setter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
@@ -20,16 +18,24 @@ public class Member implements EntityMarker {
     /** 회원 번호 */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(length = 10)
+    @Column(
+            nullable = false
+    )
     private Long memberSeq;
 
     /** 회원 구분 */
     @ManyToOne
-    @JoinColumn(name = "memberDivisionCode", referencedColumnName = "code")
+    @JoinColumn(
+            name = "memberDivisionCode",
+            referencedColumnName = "code"
+    )
     private CommonCode memberDivision;
 
     /** 이름 */
-    @Column(length = 30, nullable = false)
+    @Column(
+            length = 30,
+            nullable = false
+    )
     private String nameKor;
 
     /** 생년월일 */
@@ -38,11 +44,16 @@ public class Member implements EntityMarker {
 
     /** 성별 */
     @ManyToOne
-    @JoinColumn(name = "genderCode", referencedColumnName = "code")
+    @JoinColumn(
+            name = "genderCode",
+            referencedColumnName = "code"
+    )
     private CommonCode genderCode;
 
     /** 이메일 */
-    @Column(length = 100)
+    @Column(
+            length = 100
+    )
     private String email;
 
     /** 로그인 아이디 */
@@ -54,7 +65,7 @@ public class Member implements EntityMarker {
     private String password;
 
     /** 비밀번호 변경 날짜 */
-    @Column
+    @Column(nullable = false)
     @CreatedDate
     private LocalDate passwordChangeDate;
 
@@ -71,12 +82,15 @@ public class Member implements EntityMarker {
     private LocalDate lastLoginDate;
 
     /** 가입 날짜 */
-    @Column
+    @Column(nullable = false)
     @CreatedDate
     private LocalDate registerDate;
 
     /** 사진 파일 번호 */
     @ManyToOne
-    @JoinColumn(name = "pictureFileSeq", referencedColumnName = "fileSeq")
+    @JoinColumn(
+            name = "pictureFileSeq",
+            referencedColumnName = "fileSeq"
+    )
     private File pictureFile;
 }

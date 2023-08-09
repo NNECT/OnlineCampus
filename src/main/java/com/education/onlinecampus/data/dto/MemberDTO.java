@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class MemberDTO implements DTOMarker {
-    private String memberId;
+    private Long memberSeq;
     private CommonCodeDTO memberDivision;
     private String nameKor;
     private LocalDate birthDate;

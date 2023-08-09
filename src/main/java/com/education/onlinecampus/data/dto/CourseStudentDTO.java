@@ -10,10 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class FileDTO implements DTOMarker {
-    private Long fileSeq;
-    private String originalFileName;
-    private String fileName;
-    private Integer fileSize;
-    private String fileGuid;
+public class CourseStudentDTO implements DTOMarker {
+    private CourseDTO course;
+    private MemberDTO student;
 }
