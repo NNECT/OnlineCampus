@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
 public class CourseChapter implements EntityMarker {
     /** 강좌 챕터 복합키 */

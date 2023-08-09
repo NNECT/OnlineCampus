@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
 public class CommonCode implements EntityMarker {
     /** 공통코드 */
