@@ -6,17 +6,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CourseDTO implements DTOMarker {
-    private Long courseSeq;
-    private String courseName;
-    private String courseBrief;
-    private LocalDateTime startDateTime;
-    private LocalDateTime endDateTime;
+public class CourseChapterContentDTO implements DTOMarker {
+    private Long contentSeq;
+    private String contentName;
+    private String contentBrief;
+    private FileDTO thumbnailFileDTO;
+    private FileDTO contentFileDTO;
+    private String videoId;
     private CommonCodeDTO statusCodeDTO;
+    private Integer runningTime;
 }

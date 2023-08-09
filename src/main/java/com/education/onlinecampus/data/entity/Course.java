@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "Course")
 @Getter
-@Setter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
