@@ -23,8 +23,6 @@ public class Course implements EntityMarker {
     @Column
     private Integer courseSeq;
 
-
-
     /**
      * 강좌명
      */
