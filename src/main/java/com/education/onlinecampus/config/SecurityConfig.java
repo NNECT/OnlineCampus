@@ -27,7 +27,7 @@ public class SecurityConfig{
                 .loginProcessingUrl("/Member_login") // POST 요청 (login 창에 입력한 데이터를 처리)
                 .usernameParameter("username")	// login에 필요한 id 값을 email로 설정 (default는 username)
                 .passwordParameter("password")	// login에 필요한 password 값을 password(default)로 설정
-                .defaultSuccessUrl("/Member_login") // login에 성공하면 /로 redirect*/
+                .defaultSuccessUrl("/Member_main") // login에 성공하면 /로 redirect*/
                 .permitAll();
         // logout 설정
         http
