@@ -10,7 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CourseStudentDTO implements DTOMarker {
+public class CourseChapterDTO implements DTOMarker {
     private CourseDTO courseDTO;
-    private MemberDTO studentDTO;
+    private Long chapterSeq;
+    private Integer chapterOrder;
+    private String chapterName;
+    private CourseChapterContentDTO contentDTO;
+    private FileDTO supplementaryFileDTO;
+    private String chapterBrief;
 }
