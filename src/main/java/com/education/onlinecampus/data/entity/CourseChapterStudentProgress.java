@@ -56,7 +56,7 @@ public class CourseChapterStudentProgress implements EntityMarker {
                     insertable = false, updatable = false
             )
     })
-    private CourseChapter courseChapter;
+    private CourseChapter chapter;
 
     /** 수강생 외래키 */
     @ManyToOne
@@ -72,7 +72,7 @@ public class CourseChapterStudentProgress implements EntityMarker {
                     insertable = false, updatable = false
             )
     })
-    private CourseStudent courseStudent;
+    private CourseStudent student;
 
     /** 최종 재생 위치 */
     @Column

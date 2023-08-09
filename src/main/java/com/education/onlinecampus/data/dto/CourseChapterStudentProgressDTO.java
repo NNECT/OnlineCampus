@@ -10,7 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CourseStudentDTO implements DTOMarker {
+public class CourseChapterStudentProgressDTO implements DTOMarker {
     private CourseDTO courseDTO;
-    private MemberDTO studentDTO;
+    private CourseChapterDTO chapterDTO;
+    private CourseStudentDTO studentDTO;
+    private Integer finalPosition;
+    private Integer maxPosition;
 }

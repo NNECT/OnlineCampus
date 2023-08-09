@@ -2,10 +2,7 @@ package com.education.onlinecampus.service.common;
 
 import com.education.onlinecampus.data.marker.DTOMarker;
 import com.education.onlinecampus.data.marker.EntityMarker;
-import com.education.onlinecampus.repository.FileRepository;
-import com.education.onlinecampus.repository.lecture.MemberRepository;
-import com.education.onlinecampus.repository.manager.CourseChapterRepository;
-import com.education.onlinecampus.repository.manager.CourseRepository;
+import com.education.onlinecampus.repository.*;
 
 /**
  * RepositoryService 인터페이스
@@ -14,12 +11,14 @@ import com.education.onlinecampus.repository.manager.CourseRepository;
  * 또한 DTO와 Entity 상호간 변환을 위한 메서드를 정의한다.
  */
 public interface RepositoryService {
-    MemberRepository getMemberRepository();
-    FileRepository getFileRepository();
-
-    CourseRepository getCourseRepository();
-
+    CommonCodeRepository getCommonCodeRepository();
+    CourseChapterContentRepository getCourseChapterContentRepository();
     CourseChapterRepository getCourseChapterRepository();
+    CourseChapterStudentProgressRepository getCourseChapterStudentProgressRepository();
+    CourseRepository getCourseRepository();
+    CourseStudentRepository getCourseStudentRepository();
+    FileRepository getFileRepository();
+    MemberRepository getMemberRepository();
 
     /**
      * DTO 객체를 Entity 객체로 변환
