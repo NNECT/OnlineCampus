@@ -29,14 +29,12 @@ public class SecurityConfig{
                 .passwordParameter("password")	// login에 필요한 password 값을 password(default)로 설정
                 .defaultSuccessUrl("/Member_login") // login에 성공하면 /로 redirect*/
                 .permitAll();
-
         // logout 설정
         http
                 .logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/");	// logout에 성공하면 /로 redirect
-        return http.build();
-    }
+        return http.build();    }
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
