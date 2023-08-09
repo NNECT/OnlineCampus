@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 public class CourseController {
@@ -18,8 +20,7 @@ public class CourseController {
 
     @GetMapping("/Course")
     public String Course(){
-        return "manager/Course";
-    }
+        return "manager/Course";}
 
     @PostMapping("/Course_save")
     public String CourseSave(@ModelAttribute Course course){
@@ -36,6 +37,13 @@ public class CourseController {
         Course coursefind = courseService.CourseFind(course.getCourseSeq());
         model.addAttribute("coursefind",coursefind);
         return "manager/manager_main";
+    }
+    @GetMapping("/Course_findAll")
+    public String CourseFindAll(Model model){
+        System.out.println("오오오오오오오");
+        List<Course> courseList = courseService.CourseFindAll();
+        model.addAttribute("courseList", courseList);
+        return "lecture/courseList";
     }
     @PostMapping("/CourseChapter_save")
     public String CourseChapterSave(@ModelAttribute CourseChapter courseChapter){
