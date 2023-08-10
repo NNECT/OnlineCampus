@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>로그인</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/memberlogin.css">
+<!--    <style>
+        .login_wrap{width:100%; display: flex; justify-content: center; align-content: center;}
+        .login_formbox{padding:30px; border-radius: 5px; border:1px solid #999; /*box-shadow: 0 3px 6px rgba(0,0,0,0.2);*/}
+        .login_formbox a{text-decoration: none;}
+    </style>-->
+</head>
+<body id="particles-js"></body>
+<div class="animated bounceInDown">
+    <div class="container">
+        <span class="error animated tada" id="msg"></span>
+        <form name="form1" class="box" onsubmit="return checkStuff()">
+            <h4>로그인<span>페이지</span></h4>
+            <input type="text" name="username" placeholder="아이디" autocomplete="off">
+            <i class="typcn typcn-eye" id="eye"></i>
+            <input type="password" name="password" placeholder="비밀번호" id="pwd" autocomplete="off">
+            <label>
+                <input type="checkbox">
+                <span></span>
+                <small class="rmb">로그인 기억하기</small>
+            </label>
+            <a href="#" class="forgetpass">비밀번호 찾기</a>
+            <input type="submit" value="로그인" class="btn1">
+        </form>
+        <a href="#" class="dnthave">회원가입</a>
+    </div>
+<!--    <div class="footer">
+        <span>Made with
+            <i class="fa fa-heart pulse"></i>
+            <a href="https://www.google.de/maps/place/Augsburger+Puppenkiste/@48.360357,10.903245,17z/data=!3m1!4b1!4m2!3m1!1s0x479e98006610a511:0x73ac6b9f80c4048f"></a>
+            <a href="https://codepen.io/lordgamer2354">By Anees Khan</a>
+        </span>
+    </div>-->
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
+</html>
+
