@@ -38,7 +38,7 @@ public class CourseChapterStudentProgress implements EntityMarker {
     @JoinColumn(
             name = "courseSeq",
             referencedColumnName = "courseSeq",
-            insertable = false, updatable = false
+            insertable = false, updatable = false, nullable = false
     )
     private Course course;
 
@@ -48,12 +48,12 @@ public class CourseChapterStudentProgress implements EntityMarker {
             @JoinColumn(
                     name = "courseSeq",
                     referencedColumnName = "courseSeq",
-                    insertable = false, updatable = false
+                    insertable = false, updatable = false, nullable = false
             ),
             @JoinColumn(
                     name = "chapterSeq",
                     referencedColumnName = "chapterSeq",
-                    insertable = false, updatable = false
+                    insertable = false, updatable = false, nullable = false
             )
     })
     private CourseChapter chapter;
@@ -64,12 +64,12 @@ public class CourseChapterStudentProgress implements EntityMarker {
             @JoinColumn(
                     name = "courseSeq",
                     referencedColumnName = "courseSeq",
-                    insertable = false, updatable = false
+                    insertable = false, updatable = false, nullable = false
             ),
             @JoinColumn(
                     name = "studentSeq",
                     referencedColumnName = "studentSeq",
-                    insertable = false, updatable = false
+                    insertable = false, updatable = false, nullable = false
             )
     })
     private CourseStudent student;
@@ -79,6 +79,14 @@ public class CourseChapterStudentProgress implements EntityMarker {
     private Integer finalPosition;
 
     /** 최대 재생 위치 */
-    @Column
+    @Column(nullable = false)
     private Integer maxPosition;
+
+    /**
+     * 새 데이터 저장 전 디폴트값 설정
+     */
+    @PrePersist
+    public void prePersist() {
+        this.maxPosition = 0;
+    }
 }

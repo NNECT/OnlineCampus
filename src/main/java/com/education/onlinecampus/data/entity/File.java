@@ -20,7 +20,7 @@ public class File implements EntityMarker {
     private Long fileSeq;
 
     /** 원본 파일명 */
-    @Column(length = 200)
+    @Column(length = 200, nullable = false)
     private String originalFileName;
 
     /** 파일명 */
