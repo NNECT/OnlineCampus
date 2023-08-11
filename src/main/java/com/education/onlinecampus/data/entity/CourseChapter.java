@@ -8,7 +8,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "CourseChapter")
+@Table(name = "CourseChapter", indexes = {
+        @Index(name = "courseChapterOrderIdx", columnList = "courseSeq, chapterOrder")
+})
 @EntityListeners(CourseChapter.CourseChapterSeqListener.class)
 @Getter
 @Builder
@@ -61,7 +63,8 @@ public class CourseChapter implements EntityMarker {
     @OneToOne
     @JoinColumn(
             name = "contentSeq",
-            referencedColumnName = "contentSeq"
+            referencedColumnName = "contentSeq",
+            nullable = false
     )
     private CourseChapterContent content;
 
