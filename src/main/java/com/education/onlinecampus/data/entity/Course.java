@@ -21,22 +21,15 @@ public class Course implements EntityMarker {
     private Long courseSeq;
 
     /** 강좌명 */
-    @Column(
-            length = 100,
-            nullable = false
-    )
+    @Column(length = 100, nullable = false)
     private String courseName;
 
     /** 강좌 소개 */
-    @Column(
-            length = 400
-    )
+    @Column(length = 400)
     private String courseBrief;
 
     /** 강좌 시작 일시 */
-    @Column(
-            nullable = false
-    )
+    @Column(nullable = false) // default: now()
     private LocalDateTime startDateTime;
 
     /** 강좌 종료 일시 */
@@ -47,7 +40,16 @@ public class Course implements EntityMarker {
     @ManyToOne
     @JoinColumn(
             name = "statusCode",
-            referencedColumnName = "code"
+            referencedColumnName = "code",
+            nullable = false
     )
     private CommonCode statusCode;
+
+    /**
+     * 새 데이터 저장 전 디폴트값 설정
+     */
+    @PrePersist
+    public void prePersist() {
+        this.startDateTime = LocalDateTime.now();
+    }
 }

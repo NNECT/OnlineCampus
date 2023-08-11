@@ -37,7 +37,7 @@ public class CourseStudent implements EntityMarker {
     @JoinColumn(
             name = "courseSeq",
             referencedColumnName = "courseSeq",
-            insertable = false, updatable = false
+            insertable = false, updatable = false, nullable = false
     )
     private Course course;
 
@@ -46,7 +46,7 @@ public class CourseStudent implements EntityMarker {
     @JoinColumn(
             name = "studentSeq",
             referencedColumnName = "memberSeq",
-            insertable = false, updatable = false
+            insertable = false, updatable = false, nullable = false
     )
     private Member student;
 }

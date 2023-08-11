@@ -52,7 +52,8 @@ public class CourseChapterContent implements EntityMarker {
     @ManyToOne
     @JoinColumn(
             name = "statusCode",
-            referencedColumnName = "code"
+            referencedColumnName = "code",
+            nullable = false
     )
     private CommonCode statusCode;
 

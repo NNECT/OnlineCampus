@@ -15,29 +15,24 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
-@EntityListeners(AuditingEntityListener.class)
 public class Member implements EntityMarker {
     /** 회원 번호 */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(
-            nullable = false
-    )
+    @Column(nullable = false)
     private Long memberSeq;
 
     /** 회원 구분 */
     @ManyToOne
     @JoinColumn(
             name = "memberDivisionCode",
-            referencedColumnName = "code"
+            referencedColumnName = "code",
+            nullable = false
     )
     private CommonCode memberDivision;
 
     /** 이름 */
-    @Column(
-            length = 30,
-            nullable = false
-    )
+    @Column(length = 30, nullable = false)
     private String nameKor;
 
     /** 생년월일 */
@@ -53,9 +48,7 @@ public class Member implements EntityMarker {
     private CommonCode genderCode;
 
     /** 이메일 */
-    @Column(
-            length = 100
-    )
+    @Column(length = 100, nullable = false)
     private String email;
 
     /** 로그인 아이디 */
@@ -67,25 +60,23 @@ public class Member implements EntityMarker {
     private String password;
 
     /** 비밀번호 변경 날짜 */
-    @Column(nullable = false)
-    @CreatedDate
+    @Column(nullable = false) // default: now()
     private LocalDate passwordChangeDate;
 
     /** 비밀번호 변경 필요 여부 */
-    @Column
+    @Column(nullable = false) // default: false
     private Boolean passwordChangeRequired;
 
     /** 비밀번호 오류 횟수 */
-    @Column
+    @Column(nullable = false) // default: 0
     private Integer passwordErrorCount;
 
     /** 마지막 로그인 날짜 */
-    @Column
+    @Column(nullable = false) // default: now()
     private LocalDate lastLoginDate;
 
     /** 가입 날짜 */
-    @Column(nullable = false)
-    @CreatedDate
+    @Column(nullable = false) // default: now()
     private LocalDate registerDate;
 
     /** 사진 파일 번호 */
@@ -95,4 +86,16 @@ public class Member implements EntityMarker {
             referencedColumnName = "fileSeq"
     )
     private File pictureFile;
+
+    /**
+     * 새 데이터 저장 전 디폴트값 설정
+     */
+    @PrePersist
+    public void prePersist() {
+        this.passwordChangeDate = LocalDate.now();
+        this.passwordChangeRequired = false;
+        this.passwordErrorCount = 0;
+        this.lastLoginDate = LocalDate.now();
+        this.registerDate = LocalDate.now();
+    }
 }
