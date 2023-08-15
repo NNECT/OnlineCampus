@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "Course")
@@ -50,4 +51,8 @@ public class Course implements EntityMarker {
             referencedColumnName = "code"
     )
     private CommonCode statusCode;
+
+    @OneToMany(mappedBy = "course")
+    private List<CourseChapter> courseChapters;
+
 }

@@ -38,13 +38,6 @@ public class CourseController {
         model.addAttribute("coursefind",coursefind);
         return "manager/manager_main";
     }
-    @GetMapping("/Course_findAll")
-    public String CourseFindAll(Model model){
-        System.out.println("오오오오오오오");
-        List<Course> courseList = courseService.CourseFindAll();
-        model.addAttribute("courseList", courseList);
-        return "lecture/courseList";
-    }
     @PostMapping("/CourseChapter_save")
     public String CourseChapterSave(@ModelAttribute CourseChapter courseChapter){
         courseService.CourseChapterSave(courseChapter);
@@ -55,4 +48,14 @@ public class CourseController {
         courseService.CourseChapterDelete(courseChapter);
         return "manager/manager_main";
     }
+    @GetMapping("/Course_findAll")
+    public String CourseFindAll(@ModelAttribute Course course, Model model){
+        List<Course> courseList = courseService.CourseFindAll();
+        model.addAttribute("courseList", courseList);
+
+        List<CourseChapter> courseChapterList = courseService.findCourseChapter(course.getCourseSeq());
+        model.addAttribute("courseChapterList",courseChapterList);
+        return "lecture/courseList";
+    }
+
 }

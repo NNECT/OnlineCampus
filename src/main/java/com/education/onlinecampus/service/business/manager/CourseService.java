@@ -17,4 +17,6 @@ public interface CourseService {
     void CourseChapterSave(CourseChapter courseChapter);
 
     void CourseChapterDelete(CourseChapter courseChapter);
+
+    List<CourseChapter> findCourseChapter(Long CourseSeq);
 }
