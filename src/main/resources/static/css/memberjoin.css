@@ -14,7 +14,7 @@ body, html {
 
 .container{
     margin: 0;
-    top: 75px;
+    top: 50px;
     left: 50%;
     position: absolute;
     text-align: center;
@@ -24,11 +24,11 @@ body, html {
     border-top: 10px solid #79a6fe;
     border-bottom: 10px solid #8BD17C;
     width: 400px;
-    height: 500px;
+    height: 600px;
     box-shadow: 0 3px 18px 3px rgb(0,0,0,0.1);
 }
 
-.box input[type = "text"],.box input[type = "password"] {
+.box input[type = "text"],.box input[type = "password"],.box input[type = "email"] {
     display: block;
     margin: 20px auto;
     background: #ededed;
@@ -49,7 +49,7 @@ body, html {
     color: #565f79;
 }
 
-.box input[type = "text"]:focus,.box input[type = "password"]:focus {
+.box input[type = "text"]:focus,.box input[type = "password"]:focus,.box input[type = "email"]:focus {
     border: 1px solid #79A6FE;
 }
 .box label{color: #565f79;}

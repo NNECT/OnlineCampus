@@ -20,7 +20,7 @@ public class MemberController {
     private final PasswordEncoder passwordEncoder;
     @GetMapping("/Member_login")
     public String MemberLogin(){
-        return "MemberLogin1";
+        return "MemberLogin";
     }
 
 /*    @PostMapping("/Member_login")
@@ -42,7 +42,7 @@ public class MemberController {
         System.out.println("받아와지나1"+member.getPassword());
         member.setPassword(encodepassword);
         memberService.MemberSave(member);
-        return "MemberLogin1";
+        return "MemberLogin";
     }
 
     @GetMapping("/Member_main")
