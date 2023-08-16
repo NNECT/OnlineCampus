@@ -53,7 +53,7 @@ public class Member implements EntityMarker {
 
     /** 로그인 아이디 */
     @Column(length = 40, nullable = false, unique = true)
-    private String loginId;
+    private String username;
 
     /** 비밀번호 */
     @Column(length = 150, nullable = false)
@@ -92,10 +92,20 @@ public class Member implements EntityMarker {
      */
     @PrePersist
     public void prePersist() {
-        this.passwordChangeDate = LocalDate.now();
-        this.passwordChangeRequired = false;
-        this.passwordErrorCount = 0;
-        this.lastLoginDate = LocalDate.now();
-        this.registerDate = LocalDate.now();
+        if (this.passwordChangeDate == null) {
+            this.passwordChangeDate = LocalDate.now();
+        }
+        if (this.passwordChangeRequired == null) {
+            this.passwordChangeRequired = false;
+        }
+        if (this.passwordErrorCount == null) {
+            this.passwordErrorCount = 0;
+        }
+        if (this.lastLoginDate == null) {
+            this.lastLoginDate = LocalDate.now();
+        }
+        if (this.registerDate == null) {
+            this.registerDate = LocalDate.now();
+        }
     }
 }

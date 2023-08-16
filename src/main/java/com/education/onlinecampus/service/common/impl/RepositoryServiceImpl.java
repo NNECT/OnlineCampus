@@ -5,16 +5,16 @@ import com.education.onlinecampus.data.entity.*;
 import com.education.onlinecampus.data.mapper.*;
 import com.education.onlinecampus.data.marker.*;
 import com.education.onlinecampus.repository.*;
-import com.education.onlinecampus.repository.MemberRepository;
-import com.education.onlinecampus.repository.CourseChapterRepository;
-import com.education.onlinecampus.repository.CourseRepository;
 import com.education.onlinecampus.service.common.RepositoryService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@Getter
 @RequiredArgsConstructor
 public class RepositoryServiceImpl implements RepositoryService {
+    private final CommonCodeDivisionRepository commonCodeDivisionRepository;
     private final CommonCodeRepository commonCodeRepository;
     private final CourseChapterContentRepository courseChapterContentRepository;
     private final CourseChapterRepository courseChapterRepository;
@@ -24,33 +24,10 @@ public class RepositoryServiceImpl implements RepositoryService {
     private final FileRepository fileRepository;
     private final MemberRepository memberRepository;
 
-    @Override public CommonCodeRepository getCommonCodeRepository() {
-        return commonCodeRepository;
-    }
-    @Override public CourseChapterContentRepository getCourseChapterContentRepository() {
-        return courseChapterContentRepository;
-    }
-    @Override public CourseChapterRepository getCourseChapterRepository() {
-        return courseChapterRepository;
-    }
-    @Override public CourseChapterStudentProgressRepository getCourseChapterStudentProgressRepository() {
-        return courseChapterStudentProgressRepository;
-    }
-    @Override public CourseRepository getCourseRepository() {
-        return courseRepository;
-    }
-    @Override public CourseStudentRepository getCourseStudentRepository() {
-        return courseStudentRepository;
-    }
-    @Override public FileRepository getFileRepository() {
-        return fileRepository;
-    }
-    @Override public MemberRepository getMemberRepository() {
-        return memberRepository;
-    }
-
     @Override
     public <E extends EntityMarker, T extends DTOMarker> E convertDTOToEntity(T dto) {
+        if (dto instanceof CommonCodeDivisionDTO)
+            return (E) CommonCodeDivisionMapper.INSTANCE.toEntity((CommonCodeDivisionDTO) dto);
         if (dto instanceof CommonCodeDTO)
             return (E) CommonCodeMapper.INSTANCE.toEntity((CommonCodeDTO) dto);
         if (dto instanceof CourseDTO)
@@ -72,6 +49,8 @@ public class RepositoryServiceImpl implements RepositoryService {
 
     @Override
     public <E extends EntityMarker, T extends DTOMarker> T convertEntityToDTO(E entity) {
+        if (entity instanceof CommonCodeDivision)
+            return (T) CommonCodeDivisionMapper.INSTANCE.toDTO((CommonCodeDivision) entity);
         if (entity instanceof CommonCode)
             return (T) CommonCodeMapper.INSTANCE.toDTO((CommonCode) entity);
         if (entity instanceof Course)

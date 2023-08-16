@@ -10,10 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CommonCodeDTO implements DTOMarker {
-    private String code;
-    private CommonCodeDivisionDTO divisionDTO;
-    private String name;
+public class CommonCodeDivisionDTO implements DTOMarker {
+    private String divisionCode;
+    private String divisionName;
     private Boolean inUse;
     private Integer orderNumber;
     private String note;
