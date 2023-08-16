@@ -6,30 +6,21 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "CommonCode")
+@Table(name = "CommonCodeDivision")
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
-public class CommonCode implements EntityMarker {
-    /** 공통코드 */
-    @Id
-    @Column(length = 10, nullable = false)
-    private String code;
-
+public class CommonCodeDivision implements EntityMarker {
     /** 공통코드 구분 */
-    @ManyToOne
-    @JoinColumn(
-            name = "divisionCode",
-            referencedColumnName = "divisionCode",
-            nullable = false
-    )
-    private CommonCodeDivision division;
+    @Id
+    @Column(length = 3, nullable = false)
+    private String divisionCode;
 
-    /** 코드명 */
+    /** 공통코드 구분명 */
     @Column(length = 100, nullable = false)
-    private String name;
+    private String divisionName;
 
     /** 사용 여부 */
     @Column(nullable = false) // default: true
