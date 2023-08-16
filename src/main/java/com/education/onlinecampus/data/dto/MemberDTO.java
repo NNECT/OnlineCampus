@@ -19,7 +19,7 @@ public class MemberDTO implements DTOMarker {
     private LocalDate birthDate;
     private CommonCodeDTO genderCodeDTO;
     private String email;
-    private String loginId;
+    private String username;
     private String password;
     private LocalDate passwordChangeDate;
     private Boolean passwordChangeRequired;
