@@ -53,8 +53,6 @@ public class CourseController {
         List<Course> courseList = courseService.CourseFindAll();
         model.addAttribute("courseList", courseList);
 
-        List<CourseChapter> courseChapterList = courseService.findCourseChapter(course.getCourseSeq());
-        model.addAttribute("courseChapterList",courseChapterList);
         return "lecture/courseList";
     }
 
