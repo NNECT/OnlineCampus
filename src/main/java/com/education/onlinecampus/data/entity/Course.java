@@ -50,6 +50,8 @@ public class Course implements EntityMarker {
      */
     @PrePersist
     public void prePersist() {
-        this.startDateTime = LocalDateTime.now();
+        if (this.startDateTime == null) {
+            this.startDateTime = LocalDateTime.now();
+        }
     }
 }

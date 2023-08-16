@@ -11,6 +11,7 @@ import com.education.onlinecampus.repository.*;
  * 또한 DTO와 Entity 상호간 변환을 위한 메서드를 정의한다.
  */
 public interface RepositoryService {
+    CommonCodeDivisionRepository getCommonCodeDivisionRepository();
     CommonCodeRepository getCommonCodeRepository();
     CourseChapterContentRepository getCourseChapterContentRepository();
     CourseChapterRepository getCourseChapterRepository();
