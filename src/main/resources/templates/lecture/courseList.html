@@ -45,24 +45,7 @@
                 </tr>
             </table>
             <div th:id="'collapse' + ${course.courseSeq}" class="accordion-collapse collapse accordion-body" th:aria-labelledby="'heading' + ${course.courseSeq}" th:data-bs-parent="'#accordionExample'" style="padding: 0;">
-                <table class="table" th:each="chapter : ${courseChapterList}">
-                    <tr style="text-align: left;">
-                        <th colspan="5" th:text="${chapter.chapterSeq + '차시'}"></th>
-                        <td></td>
-                        <td>
-                            <button type="button" class="startCourse float-right" onclick="startCourse()">강의보기</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" rowspan="2" style="padding: 30px 10px;">
-                            <img src="../../static/img/example.png" width="100%" height="80px">
-                        </td>
-                        <th th:text="'차시번호 : ' + ${chapter.chapterSeq}"></th>
-                        <td>진도율 : 75%</td>
-                        <th>학습시간 : 0시 0분 0초</th>
-                        <td>진도율 : 75%</td>
-                    </tr>
-                </table>
+                <table class="table" id="courseChapterTable"></table>
                 <div>
                     <table class="table">
                         <tr>
@@ -111,7 +94,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     $(document).ready(function() {
-        // 각 행을 클릭할 때의 이벤트 리스너
         $('.view-chapters-btn').click(function() {
             const courseSeq = $(this).attr('id');
 
@@ -125,10 +107,32 @@
                 async: false,
                 contentType: "application/json; charset=utf-8",
                 success: function(response) {
-                    if(response.result==="success"){
+                    if(response.result === "success"){
                         const list = response.list;
+                        const courseChapterTable = document.getElementById("courseChapterTable");
                         for(var i=0; i<list; i++){
+                            let chapterRow = document.createElement("tr");
+                            chapterRow.style.textAlign = "left";
 
+                            let chapterNumberCell = document.createElement("td");
+                            chapterNumberCell.colSpan = 5;
+                            chapterNumberCell.innerHTML = courseSeq+"차시";
+
+                            let emptyCell = document.createElement("td");
+
+                            let viewButtonCell = document.createElement("td");
+                            let viewButton = document.createElement("button");
+                            viewButton.type = "button";
+                            viewButton.className = "startCourse float-right";
+                            viewButton.onclick = openModalAndPlayYoutube;
+                            viewButton.innerHTML = "강의보기";
+                            viewButtonCell.appendChild(viewButton);
+
+                            chapterRow.appendChild(chapterNumberCell);
+                            chapterRow.appendChild(emptyCell);
+                            chapterRow.appendChild(viewButtonCell);
+
+                            courseChapterTable.appendChild(chapterRow);
                         }
                     }
                 }
