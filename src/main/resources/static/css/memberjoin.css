@@ -11,7 +11,7 @@ body, html {
 }
 
 .container{
-    margin: 0;
+    /*margin: 0;*/
     top: 50px;
     left: 50%;
     position: absolute;
@@ -22,7 +22,7 @@ body, html {
     border-top: 10px solid #79a6fe;
     border-bottom: 10px solid #8BD17C;
     width: 400px;
-    height: 600px;
+    height: min-content;
     box-shadow: 0 3px 18px 3px rgb(0,0,0,0.1);
 }
 
@@ -66,6 +66,12 @@ body, html {
 .btn1:hover {
     background: #5d33e6;
 }
+
+div.wds{display: flex; justify-content: space-around;}
+.wds input[type = "date"]{width:85%}
+.wds input[type = "file"]{width:70%;}
+.wds select[name="memberDivisionDTO.code"]{width:76%;}
+.wds select[name="genderCodeDTO.code"]{width:85%;}
 
 [type=checkbox]:checked + span:before {/* <-- style its checked state */
     font-family: FontAwesome, serif;
