@@ -7,11 +7,11 @@
 <body>
     <h2>회원가입</h2>
     <form action="/Member_signup" method="Post">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <!--<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">-->
         이름: <input type="text" name="nameKor"><br>
         <!--생일: <input type="datetime-local" name="birthDate"><br>-->
         이메일: <input type="email" name="email"><br>
-        아이디: <input type="text" name="loginId"><br>
+        아이디: <input type="text" name="username"><br>
         비밀번호: <input type="password" name="password"><br>
         <input type="submit" value="가입">
     </form>
