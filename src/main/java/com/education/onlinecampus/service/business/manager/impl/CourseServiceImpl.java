@@ -7,6 +7,8 @@ import com.education.onlinecampus.service.common.RepositoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CourseServiceImpl implements CourseService {
@@ -33,6 +35,13 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public void CourseChapterDelete(CourseChapter courseChapter){repositoryService.getCourseChapterRepository().delete(courseChapter);}
 
+    @Override
+    public List<Course> CourseFindAll(){ return repositoryService.getCourseRepository().findAll();}
 
-    
+    @Override
+    public List<CourseChapter> findCourseChapter(Long CourseSeq) {
+        return repositoryService.getCourseChapterRepository().findByCourseChapterCompositeKeyCourseSeq(CourseSeq);
+    }
+
+
 }

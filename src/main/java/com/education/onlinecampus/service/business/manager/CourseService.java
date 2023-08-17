@@ -3,6 +3,8 @@ package com.education.onlinecampus.service.business.manager;
 import com.education.onlinecampus.data.entity.Course;
 import com.education.onlinecampus.data.entity.CourseChapter;
 
+import java.util.List;
+
 public interface CourseService {
     void CourseSave(Course course);
 
@@ -10,7 +12,11 @@ public interface CourseService {
 
     Course CourseFind(Long CourseSeq);
 
+    List<Course> CourseFindAll();
+
     void CourseChapterSave(CourseChapter courseChapter);
 
     void CourseChapterDelete(CourseChapter courseChapter);
+
+    List<CourseChapter> findCourseChapter(Long CourseSeq);
 }
