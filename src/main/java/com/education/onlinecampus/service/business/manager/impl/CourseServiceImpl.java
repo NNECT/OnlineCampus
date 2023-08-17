@@ -2,8 +2,6 @@ package com.education.onlinecampus.service.business.manager.impl;
 
 import com.education.onlinecampus.data.entity.Course;
 import com.education.onlinecampus.data.entity.CourseChapter;
-import com.education.onlinecampus.repository.manager.CourseChapterRepository;
-import com.education.onlinecampus.repository.manager.CourseRepository;
 import com.education.onlinecampus.service.business.manager.CourseService;
 import com.education.onlinecampus.service.common.RepositoryService;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +40,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<CourseChapter> findCourseChapter(Long CourseSeq) {
-        return repositoryService.getCourseChapterRepository().findByCourseCourseSeq(CourseSeq);
+        return repositoryService.getCourseChapterRepository().findByCourseChapterCompositeKeyCourseSeq(CourseSeq);
     }
 
 

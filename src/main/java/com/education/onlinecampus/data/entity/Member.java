@@ -79,6 +79,7 @@ public class Member implements EntityMarker {
     @Column(nullable = false) // default: now()
     private LocalDate registerDate;
 
+
     /** 사진 파일 번호 */
     @ManyToOne
     @JoinColumn(
