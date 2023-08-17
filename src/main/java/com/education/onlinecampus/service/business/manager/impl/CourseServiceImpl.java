@@ -44,5 +44,5 @@ public class CourseServiceImpl implements CourseService {
         return repositoryService.getCourseChapterRepository().findByCourse(course);
     }
 
-
+    
 }

@@ -1,5 +1,7 @@
 package com.education.onlinecampus.data.dto;
 
+import com.education.onlinecampus.data.adapter.AdapterDTOToEntity;
+import com.education.onlinecampus.data.entity.CourseChapterContent;
 import com.education.onlinecampus.data.marker.DTOMarker;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CourseChapterContentDTO implements DTOMarker {
+public class CourseChapterContentDTO implements DTOMarker<CourseChapterContent> {
     private Long contentSeq;
     private String contentName;
     private String contentBrief;
@@ -19,4 +21,9 @@ public class CourseChapterContentDTO implements DTOMarker {
     private String videoId;
     private CommonCodeDTO statusCodeDTO;
     private Integer runningTime;
+
+    @Override
+    public CourseChapterContent toEntity() {
+        return AdapterDTOToEntity.convert(this);
+    }
 }

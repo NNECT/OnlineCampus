@@ -4,41 +4,30 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
+
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig{
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.csrf().disable()
+                .authorizeRequests() //인증 인가가 필요한 URL 지정
+                .antMatchers("/").authenticated() //해당 url에 접근하기 위해서는 authenticated(인증,인가)가 필요함
+                .anyRequest().permitAll() //anyRequest: 그외의 모든 URL , permitAll 인증,인가가 필요없이 통과
+                .and()
+                .formLogin()//Form Login 방식 적용
+                .loginPage("/Member_login") //로그인 페이지
+                .defaultSuccessUrl("/")// 로그인 성공시 페이지
+                .failureUrl("/Member_login_fail")//로그인 실패시 페이지
+                .and()
+                .logout()//로그아웃
+                .logoutUrl("/Member_logout")//로그아웃
+                .invalidateHttpSession(true).deleteCookies("JSESSIONID");
+    }
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        // 권한에 따라 허용하는 url 설정
-        // /login, /signup 페이지는 모두 허용, 다른 페이지는 인증된 사용자만 허용
-        http
-                .authorizeRequests()
-                .antMatchers("/Member_login", "/Member_signup", "/Course", "/Course_findAll").permitAll()
-                .anyRequest().authenticated();
-        // login 설정
-        http
-                .formLogin()
-                .loginPage("/Member_login")    // GET 요청 (login form을 보여줌)
-                .loginProcessingUrl("/Member_login") // POST 요청 (login 창에 입력한 데이터를 처리)
-                .usernameParameter("username")	// login에 필요한 id 값을 email로 설정 (default는 username)
-                .passwordParameter("password")	// login에 필요한 password 값을 password(default)로 설정
-                .defaultSuccessUrl("/Member_login") // login에 성공하면 /로 redirect*/
-                .permitAll();
-        // logout 설정
-        http
-                .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/");	// logout에 성공하면 /로 redirect
-        return http.build();    }
-    @Bean
-    public PasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-
 }
