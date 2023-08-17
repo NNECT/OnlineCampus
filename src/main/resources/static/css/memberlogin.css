@@ -1,5 +1,4 @@
 body, html {
-    /*background-color: #1d243d;*/
     padding: 0;
     margin: 0;
 }
@@ -17,7 +16,6 @@ body, html {
     position: absolute;
     text-align: center;
     transform: translateX(-50%);
-    /*background-color: rgb( 33, 41, 66 );*/
     border-radius: 9px;
     border-top: 10px solid #79a6fe;
     border-bottom: 10px solid #8BD17C;
