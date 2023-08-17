@@ -1,12 +1,13 @@
 package com.education.onlinecampus.service.business.manager;
 
+import com.education.onlinecampus.data.dto.CourseDTO;
 import com.education.onlinecampus.data.entity.Course;
 import com.education.onlinecampus.data.entity.CourseChapter;
 
 import java.util.List;
 
 public interface CourseService {
-    void CourseSave(Course course);
+    void CourseSave(CourseDTO course);
 
     void CourseDelete(Course course);
 

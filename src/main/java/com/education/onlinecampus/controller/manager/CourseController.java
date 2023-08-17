@@ -1,5 +1,8 @@
 package com.education.onlinecampus.controller.manager;
 
+import com.education.onlinecampus.data.dto.CommonCodeDTO;
+import com.education.onlinecampus.data.dto.CourseDTO;
+import com.education.onlinecampus.data.entity.CommonCode;
 import com.education.onlinecampus.data.entity.Course;
 import com.education.onlinecampus.data.entity.CourseChapter;
 import com.education.onlinecampus.service.business.manager.CourseService;
@@ -10,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -23,7 +28,7 @@ public class CourseController {
         return "manager/Course";}
 
     @PostMapping("/Course_save")
-    public String CourseSave(@ModelAttribute Course course){
+    public String CourseSave(@ModelAttribute CourseDTO course){
         courseService.CourseSave(course);
         return "manager/manager_main";
     }
