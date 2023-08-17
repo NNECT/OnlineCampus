@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequiredArgsConstructor
@@ -39,7 +40,7 @@ public class MemberController {
         return "/lecture/MemberJoin";
     }
     @PostMapping("/Member_signup")
-    public String PostMemberSignup(@ModelAttribute MemberDTO member){
+    public String PostMemberSignup(@ModelAttribute MemberDTO member, @RequestParam("profileImage") MultipartFile profileImage){
         member.setPassword(passwordEncoder.encode(member.getPassword()));
         member.setMemberDivisionDTO(repositoryService.convertEntityToDTO(repositoryService.getCommonCodeRepository().findById("M002").orElseThrow()));
         member.setGenderCodeDTO(repositoryService.convertEntityToDTO(repositoryService.getCommonCodeRepository().findById("G001").orElseThrow()));
