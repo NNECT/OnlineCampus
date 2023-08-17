@@ -17,7 +17,6 @@ public class MemberServiceImpl implements MemberService {
     public void MemberSave(MemberDTO memberDTO){
         repositoryService.getMemberRepository().save(repositoryService.convertDTOToEntity(memberDTO));
     }
-
     @Override
     public Member findByUserName(String username){
         Member byUsername = repositoryService.getMemberRepository().findByUsername(username);
