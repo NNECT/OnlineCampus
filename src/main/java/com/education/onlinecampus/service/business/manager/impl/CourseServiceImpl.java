@@ -1,5 +1,6 @@
 package com.education.onlinecampus.service.business.manager.impl;
 
+import com.education.onlinecampus.data.dto.CourseDTO;
 import com.education.onlinecampus.data.entity.Course;
 import com.education.onlinecampus.data.entity.CourseChapter;
 import com.education.onlinecampus.service.business.manager.CourseService;
@@ -16,8 +17,8 @@ public class CourseServiceImpl implements CourseService {
     private final RepositoryService repositoryService;
 
     @Override
-    public void CourseSave(Course course){
-        repositoryService.getCourseRepository().save(course);
+    public void CourseSave(CourseDTO course){
+        repositoryService.getCourseRepository().save(course.toEntity());
     }
 
     @Override
