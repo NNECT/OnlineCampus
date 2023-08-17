@@ -93,50 +93,48 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    $(document).ready(function() {
-        $('.view-chapters-btn').click(function() {
-            const courseSeq = $(this).attr('id');
+    document.querySelector(".view-chapters-btn").addEventListener("click", function () {
+        const courseSeq = $(this).attr('id');
 
-            $.ajax({
-                type: 'POST',
-                url: "/ajax/getCourseChapter",
-                data: JSON.stringify({
-                    "courseSeq": courseSeq
-                }),
-                dataType: "json",
-                async: false,
-                contentType: "application/json; charset=utf-8",
-                success: function(response) {
-                    if(response.result === "success"){
-                        const list = response.list;
-                        const courseChapterTable = document.getElementById("courseChapterTable");
-                        for(var i=0; i<list; i++){
-                            let chapterRow = document.createElement("tr");
-                            chapterRow.style.textAlign = "left";
+        $.ajax({
+            type: 'GET',
+            url: "/ajax/getCourseChapter",
+            data: JSON.stringify({
+                "courseSeq": courseSeq
+            }),
+            dataType: "json",
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            success: function(response) {
+                if(response.result === "success"){
+                    const length = response.length;
+                    const courseChapterTable = document.getElementById("courseChapterTable");
+                    for(var i=0; i<length; i++){
+                        let chapterRow = document.createElement("tr");
+                        chapterRow.style.textAlign = "left";
 
-                            let chapterNumberCell = document.createElement("td");
-                            chapterNumberCell.colSpan = 5;
-                            chapterNumberCell.innerHTML = courseSeq+"차시";
+                        let chapterNumberCell = document.createElement("td");
+                        chapterNumberCell.colSpan = 5;
+                        chapterNumberCell.innerHTML = courseSeq+"차시";
 
-                            let emptyCell = document.createElement("td");
+                        let emptyCell = document.createElement("td");
 
-                            let viewButtonCell = document.createElement("td");
-                            let viewButton = document.createElement("button");
-                            viewButton.type = "button";
-                            viewButton.className = "startCourse float-right";
-                            viewButton.onclick = openModalAndPlayYoutube;
-                            viewButton.innerHTML = "강의보기";
-                            viewButtonCell.appendChild(viewButton);
+                        let viewButtonCell = document.createElement("td");
+                        let viewButton = document.createElement("button");
+                        viewButton.type = "button";
+                        viewButton.className = "startCourse float-right";
+                        viewButton.onclick = openModalAndPlayYoutube;
+                        viewButton.innerHTML = "강의보기";
+                        viewButtonCell.appendChild(viewButton);
 
-                            chapterRow.appendChild(chapterNumberCell);
-                            chapterRow.appendChild(emptyCell);
-                            chapterRow.appendChild(viewButtonCell);
+                        chapterRow.appendChild(chapterNumberCell);
+                        chapterRow.appendChild(emptyCell);
+                        chapterRow.appendChild(viewButtonCell);
 
-                            courseChapterTable.appendChild(chapterRow);
-                        }
+                        courseChapterTable.appendChild(chapterRow);
                     }
                 }
-            });
+            }
         });
     });
 

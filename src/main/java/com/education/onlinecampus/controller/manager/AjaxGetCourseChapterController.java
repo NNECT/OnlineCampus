@@ -4,21 +4,22 @@ import com.education.onlinecampus.data.entity.CourseChapter;
 import com.education.onlinecampus.service.business.manager.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class AjaxGetCourseChapterController {
 
     private final CourseService courseService;
 
-    @PostMapping ("/ajax/getCourseChapter")
+    @GetMapping("/ajax/getCourseChapter")
     public ResponseEntity<Map<String,Object>> getCourseChapter(@RequestBody Map<String,String> map){
 
         System.out.println("1111111111111111111111");
