@@ -1,7 +1,8 @@
 package com.education.onlinecampus.service.business.lecture.impl;
 
 import com.education.onlinecampus.data.entity.Member;
-import com.education.onlinecampus.repository.lecture.MemberRepository;
+import com.education.onlinecampus.repository.MemberRepository;
+/*import com.education.onlinecampus.repository.lecture.lectureMemberRepository;*/
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
