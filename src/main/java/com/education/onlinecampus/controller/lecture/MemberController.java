@@ -51,13 +51,25 @@ public class MemberController {
     public String Main(Model model){
         // 인증 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         if (authentication != null && authentication.isAuthenticated()) {
             String username = authentication.getName();
             Member loggedInMember = memberService.findByUserName(username);
-            if (loggedInMember != null) {
-                // 회원 정보를 모델에 추가하여 Thymeleaf 템플릿에서 사용 가능하게 함
-                model.addAttribute("loggedInMember", loggedInMember);
+            switch (loggedInMember.getMemberDivision().getCode()) {
+                case "M001": {
+                    model.addAttribute("loggedInMember", loggedInMember);
+                    return "/manager/manager_main";
+                }
+                case "M002": {
+                    model.addAttribute("loggedInMember", loggedInMember);
+                    return "/lecture/MemberMain";
+                }
+                case "M003": {
+                    model.addAttribute("loggedInMember", loggedInMember);
+                    return "/lecture/MemberMain";
+                }
+                default: {
+                    break;
+                }
             }
         }
         return "/lecture/MemberMain";
