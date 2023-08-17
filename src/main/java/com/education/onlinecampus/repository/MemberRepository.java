@@ -11,4 +11,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findByMemberDivision(CommonCode memberDivision);
     List<Member> findByGenderCode(CommonCode genderCode);
     List<Member> findByPictureFile(File pictureFile);
+    Member findByUsername(String username);
 }

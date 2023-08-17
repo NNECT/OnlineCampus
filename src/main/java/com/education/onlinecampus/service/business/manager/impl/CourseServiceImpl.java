@@ -40,8 +40,9 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<CourseChapter> findCourseChapter(Long CourseSeq) {
-        return repositoryService.getCourseChapterRepository().findByCourseChapterCompositeKeyCourseSeq(CourseSeq);
+        Course course = repositoryService.getCourseRepository().findByCourseSeq(CourseSeq);
+        return repositoryService.getCourseChapterRepository().findByCourse(course);
     }
 
-
+    
 }
