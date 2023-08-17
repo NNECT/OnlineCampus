@@ -1,5 +1,7 @@
 package com.education.onlinecampus.data.entity;
 
+import com.education.onlinecampus.data.adapter.AdapterEntityToDTO;
+import com.education.onlinecampus.data.dto.CourseChapterStudentProgressDTO;
 import com.education.onlinecampus.data.marker.EntityMarker;
 import lombok.*;
 
@@ -13,7 +15,7 @@ import java.io.Serializable;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
-public class CourseChapterStudentProgress implements EntityMarker {
+public class CourseChapterStudentProgress implements EntityMarker<CourseChapterStudentProgressDTO> {
     /** 챕터 수강생 진도 복합키 */
     @EmbeddedId
     private CourseChapterStudentProgressCompositeKey courseChapterStudentProgressCompositeKey;
@@ -88,5 +90,10 @@ public class CourseChapterStudentProgress implements EntityMarker {
     @PrePersist
     public void prePersist() {
         this.maxPosition = 0;
+    }
+
+    @Override
+    public CourseChapterStudentProgressDTO toDTO() {
+        return AdapterEntityToDTO.convert(this);
     }
 }

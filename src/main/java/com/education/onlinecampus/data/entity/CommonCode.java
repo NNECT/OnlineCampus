@@ -1,5 +1,7 @@
 package com.education.onlinecampus.data.entity;
 
+import com.education.onlinecampus.data.adapter.AdapterEntityToDTO;
+import com.education.onlinecampus.data.dto.CommonCodeDTO;
 import com.education.onlinecampus.data.marker.EntityMarker;
 import lombok.*;
 
@@ -12,7 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
-public class CommonCode implements EntityMarker {
+public class CommonCode implements EntityMarker<CommonCodeDTO> {
     /** 공통코드 */
     @Id
     @Column(length = 10, nullable = false)
@@ -54,5 +56,10 @@ public class CommonCode implements EntityMarker {
         if (this.orderNumber == null) {
             this.orderNumber = 0;
         }
+    }
+
+    @Override
+    public CommonCodeDTO toDTO() {
+        return AdapterEntityToDTO.convert(this);
     }
 }

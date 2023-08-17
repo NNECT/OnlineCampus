@@ -1,5 +1,7 @@
 package com.education.onlinecampus.data.entity;
 
+import com.education.onlinecampus.data.adapter.AdapterEntityToDTO;
+import com.education.onlinecampus.data.dto.CourseChapterDTO;
 import com.education.onlinecampus.data.marker.EntityMarker;
 import lombok.*;
 import org.springframework.stereotype.Component;
@@ -17,7 +19,7 @@ import java.io.Serializable;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
-public class CourseChapter implements EntityMarker {
+public class CourseChapter implements EntityMarker<CourseChapterDTO> {
     /** 강좌 챕터 복합키 */
     @EmbeddedId
     private CourseChapterCompositeKey courseChapterCompositeKey;
@@ -108,5 +110,10 @@ public class CourseChapter implements EntityMarker {
 
             courseChapter.getCourseChapterCompositeKey().setChapterSeq(maxChapterSeq + 1);
         }
+    }
+
+    @Override
+    public CourseChapterDTO toDTO() {
+        return AdapterEntityToDTO.convert(this);
     }
 }

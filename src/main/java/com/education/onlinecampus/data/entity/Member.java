@@ -1,16 +1,14 @@
 package com.education.onlinecampus.data.entity;
 
+import com.education.onlinecampus.data.adapter.AdapterEntityToDTO;
+import com.education.onlinecampus.data.dto.MemberDTO;
 import com.education.onlinecampus.data.marker.EntityMarker;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Collections;
 
 @Entity
 @Table(name = "Member")
@@ -19,7 +17,7 @@ import java.util.Collections;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
-public class Member implements EntityMarker {
+public class Member implements EntityMarker<MemberDTO> {
     /** 회원 번호 */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,7 +81,6 @@ public class Member implements EntityMarker {
     @Column(nullable = false) // default: now()
     private LocalDate registerDate;
 
-
     /** 사진 파일 번호 */
     @ManyToOne
     @JoinColumn(
@@ -112,5 +109,10 @@ public class Member implements EntityMarker {
         if (this.registerDate == null) {
             this.registerDate = LocalDate.now();
         }
+    }
+
+    @Override
+    public MemberDTO toDTO() {
+        return AdapterEntityToDTO.convert(this);
     }
 }
