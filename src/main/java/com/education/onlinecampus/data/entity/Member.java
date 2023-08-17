@@ -1,5 +1,7 @@
 package com.education.onlinecampus.data.entity;
 
+import com.education.onlinecampus.data.adapter.AdapterEntityToDTO;
+import com.education.onlinecampus.data.dto.MemberDTO;
 import com.education.onlinecampus.data.marker.EntityMarker;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,7 +17,7 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
-public class Member implements EntityMarker {
+public class Member implements EntityMarker<MemberDTO> {
     /** 회원 번호 */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -107,5 +109,10 @@ public class Member implements EntityMarker {
         if (this.registerDate == null) {
             this.registerDate = LocalDate.now();
         }
+    }
+
+    @Override
+    public MemberDTO toDTO() {
+        return AdapterEntityToDTO.convert(this);
     }
 }
