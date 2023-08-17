@@ -1,5 +1,7 @@
 package com.education.onlinecampus.data.dto;
 
+import com.education.onlinecampus.data.adapter.AdapterDTOToEntity;
+import com.education.onlinecampus.data.entity.Member;
 import com.education.onlinecampus.data.marker.DTOMarker;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MemberDTO implements DTOMarker {
+public class MemberDTO implements DTOMarker<Member> {
     private Long memberSeq;
     private CommonCodeDTO memberDivisionDTO;
     private String nameKor;
@@ -27,4 +29,9 @@ public class MemberDTO implements DTOMarker {
     private LocalDate lastLoginDate;
     private LocalDate registerDate;
     private FileDTO pictureFileDTO;
+
+    @Override
+    public Member toEntity() {
+        return AdapterDTOToEntity.convert(this);
+    }
 }

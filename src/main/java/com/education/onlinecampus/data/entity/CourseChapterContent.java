@@ -1,5 +1,7 @@
 package com.education.onlinecampus.data.entity;
 
+import com.education.onlinecampus.data.adapter.AdapterEntityToDTO;
+import com.education.onlinecampus.data.dto.CourseChapterContentDTO;
 import com.education.onlinecampus.data.marker.EntityMarker;
 import lombok.*;
 
@@ -12,7 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
-public class CourseChapterContent implements EntityMarker {
+public class CourseChapterContent implements EntityMarker<CourseChapterContentDTO> {
     /** 콘텐츠 번호 */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,4 +62,9 @@ public class CourseChapterContent implements EntityMarker {
     /** 동영상 길이 (초) */
     @Column
     private Integer runningTime;
+
+    @Override
+    public CourseChapterContentDTO toDTO() {
+        return AdapterEntityToDTO.convert(this);
+    }
 }

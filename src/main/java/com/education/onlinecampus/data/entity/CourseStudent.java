@@ -1,5 +1,7 @@
 package com.education.onlinecampus.data.entity;
 
+import com.education.onlinecampus.data.adapter.AdapterEntityToDTO;
+import com.education.onlinecampus.data.dto.CourseStudentDTO;
 import com.education.onlinecampus.data.marker.EntityMarker;
 import lombok.*;
 
@@ -13,7 +15,7 @@ import java.io.Serializable;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
-public class CourseStudent implements EntityMarker {
+public class CourseStudent implements EntityMarker<CourseStudentDTO> {
     /** 강좌 수강생 복합키 */
     @EmbeddedId
     private CourseStudentCompositeKey courseStudentCompositeKey;
@@ -49,4 +51,9 @@ public class CourseStudent implements EntityMarker {
             insertable = false, updatable = false, nullable = false
     )
     private Member student;
+
+    @Override
+    public CourseStudentDTO toDTO() {
+        return AdapterEntityToDTO.convert(this);
+    }
 }
