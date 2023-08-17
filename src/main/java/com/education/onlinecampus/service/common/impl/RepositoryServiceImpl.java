@@ -1,20 +1,22 @@
 package com.education.onlinecampus.service.common.impl;
 
+import com.education.onlinecampus.data.adapter.AdapterEntityToDTO;
+import com.education.onlinecampus.data.adapter.AdapterDTOToEntity;
 import com.education.onlinecampus.data.dto.*;
 import com.education.onlinecampus.data.entity.*;
-import com.education.onlinecampus.data.mapper.*;
-import com.education.onlinecampus.data.marker.*;
+import com.education.onlinecampus.data.marker.DTOMarker;
+import com.education.onlinecampus.data.marker.EntityMarker;
 import com.education.onlinecampus.repository.*;
-import com.education.onlinecampus.repository.MemberRepository;
-import com.education.onlinecampus.repository.CourseChapterRepository;
-import com.education.onlinecampus.repository.CourseRepository;
 import com.education.onlinecampus.service.common.RepositoryService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@Getter
 @RequiredArgsConstructor
 public class RepositoryServiceImpl implements RepositoryService {
+    private final CommonCodeDivisionRepository commonCodeDivisionRepository;
     private final CommonCodeRepository commonCodeRepository;
     private final CourseChapterContentRepository courseChapterContentRepository;
     private final CourseChapterRepository courseChapterRepository;
@@ -24,70 +26,49 @@ public class RepositoryServiceImpl implements RepositoryService {
     private final FileRepository fileRepository;
     private final MemberRepository memberRepository;
 
-    @Override public CommonCodeRepository getCommonCodeRepository() {
-        return commonCodeRepository;
-    }
-    @Override public CourseChapterContentRepository getCourseChapterContentRepository() {
-        return courseChapterContentRepository;
-    }
-    @Override public CourseChapterRepository getCourseChapterRepository() {
-        return courseChapterRepository;
-    }
-    @Override public CourseChapterStudentProgressRepository getCourseChapterStudentProgressRepository() {
-        return courseChapterStudentProgressRepository;
-    }
-    @Override public CourseRepository getCourseRepository() {
-        return courseRepository;
-    }
-    @Override public CourseStudentRepository getCourseStudentRepository() {
-        return courseStudentRepository;
-    }
-    @Override public FileRepository getFileRepository() {
-        return fileRepository;
-    }
-    @Override public MemberRepository getMemberRepository() {
-        return memberRepository;
-    }
-
     @Override
     public <E extends EntityMarker, T extends DTOMarker> E convertDTOToEntity(T dto) {
+        if (dto instanceof CommonCodeDivisionDTO)
+            return (E) AdapterDTOToEntity.convert((CommonCodeDivisionDTO) dto);
         if (dto instanceof CommonCodeDTO)
-            return (E) CommonCodeMapper.INSTANCE.toEntity((CommonCodeDTO) dto);
+            return (E) AdapterDTOToEntity.convert((CommonCodeDTO) dto);
         if (dto instanceof CourseDTO)
-            return (E) CourseMapper.INSTANCE.toEntity((CourseDTO) dto);
+            return (E) AdapterDTOToEntity.convert((CourseDTO) dto);
         if (dto instanceof CourseChapterDTO)
-            return (E) CourseChapterMapper.INSTANCE.toEntity((CourseChapterDTO) dto);
+            return (E) AdapterDTOToEntity.convert((CourseChapterDTO) dto);
         if (dto instanceof CourseChapterContentDTO)
-            return (E) CourseChapterContentMapper.INSTANCE.toEntity((CourseChapterContentDTO) dto);
+            return (E) AdapterDTOToEntity.convert((CourseChapterContentDTO) dto);
         if (dto instanceof CourseChapterStudentProgressDTO)
-            return (E) CourseChapterStudentProgressMapper.INSTANCE.toEntity((CourseChapterStudentProgressDTO) dto);
+            return (E) AdapterDTOToEntity.convert((CourseChapterStudentProgressDTO) dto);
         if (dto instanceof CourseStudentDTO)
-            return (E) CourseStudentMapper.INSTANCE.toEntity((CourseStudentDTO) dto);
+            return (E) AdapterDTOToEntity.convert((CourseStudentDTO) dto);
         if (dto instanceof FileDTO)
-            return (E) FileMapper.INSTANCE.toEntity((FileDTO) dto);
+            return (E) AdapterDTOToEntity.convert((FileDTO) dto);
         if (dto instanceof MemberDTO)
-            return (E) MemberMapper.INSTANCE.toEntity((MemberDTO) dto);
+            return (E) AdapterDTOToEntity.convert((MemberDTO) dto);
         return null;
     }
 
     @Override
     public <E extends EntityMarker, T extends DTOMarker> T convertEntityToDTO(E entity) {
+        if (entity instanceof CommonCodeDivision)
+            return (T) AdapterEntityToDTO.convert((CommonCodeDivision) entity);
         if (entity instanceof CommonCode)
-            return (T) CommonCodeMapper.INSTANCE.toDTO((CommonCode) entity);
+            return (T) AdapterEntityToDTO.convert((CommonCode) entity);
         if (entity instanceof Course)
-            return (T) CourseMapper.INSTANCE.toDTO((Course) entity);
+            return (T) AdapterEntityToDTO.convert((Course) entity);
         if (entity instanceof CourseChapter)
-            return (T) CourseChapterMapper.INSTANCE.toDTO((CourseChapter) entity);
+            return (T) AdapterEntityToDTO.convert((CourseChapter) entity);
         if (entity instanceof CourseChapterContent)
-            return (T) CourseChapterContentMapper.INSTANCE.toDTO((CourseChapterContent) entity);
+            return (T) AdapterEntityToDTO.convert((CourseChapterContent) entity);
         if (entity instanceof CourseChapterStudentProgress)
-            return (T) CourseChapterStudentProgressMapper.INSTANCE.toDTO((CourseChapterStudentProgress) entity);
+            return (T) AdapterEntityToDTO.convert((CourseChapterStudentProgress) entity);
         if (entity instanceof CourseStudent)
-            return (T) CourseStudentMapper.INSTANCE.toDTO((CourseStudent) entity);
+            return (T) AdapterEntityToDTO.convert((CourseStudent) entity);
         if (entity instanceof File)
-            return (T) FileMapper.INSTANCE.toDTO((File) entity);
+            return (T) AdapterEntityToDTO.convert((File) entity);
         if (entity instanceof Member)
-            return (T) MemberMapper.INSTANCE.toDTO((Member) entity);
+            return (T) AdapterEntityToDTO.convert((Member) entity);
         return null;
     }
 }

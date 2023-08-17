@@ -1,5 +1,7 @@
 package com.education.onlinecampus.data.entity;
 
+import com.education.onlinecampus.data.adapter.AdapterEntityToDTO;
+import com.education.onlinecampus.data.dto.FileDTO;
 import com.education.onlinecampus.data.marker.EntityMarker;
 import lombok.*;
 
@@ -12,7 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
-public class File implements EntityMarker {
+public class File implements EntityMarker<FileDTO> {
     /** 파일 번호 */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,4 +36,9 @@ public class File implements EntityMarker {
     /** 파일 GUID */
     @Column(length = 40)
     private String fileGuid;
+
+    @Override
+    public FileDTO toDTO() {
+        return AdapterEntityToDTO.convert(this);
+    }
 }

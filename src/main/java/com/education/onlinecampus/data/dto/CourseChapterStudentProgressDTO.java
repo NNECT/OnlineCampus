@@ -1,5 +1,7 @@
 package com.education.onlinecampus.data.dto;
 
+import com.education.onlinecampus.data.adapter.AdapterDTOToEntity;
+import com.education.onlinecampus.data.entity.CourseChapterStudentProgress;
 import com.education.onlinecampus.data.marker.DTOMarker;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,10 +12,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CourseChapterStudentProgressDTO implements DTOMarker {
+public class CourseChapterStudentProgressDTO implements DTOMarker<CourseChapterStudentProgress> {
     private CourseDTO courseDTO;
     private CourseChapterDTO chapterDTO;
     private CourseStudentDTO studentDTO;
     private Integer finalPosition;
     private Integer maxPosition;
+
+    @Override
+    public CourseChapterStudentProgress toEntity() {
+        return AdapterDTOToEntity.convert(this);
+    }
 }

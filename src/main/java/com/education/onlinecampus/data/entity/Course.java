@@ -1,5 +1,7 @@
 package com.education.onlinecampus.data.entity;
 
+import com.education.onlinecampus.data.adapter.AdapterEntityToDTO;
+import com.education.onlinecampus.data.dto.CourseDTO;
 import com.education.onlinecampus.data.marker.EntityMarker;
 import lombok.*;
 
@@ -13,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
-public class Course implements EntityMarker {
+public class Course implements EntityMarker<CourseDTO> {
     /** 강좌 번호 */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,6 +52,13 @@ public class Course implements EntityMarker {
      */
     @PrePersist
     public void prePersist() {
-        this.startDateTime = LocalDateTime.now();
+        if (this.startDateTime == null) {
+            this.startDateTime = LocalDateTime.now();
+        }
+    }
+
+    @Override
+    public CourseDTO toDTO() {
+        return AdapterEntityToDTO.convert(this);
     }
 }

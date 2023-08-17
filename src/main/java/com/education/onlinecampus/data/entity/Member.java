@@ -1,5 +1,7 @@
 package com.education.onlinecampus.data.entity;
 
+import com.education.onlinecampus.data.adapter.AdapterEntityToDTO;
+import com.education.onlinecampus.data.dto.MemberDTO;
 import com.education.onlinecampus.data.marker.EntityMarker;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,7 +17,7 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
-public class Member implements EntityMarker {
+public class Member implements EntityMarker<MemberDTO> {
     /** 회원 번호 */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,7 +55,7 @@ public class Member implements EntityMarker {
 
     /** 로그인 아이디 */
     @Column(length = 40, nullable = false, unique = true)
-    private String loginId;
+    private String username;
 
     /** 비밀번호 */
     @Column(length = 150, nullable = false)
@@ -92,10 +94,25 @@ public class Member implements EntityMarker {
      */
     @PrePersist
     public void prePersist() {
-        this.passwordChangeDate = LocalDate.now();
-        this.passwordChangeRequired = false;
-        this.passwordErrorCount = 0;
-        this.lastLoginDate = LocalDate.now();
-        this.registerDate = LocalDate.now();
+        if (this.passwordChangeDate == null) {
+            this.passwordChangeDate = LocalDate.now();
+        }
+        if (this.passwordChangeRequired == null) {
+            this.passwordChangeRequired = false;
+        }
+        if (this.passwordErrorCount == null) {
+            this.passwordErrorCount = 0;
+        }
+        if (this.lastLoginDate == null) {
+            this.lastLoginDate = LocalDate.now();
+        }
+        if (this.registerDate == null) {
+            this.registerDate = LocalDate.now();
+        }
+    }
+
+    @Override
+    public MemberDTO toDTO() {
+        return AdapterEntityToDTO.convert(this);
     }
 }
