@@ -6,6 +6,7 @@
 
 package com.education.onlinecampus;
 
+import com.education.onlinecampus.config.Constant;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
@@ -34,9 +35,7 @@ public class ApiExample implements ApplicationListener<ContextRefreshedEvent> {
     private final GoogleClientSecrets googleClientSecrets;
     private final GoogleAuthorizationCodeFlow googleAuthorizationCodeFlow;
 
-    private static final String APPLICATION_NAME = "OnlineCampus";
     private static final GsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-    private static final String REDIRECT_URI = "http://localhost:8080/oauth2callback";
 
     private String readRefreshToken() throws IOException {
         Resource resource = resourceLoader.getResource("classpath:token");
@@ -67,7 +66,7 @@ public class ApiExample implements ApplicationListener<ContextRefreshedEvent> {
         OAuth2Credentials credentials = authorize();
         HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
         return new YouTube.Builder(httpTransport, JSON_FACTORY, new HttpCredentialsAdapter(credentials))
-                .setApplicationName(APPLICATION_NAME)
+                .setApplicationName(Constant.APPLICATION_NAME)
                 .build();
     }
 
@@ -86,7 +85,7 @@ public class ApiExample implements ApplicationListener<ContextRefreshedEvent> {
         } catch (IllegalStateException e) {
             // Redirect the user to the OAuth2 authorization page
             String url = googleAuthorizationCodeFlow.newAuthorizationUrl()
-                    .setRedirectUri(REDIRECT_URI)
+                    .setRedirectUri(Constant.OAUTH_REDIRECT_URI)
                     .build();
 
             System.out.println("Please authorize the application by visiting the following URL: " + url);
