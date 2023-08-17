@@ -10,10 +10,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http.csrf().disable()
                 .authorizeRequests() //인증 인가가 필요한 URL 지정
                 .antMatchers("/").authenticated() //해당 url에 접근하기 위해서는 authenticated(인증,인가)가 필요함

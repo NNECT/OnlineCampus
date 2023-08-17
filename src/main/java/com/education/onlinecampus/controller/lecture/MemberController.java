@@ -42,8 +42,6 @@ public class MemberController {
     @PostMapping("/Member_signup")
     public String PostMemberSignup(@ModelAttribute MemberDTO member, @RequestParam("profileImage") MultipartFile profileImage){
         member.setPassword(passwordEncoder.encode(member.getPassword()));
-        member.setMemberDivisionDTO(repositoryService.convertEntityToDTO(repositoryService.getCommonCodeRepository().findById("M002").orElseThrow()));
-        member.setGenderCodeDTO(repositoryService.convertEntityToDTO(repositoryService.getCommonCodeRepository().findById("G001").orElseThrow()));
         memberService.MemberSave(member);
         return "lecture/MemberLogin";
     }
