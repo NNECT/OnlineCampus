@@ -5,8 +5,12 @@
     <title>Title</title>
 </head>
 <body>
-회원메인페이지입니다.
-<a href="/Member_login">로그인</a>
-<a href="/Member_signup">회원가입</a>
+    <h1>회원메인페이지입니다.</h1>
+    <p th:text="${loggedInMember.nameKor} + ' 님 환영합니다.'"></p>
+    <!-- 다른 회원 정보도 필요에 따라 표시 가능 -->
+    <p th:text="${loggedInMember.email}"></p>
+    <p th:text="${loggedInMember.genderCode.name}"></p>
+    <!-- ... -->
+    <a href="/Member_logout">로그아웃</a>
 </body>
 </html>

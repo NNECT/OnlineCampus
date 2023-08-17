@@ -9,8 +9,11 @@ import com.education.onlinecampus.service.common.RepositoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,8 +47,18 @@ public class MemberController {
         return "lecture/MemberLogin";
     }
     @GetMapping("/")
-    public String Main(){
+    public String Main(Model model){
+        // 인증 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            String username = authentication.getName();
+            Member loggedInMember = memberService.findByUserName(username);
+            if (loggedInMember != null) {
+                // 회원 정보를 모델에 추가하여 Thymeleaf 템플릿에서 사용 가능하게 함
+                model.addAttribute("loggedInMember", loggedInMember);
+            }
+        }
         return "/lecture/MemberMain";
     }
-
 }
