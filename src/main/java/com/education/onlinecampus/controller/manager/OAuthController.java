@@ -22,7 +22,8 @@ public class OAuthController {
     @RequestMapping("/oauth2callback")
     public String handleOAuth2Callback(@RequestParam("code") String authorizationCode) throws IOException {
         // authorization_code를 사용하여 access_token과 refresh_token 획득
-        GoogleTokenResponse tokenResponse = googleAuthorizationCodeFlow.newTokenRequest(authorizationCode)
+        GoogleTokenResponse tokenResponse = googleAuthorizationCodeFlow
+                .newTokenRequest(authorizationCode)
                 .setRedirectUri(Constant.OAUTH_REDIRECT_URI)
                 .execute();
 
@@ -39,7 +40,7 @@ public class OAuthController {
     private void saveTokenToFile(String token) throws IOException {
         // Define the path of the file where the token should be saved
         // Assuming that the file "token" is located directly under the resources directory
-        Path path = Paths.get("src", "main", "resources", "token");
+        Path path = Paths.get("src", "main", "resources", "oauth", "token");
 
         // Write the token to the file, overwriting the file if it already exists
         Files.write(path, token.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
