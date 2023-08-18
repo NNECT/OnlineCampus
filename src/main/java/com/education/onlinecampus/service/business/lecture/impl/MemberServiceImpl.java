@@ -1,6 +1,7 @@
 package com.education.onlinecampus.service.business.lecture.impl;
 
 import com.education.onlinecampus.data.dto.MemberDTO;
+import com.education.onlinecampus.data.entity.Member;
 import com.education.onlinecampus.service.business.lecture.MemberService;
 import com.education.onlinecampus.service.common.RepositoryService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,6 @@ public class MemberServiceImpl implements MemberService {
     }
     @Override
     public Member findByUserName(String username){
-        Member byUsername = repositoryService.getMemberRepository().findByUsername(username);
-        return byUsername;
+        return repositoryService.getMemberRepository().findByUsername(username);
     }
 }
