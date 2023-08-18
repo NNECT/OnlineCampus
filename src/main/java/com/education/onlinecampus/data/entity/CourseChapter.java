@@ -43,7 +43,6 @@ public class CourseChapter implements EntityMarker<CourseChapterDTO> {
             this.chapterSeq = chapterSeq;
         }
     }
-
     /** 강좌 외래키 */
     @ManyToOne
     @JoinColumn(
