@@ -42,7 +42,7 @@ public class CourseChapterContent implements EntityMarker<CourseChapterContentDT
     @JoinColumn(
             name = "contentFileSeq",
             referencedColumnName = "fileSeq"
-            /*nullable = false*/
+            nullable = false
     )
     private File contentFile;
 
@@ -55,7 +55,7 @@ public class CourseChapterContent implements EntityMarker<CourseChapterContentDT
     @JoinColumn(
             name = "statusCode",
             referencedColumnName = "code"
-            /*nullable = false*/
+            nullable = false
     )
     private CommonCode statusCode;
 
