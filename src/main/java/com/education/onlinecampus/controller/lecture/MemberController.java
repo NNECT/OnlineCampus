@@ -25,7 +25,7 @@ import java.time.LocalDate;
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
-    private final RepositoryService repositoryService;
+
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
 

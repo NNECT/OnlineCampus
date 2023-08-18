@@ -5,6 +5,5 @@ import com.education.onlinecampus.data.entity.Member;
 
 public interface MemberService {
     void MemberSave(MemberDTO memberDTO);
-
     Member findByUserName(String username);
 }
