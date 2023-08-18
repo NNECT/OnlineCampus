@@ -8,7 +8,7 @@ public class AdapterDTOToEntity {
     public static CommonCodeDivision convert(CommonCodeDivisionDTO dto) {
         return CommonCodeDivisionMapper.INSTANCE.toEntity(dto);
     }
-
+    
     public static CommonCode convert(CommonCodeDTO dto) {
         return CommonCodeMapper.INSTANCE.toEntity(dto);
     }

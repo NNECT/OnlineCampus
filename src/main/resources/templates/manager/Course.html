@@ -6,7 +6,7 @@
 </head>
 <body>
     <h2>강좌등록</h2>
-    <form action="/Course" method="post">
+    <form action="/Course_save" method="post">
         강좌명 <select name="courseName">
                 <option value="국어">국어</option>
                 <option value="영어">영어</option>
@@ -15,7 +15,10 @@
         강좌소개 <input type="text" name="courseBrief"><br>
         강좌시작일 <input type="datetime-local" name="startDateTime" required><br>
         강좌종료일 <input type="datetime-local" name="endDateTime" required>
+        <input type="hidden" name="statusCodeDTO.code" value="C001">
         <input type="submit" value="등록">
     </form>
+
+    
 </body>
 </html>
