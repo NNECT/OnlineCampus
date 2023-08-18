@@ -1,14 +1,20 @@
 package com.education.onlinecampus.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.Formatter;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
+@Component
 public class LocalDateFormatter implements Formatter<LocalDate> {
-    private static final String datePattern = "yyyy-MM-dd";
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(datePattern);
+    private final DateTimeFormatter formatter;
+
+    public LocalDateFormatter(@Value("${date.pattern}") String datePattern) {
+        this.formatter = DateTimeFormatter.ofPattern(datePattern);
+    }
 
     @Override
     public LocalDate parse(String str, Locale locale) {
