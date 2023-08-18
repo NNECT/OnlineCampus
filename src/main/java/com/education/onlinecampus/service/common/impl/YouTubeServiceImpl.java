@@ -10,6 +10,7 @@ import com.google.api.services.youtube.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,6 +77,22 @@ public class YouTubeServiceImpl implements YouTubeService {
         return videos;
     }
 
+    @Override
+    public CourseChapterContentDTO uploadVideo(CourseChapterContentDTO content, FileDTO file) throws IOException {
+        try (InputStream inputStream = new ClassPathResource("file/" + file.getFileName()).getInputStream()) {
+            content.setVideoId(uploadVideo(getVideoSnippet(content), getVideoStatus(), inputStream));
+            content.setContentFileDTO(file);
+        }
+        return repositoryService.getCourseChapterContentRepository().save(content.toEntity()).toDTO();
+    }
+
+    @Override
+    public CourseChapterContentDTO uploadVideo(CourseChapterContentDTO content, MultipartFile multipartFile) throws IOException {
+        try (InputStream inputStream = multipartFile.getInputStream()) {
+            content.setVideoId(uploadVideo(getVideoSnippet(content), getVideoStatus(), inputStream));
+        }
+        return repositoryService.getCourseChapterContentRepository().save(content.toEntity()).toDTO();
+    }
 
     @Override
     public String uploadVideo(VideoSnippet snippet, VideoStatus status, InputStream videoStream) throws IOException {
@@ -98,32 +115,17 @@ public class YouTubeServiceImpl implements YouTubeService {
         return uploadedVideo.getId();
     }
 
-    @Override
-    public CourseChapterContentDTO uploadVideo(CourseChapterContentDTO content, FileDTO file) throws IOException {
-        Video video = new Video();
-
+    private VideoSnippet getVideoSnippet(CourseChapterContentDTO content) {
         VideoSnippet snippet = new VideoSnippet();
         snippet.setTitle(content.getContentName());
         snippet.setDescription(content.getContentBrief());
         snippet.setTags(Arrays.asList("test", "example"));
-        video.setSnippet(snippet);
+        return snippet;
+    }
 
+    private VideoStatus getVideoStatus() {
         VideoStatus status = new VideoStatus();
         status.setPrivacyStatus("private");
-        video.setStatus(status);
-
-        try (InputStream inputStream = new ClassPathResource("file/" + file.getFileName()).getInputStream()) {
-            InputStreamContent inputStreamContent = new InputStreamContent("video/*", inputStream);
-
-            YouTube.Videos.Insert videoInsert = youtube.videos()
-                    .insert(Arrays.asList("snippet", "statistics", "status"), video, inputStreamContent);
-
-            Video uploadedVideo = videoInsert.execute();
-
-            content.setContentFileDTO(file);
-            content.setVideoId(uploadedVideo.getId());
-        }
-
-        return repositoryService.getCourseChapterContentRepository().save(content.toEntity()).toDTO();
+        return status;
     }
 }
