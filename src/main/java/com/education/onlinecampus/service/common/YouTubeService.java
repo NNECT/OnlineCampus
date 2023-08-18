@@ -6,6 +6,7 @@ import com.google.api.services.youtube.model.ChannelListResponse;
 import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoSnippet;
 import com.google.api.services.youtube.model.VideoStatus;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,7 +17,9 @@ public interface YouTubeService {
 
     List<Video> getAllUploadedVideos() throws IOException;
 
-    String uploadVideo(VideoSnippet snippet, VideoStatus status, InputStream file) throws IOException;
-
     CourseChapterContentDTO uploadVideo(CourseChapterContentDTO content, FileDTO file) throws IOException;
+
+    CourseChapterContentDTO uploadVideo(CourseChapterContentDTO content, MultipartFile multipartFile) throws IOException;
+
+    String uploadVideo(VideoSnippet snippet, VideoStatus status, InputStream file) throws IOException;
 }
