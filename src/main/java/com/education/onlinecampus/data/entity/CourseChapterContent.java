@@ -41,8 +41,8 @@ public class CourseChapterContent implements EntityMarker<CourseChapterContentDT
     @ManyToOne
     @JoinColumn(
             name = "contentFileSeq",
-            referencedColumnName = "fileSeq",
-            nullable = false
+            referencedColumnName = "fileSeq"
+            /*nullable = false*/
     )
     private File contentFile;
 
@@ -54,8 +54,8 @@ public class CourseChapterContent implements EntityMarker<CourseChapterContentDT
     @ManyToOne
     @JoinColumn(
             name = "statusCode",
-            referencedColumnName = "code",
-            nullable = false
+            referencedColumnName = "code"
+            /*nullable = false*/
     )
     private CommonCode statusCode;
 
