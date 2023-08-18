@@ -28,8 +28,10 @@ public class CourseController {
         return "manager/Course";}
 
     @PostMapping("/Course_save")
-    public String CourseSave(@ModelAttribute CourseDTO course){
+    public String CourseSave(@ModelAttribute CourseDTO course,Model model){
         courseService.CourseSave(course);
+        List<Course> courses = courseService.CourseFindAll();
+        model.addAttribute("courses",courses);
         return "manager/manager_main";
     }
     @PostMapping("/Course_delete")
