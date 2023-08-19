@@ -1,8 +1,8 @@
 package com.education.onlinecampus.data.entity;
 
+import com.education.onlinecampus.config.ApplicationContextHolder;
 import com.education.onlinecampus.data.adapter.AdapterEntityToDTO;
 import com.education.onlinecampus.data.dto.CourseChapterDTO;
-import com.education.onlinecampus.data.entityListener.CourseChapterSeqListener;
 import com.education.onlinecampus.data.marker.EntityMarker;
 import lombok.*;
 
@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Table(name = "CourseChapter", indexes = {
         @Index(name = "courseChapterOrderIdx", columnList = "courseSeq, chapterOrder")
 })
-@EntityListeners(CourseChapterSeqListener.class)
+@EntityListeners(CourseChapter.CourseChapterSeqListener.class)
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,7 +39,7 @@ public class CourseChapter implements EntityMarker<CourseChapterDTO> {
         @Column(nullable = false)
         private Long chapterSeq;
 
-        public void setChapterSeq(Long chapterSeq) {
+        private void setChapterSeq(Long chapterSeq) {
             this.chapterSeq = chapterSeq;
         }
     }
@@ -84,5 +84,26 @@ public class CourseChapter implements EntityMarker<CourseChapterDTO> {
     @Override
     public CourseChapterDTO toDTO() {
         return AdapterEntityToDTO.convert(this);
+    }
+
+    public static class CourseChapterSeqListener {
+        @PrePersist
+        public void prePersist(CourseChapter courseChapter) {
+            EntityManager entityManager = ApplicationContextHolder.getBean(EntityManager.class);
+
+            Long courseSeq = courseChapter.getCourseChapterCompositeKey().getCourseSeq();
+
+            // Course 엔티티에 대한 트랜잭션 잠금 (다른 트랜잭션에서 해당 엔티티에 대한 수정을 못하도록 함)
+            Course course = entityManager.find(Course.class, courseSeq, LockModeType.PESSIMISTIC_WRITE);
+
+            TypedQuery<Long> query = entityManager.createQuery(
+                    "SELECT COALESCE(MAX(cc.courseChapterCompositeKey.chapterSeq), 0) FROM CourseChapter cc WHERE cc.courseChapterCompositeKey.courseSeq = :courseSeq",
+                    Long.class
+            );
+            query.setParameter("courseSeq", courseSeq);
+            Long maxChapterSeq = query.getSingleResult();
+
+            courseChapter.getCourseChapterCompositeKey().setChapterSeq(maxChapterSeq + 1);
+        }
     }
 }
