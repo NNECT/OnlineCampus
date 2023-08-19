@@ -19,7 +19,7 @@ public class AjaxGetCourseChapterController {
 
     private final CourseService courseService;
 
-    @GetMapping("/ajax/getCourseChapter")
+    @PostMapping("/ajax/getCourseChapter")
     public ResponseEntity<Map<String,Object>> getCourseChapter(@RequestBody Map<String,String> map){
 
         System.out.println("1111111111111111111111");
