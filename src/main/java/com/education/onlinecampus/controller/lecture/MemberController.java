@@ -80,4 +80,8 @@ public class MemberController {
         }
         return "/lecture/MemberMain";
     }
+    @GetMapping("/Header")
+    public String Header(){
+        return "lecture/header";
+    }
 }
