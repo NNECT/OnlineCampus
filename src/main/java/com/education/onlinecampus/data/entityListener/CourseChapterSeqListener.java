@@ -1,23 +1,16 @@
 package com.education.onlinecampus.data.entityListener;
 
+import com.education.onlinecampus.config.ApplicationContextHolder;
 import com.education.onlinecampus.data.entity.Course;
 import com.education.onlinecampus.data.entity.CourseChapter;
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
-import javax.persistence.PrePersist;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 
-@Component
-@Setter(onMethod_ = @Autowired)
 public class CourseChapterSeqListener {
-    private EntityManager entityManager;
-
     @PrePersist
     public void prePersist(CourseChapter courseChapter) {
+        EntityManager entityManager = ApplicationContextHolder.getBean(EntityManager.class);
+
         Long courseSeq = courseChapter.getCourseChapterCompositeKey().getCourseSeq();
 
         // Locking the specific course to prevent concurrent modifications
