@@ -7,11 +7,13 @@
 <body>
     <h2>강의 차시 등록</h2>
     <form action="/CourseChapter_save" method="post">
-        <input type="hidden" name="course" value="">
-        순서: <input type="text" name="chapterOrder">
+        강좌목록: <select name="courseDTO.courseSeq">
+                    <option th:each="course : ${courses}" th:value="${course.courseSeq}" th:text="${course.courseName}"></option>
+                </select>
+        차시순서: <input type="number" name="chapterOrder">
         쳅터제목: <input type="text" name="chapterName">
-        컨텐츠번호: <input type="text" name="content">
-        보조자료: <input type="file" name="supplementaryFile">
+        <!--컨텐츠번호: <input type="text" name="content">
+        보조자료: <input type="file" name="supplementaryFile">-->
         챕터설명: <input type="text" name="chapterBrief">
         <input type="submit" value="등록">
     </form>

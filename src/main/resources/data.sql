@@ -36,3 +36,6 @@ insert ignore into common_code (code, division_code, name, in_use, order_number,
 values ('Y003', 'Y', '업로드완료', true, 0, null);
 insert ignore into common_code (code, division_code, name, in_use, order_number, note)
 values ('Y004', 'Y', '업로드실패', true, 0, null);
+
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('테스트', '테스트', now(), now(), 'C001');

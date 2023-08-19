@@ -4,6 +4,7 @@ import com.education.onlinecampus.config.SecurityConfig;
 import com.education.onlinecampus.data.dto.CommonCodeDTO;
 import com.education.onlinecampus.data.dto.MemberDTO;
 import com.education.onlinecampus.data.entity.Course;
+import com.education.onlinecampus.data.entity.CourseChapter;
 import com.education.onlinecampus.data.entity.Member;
 import com.education.onlinecampus.service.business.lecture.MemberService;
 import com.education.onlinecampus.service.business.manager.CourseService;
@@ -63,22 +64,24 @@ public class MemberController {
                     model.addAttribute("loggedInMember", loggedInMember);
                     List<Course> courses = courseService.CourseFindAll();
                     model.addAttribute("courses",courses);
+                    List<CourseChapter> courseChapters = courseService.CourseChapterFindAll();
+                    model.addAttribute("courseChapters",courseChapters);
                     return "/manager/manager_main";
                 }
                 case "M002": {
                     model.addAttribute("loggedInMember", loggedInMember);
-                    return "/lecture/MemberMain";
+                    return "/lecture/courseList";
                 }
                 case "M003": {
                     model.addAttribute("loggedInMember", loggedInMember);
-                    return "/lecture/MemberMain";
+                    return "/lecture/courseList";
                 }
                 default: {
                     break;
                 }
             }
         }
-        return "/lecture/MemberMain";
+        return "/lecture/courseList";
     }
     @GetMapping("/Header")
     public String Header(){

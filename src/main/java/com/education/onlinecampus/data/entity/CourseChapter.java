@@ -1,10 +1,10 @@
 package com.education.onlinecampus.data.entity;
 
+import com.education.onlinecampus.config.ApplicationContextHolder;
 import com.education.onlinecampus.data.adapter.AdapterEntityToDTO;
 import com.education.onlinecampus.data.dto.CourseChapterDTO;
 import com.education.onlinecampus.data.marker.EntityMarker;
 import lombok.*;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -39,7 +39,7 @@ public class CourseChapter implements EntityMarker<CourseChapterDTO> {
         @Column(nullable = false)
         private Long chapterSeq;
 
-        protected void setChapterSeq(Long chapterSeq) {
+        private void setChapterSeq(Long chapterSeq) {
             this.chapterSeq = chapterSeq;
         }
     }
@@ -64,8 +64,7 @@ public class CourseChapter implements EntityMarker<CourseChapterDTO> {
     @OneToOne
     @JoinColumn(
             name = "contentSeq",
-            referencedColumnName = "contentSeq",
-            nullable = false
+            referencedColumnName = "contentSeq"
     )
     private CourseChapterContent content;
 
@@ -81,27 +80,23 @@ public class CourseChapter implements EntityMarker<CourseChapterDTO> {
     @Column(length = 1000)
     private String chapterBrief;
 
-    /**
-     * 챕터 순서 번호를 자동으로 채워주는 리스너 클래스
-     */
-    @Component
-    public static class CourseChapterSeqListener {
-        @PersistenceContext
-        private EntityManager entityManager;
+    @Override
+    public CourseChapterDTO toDTO() {
+        return AdapterEntityToDTO.convert(this);
+    }
 
-        /**
-         * 챕터 순서 번호를 자동으로 채움
-         * @param courseChapter 챕터 엔티티
-         */
+    public static class CourseChapterSeqListener {
         @PrePersist
         public void prePersist(CourseChapter courseChapter) {
+            EntityManager entityManager = ApplicationContextHolder.getBean(EntityManager.class);
+
             Long courseSeq = courseChapter.getCourseChapterCompositeKey().getCourseSeq();
 
-            // Locking the specific course to prevent concurrent modifications
+            // Course 엔티티에 대한 트랜잭션 잠금 (다른 트랜잭션에서 해당 엔티티에 대한 수정을 못하도록 함)
             Course course = entityManager.find(Course.class, courseSeq, LockModeType.PESSIMISTIC_WRITE);
 
             TypedQuery<Long> query = entityManager.createQuery(
-                    "SELECT COALESCE(MAX(chapterSeq), 0) FROM CourseChapter cc WHERE cc.courseSessionCompositeKey.courseSeq = :courseSeq",
+                    "SELECT COALESCE(MAX(cc.courseChapterCompositeKey.chapterSeq), 0) FROM CourseChapter cc WHERE cc.courseChapterCompositeKey.courseSeq = :courseSeq",
                     Long.class
             );
             query.setParameter("courseSeq", courseSeq);
@@ -109,10 +104,5 @@ public class CourseChapter implements EntityMarker<CourseChapterDTO> {
 
             courseChapter.getCourseChapterCompositeKey().setChapterSeq(maxChapterSeq + 1);
         }
-    }
-
-    @Override
-    public CourseChapterDTO toDTO() {
-        return AdapterEntityToDTO.convert(this);
     }
 }

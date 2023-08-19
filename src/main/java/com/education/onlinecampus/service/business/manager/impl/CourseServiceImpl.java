@@ -1,5 +1,6 @@
 package com.education.onlinecampus.service.business.manager.impl;
 
+import com.education.onlinecampus.data.dto.CourseChapterDTO;
 import com.education.onlinecampus.data.dto.CourseDTO;
 import com.education.onlinecampus.data.entity.Course;
 import com.education.onlinecampus.data.entity.CourseChapter;
@@ -29,9 +30,10 @@ public class CourseServiceImpl implements CourseService {
         Course byId = repositoryService.getCourseRepository().findByCourseSeq(CourseSeq);
         return byId;
     }
-
     @Override
-    public void CourseChapterSave(CourseChapter courseChapter){repositoryService.getCourseChapterRepository().save(courseChapter);}
+    public void CourseChapterSave(CourseChapterDTO courseChapter){
+        repositoryService.getCourseChapterRepository().save(courseChapter.toEntity());
+    }
 
     @Override
     public void CourseChapterDelete(CourseChapter courseChapter){repositoryService.getCourseChapterRepository().delete(courseChapter);}
@@ -43,6 +45,12 @@ public class CourseServiceImpl implements CourseService {
     public List<CourseChapter> findCourseChapter(Long CourseSeq) {
         Course course = repositoryService.getCourseRepository().findByCourseSeq(CourseSeq);
         return repositoryService.getCourseChapterRepository().findByCourse(course);
+    }
+
+    @Override
+    public List<CourseChapter> CourseChapterFindAll(){
+        List<CourseChapter> all = repositoryService.getCourseChapterRepository().findAll();
+        return all;
     }
 
     
