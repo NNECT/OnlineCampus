@@ -7,10 +7,13 @@
 <body>
 <h2>강의컨탠트등록</h2>
 <form action="/CourseChapterContent_save" method="post" enctype="multipart/form-data">
-  컨탠트 이름: <input name="contentName">
-  컨탠트 설명: <input name="contentBrief">
-  컨탠드 비디오: <input type="file" accept="video/*" name="viedo">
-  <input type="submit" value="등록">
+    컨탠트 이름: <input name="contentName">
+    컨탠트 설명: <input name="contentBrief">
+    썬네일 파일: <input name="thumbnailFile">
+    컨탠드 비디오: <input type="file" accept="video/*" name="viedo">
+    <input type="hidden" name="statusCodeDTO.code" value="Y001">
+    영상 길이:<input type="number" name="runningTime" value="5">
+    <input type="submit" value="등록">
 </form>
 </body>
 </html>

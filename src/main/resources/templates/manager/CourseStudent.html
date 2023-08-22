@@ -1,11 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
-    <h2>수강대상자등록</h2>
-
+<h2>수강대상자등록</h2>
+<a href="/Member_findAll">조회</a>
+<form action="/CourseStudent_save" method="post" id="courseStudentForm">
+    <input type="hidden" name="courseSeq" value="1">
+    <table>
+        <tr>
+            <th><input type="checkbox" id="cboxAll" name="cboxAll" onclick="checkAll()"></th>
+            <th>회원구분</th>
+            <th>성명</th>
+            <th>이메일</th>
+            <th>접속시간</th>
+            <th>접속종료시간</th>
+            <th>진도율</th>
+        </tr>
+        <tr th:each="member, status : ${members}">
+            <td>
+                <input type="checkbox" name="cbox" th:data-index="${status.index}" th:value="${member.memberSeq}" onclick="toggleCheckbox(this)">
+            </td>
+            <td th:text="${member.memberDivision.code}"></td>
+            <td th:text="${member.nameKor}"></td>
+            <td th:text="${member.email}"></td>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+        </tr>
+    </table>
+    <input type="submit" value="등록">
+</form>
+<script>
+    function checkAll() {
+        if ($("#cboxAll").is(':checked')) {
+            $("input[name=cbox]").prop("checked", true);
+        } else {
+            $("input[name=cbox]").prop("checked", false);
+        }
+    }
+    function toggleCheckbox(checkbox) {
+        var hiddenInput = $(checkbox).siblings('.memberSeq');
+        if (checkbox.checked) {
+            hiddenInput.prop('disabled', false);
+        } else {
+            hiddenInput.prop('disabled', true);
+        }
+    }
+</script>
 </body>
 </html>

@@ -1,0 +1,502 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+.header {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.search-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    border: 1px solid black;
+}
+
+.search-bar-row {
+    display: flex;
+    align-items: center;
+}
+
+.search-bar select,
+.search-bar input[type="text"] {
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+select, input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #333; /* Change text color to make selected options visible */
+    background-color: white; /* Add background color for better visibility */
+}
+
+/* Style the selected option */
+option:checked {
+    background-color: #555;
+    color: white;
+}
+
+select {
+    width: 20%;
+}
+
+input[type="text"] {
+    width: 50%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ccc;
+}
+
+th {
+    background-color: #555;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.new-course-link {
+    display: inline-block;
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    float: right;
+}
+
+.new-course-link:hover {
+    background-color: #555;
+}
+
+select option:checked {
+    background-color: #555;
+    color: white;
+}
+
+/* Additional styles for improved alignment */
+.search-bar-row {
+    margin: 10px 0;
+}
+
+.search-bar-row label {
+    width: 150px;
+}
+
+.search-bar-row select,
+.search-bar-row input[type="text"] {
+    width: 130%; /* Adjust the width as needed */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+.header {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.container {
+    max-width: 1585px;
+    margin: 0 auto;
+    padding: 20px;
+    margin-right: 10px;
+    width: 100%;
+
+}
+
+.search-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.search-bar-row {
+    display: flex;
+    align-items: center;
+    width: 33.33%; /* Divide into three equal parts for left, center, and right */
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+.search-bar select,
+.search-bar input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #333;
+    background-color: white;
+}
+
+select, input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Style the selected option */
+option:checked {
+    background-color: #555;
+    color: white;
+}
+
+/* Additional styles for improved alignment */
+.search-bar-row label {
+    width: 150px;
+}
+
+.search-bar-row select,
+.search-bar-row input[type="text"] {
+    width: 70%; /* Adjust the width as needed */
+}
+
+.search-bar-row:last-child {
+    justify-content: flex-end;
+}
+
+.new-course-link {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.new-course-link:hover {
+    background-color: #555;
+}
+#courseSessionsSection,
+#enrolleesSection {
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#courseSessionsSection:hover,
+#enrolleesSection:hover {
+    background-color: #555;
+    color: white;
+}
+select {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: url('https://cdn.iconscout.com/icon/free/png-256/arrow-1767537-1501935.png') no-repeat right center; /* Custom arrow icon */
+    background-size: 12px; /* Size of the arrow icon */
+    cursor: pointer;
+    width: 57px; /* Adjust the width as needed */
+}
+
+/* Style for the arrow icon */
+select::-ms-expand {
+    display: none; /* Hide the arrow in IE */
+}
+.search-bar {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar-row {
+    display: flex;
+    align-items: center;
+}
+
+.search-bar label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+/* Style for select elements */
+.search-bar select,
+.search-bar input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.search-bar select {
+    width: 120px;
+    background-color: #fff;
+    background-image: url('https://cdn.iconscout.com/icon/free/png-256/arrow-1767537-1501935.png');
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: 12px;
+    cursor: pointer;
+}
+
+.search-bar input[type="text"] {
+    width: 250px;
+}
+.search-bar-row {
+    /* ... (이전 스타일 코드) ... */
+    display: flex; /* Display elements in a row */
+    justify-content: space-between; /* Distribute space between elements */
+    align-items: center; /* Vertically center items */
+}
+.table-container {
+    overflow-x: auto;
+    max-width: 100%;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background-color: #f0f0f0;
+}
+
+td input[type="checkbox"] {
+    margin: 0;
+}
+.pagination {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 14px;
+}
+th {
+    background-color: #f0f0f0;
+    color: #333; /* Change the text color to black */
+}
+.sidebar {
+    width: 270px; /* Adjust the width as needed */
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 10px;
+    height: 89.5vh;
+    /* Add any other styling you want */
+}
+.sidebar-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-list li {
+    margin-bottom: 10px;
+}
+
+.sidebar-list a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+.container {
+    position: relative;
+    max-height: calc(100vh - 80px); /* 뷰포트 높이에서 헤더의 높이만큼 빼줌 */
+    overflow-y: auto; /* 세로 스크롤 바가 필요한 경우만 표시 */
+}
+body {
+    overflow: hidden;
+}
+.sidebar {
+    position: absolute;
+    width: 255px;
+    background-color: #f5f5f5;
+    color: #333;
+    padding: 20px;
+    height: calc(100vh - 80px);
+    border-right: 1px solid #ddd;
+}
+
+.sidebar input[type="search"] {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    background-color: #fff;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.sidebar-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-list li {
+    margin-top: 10px;
+    margin-left: 20px;
+    transition: background-color 0.3s, color 0.3s, cursor 0.3s;
+}
+
+.sidebar-list li a {
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.sidebar-list li a:hover {
+    color: #000;
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+.sidebar {
+    position: fixed;
+    width: 255px;
+    background-color: #f5f5f5;
+    color: #333;
+    padding: 20px;
+    height: calc(100vh - 80px);
+    border-right: 1px solid #ddd;
+}
+
+.sidebar input[type="search"] {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    background-color: #fff;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.sidebar-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 30px;
+}
+
+.sidebar-list li {
+    margin-top: 10px;
+    margin-left: 20px;
+    transition: background-color 0.3s, color 0.3s, cursor 0.3s;
+}
+
+.sidebar-list li a {
+    text-decoration: none;
+    font-size: 12px;
+    color: #555;
+    transition: color 0.3s;
+}
+
+.sidebar-list li a:hover {
+    color: #000;
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+.sidebar-list li:hover {
+    background-color: #ddd;
+    cursor: pointer;
+}
+
+.sidebar-list li:hover a {
+    color: #333;
+}
+.container {
+    position: relative;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    margin-left: 296px; /* 사이드바의 너비만큼 여백을 추가 */
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        display: none; /* 작은 화면에서 사이드바 숨김 */
+    }
+
+    .container {
+        margin-left: 0; /* 작은 화면에서 컨테이너를 가로로 꽉 차게 설정 */
+    }
+}
+.content-box {
+    display: none;
+    border: 1px solid #ccc;
+    width: auto;
+    font-size: 23px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    padding: 10px;
+    position: relative;
+    margin-left: 7px;
+    cursor: pointer;
+}
+
+.show {
+    display: block;
+}
+.show1 {
+    display: block;
+}
+.close-button {
+    background: none;
+    border: none;
+    color: #e74c3c;
+    font-size: 18px;
+    cursor: pointer;
+}
+.content-box.show {
+    display: block;
+    border: 2px solid #3498db; /* 활성화된 박스의 테두리 색상 */
+    background-color: #f0f0f0; /* 활성화된 박스의 배경색 */
+}

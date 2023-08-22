@@ -12,15 +12,13 @@ import com.education.onlinecampus.service.common.RepositoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -46,6 +44,12 @@ public class MemberController {
     public String GetMemberSignup(){
         return "/lecture/MemberJoin";
     }
+    @GetMapping("/Member_findAll")
+    @ResponseBody
+    public ResponseEntity<List<Member>> Member_findAll() {
+        List<Member> members = memberService.MemberfindAll();
+        return ResponseEntity.ok(members);
+    }
     @PostMapping("/Member_signup")
     public String PostMemberSignup(@ModelAttribute MemberDTO member, @RequestParam("profileImage") MultipartFile profileImage){
         member.setPassword(passwordEncoder.encode(member.getPassword()));
@@ -66,6 +70,8 @@ public class MemberController {
                     model.addAttribute("courses",courses);
                     List<CourseChapter> courseChapters = courseService.CourseChapterFindAll();
                     model.addAttribute("courseChapters",courseChapters);
+                    int i = courseChapters.size() + 1;
+                    model.addAttribute("i",i);
                     return "/manager/manager_main";
                 }
                 case "M002": {

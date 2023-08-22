@@ -7,6 +7,8 @@ import com.education.onlinecampus.service.common.RepositoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
@@ -20,5 +22,10 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member findByUserName(String username){
         return repositoryService.getMemberRepository().findByUsername(username);
+    }
+
+    @Override
+    public List<Member> MemberfindAll(){
+        return  repositoryService.getMemberRepository().findAll();
     }
 }

@@ -1,12 +1,16 @@
 package com.education.onlinecampus.service.business.manager.impl;
 
+import com.education.onlinecampus.data.dto.CourseChapterContentDTO;
 import com.education.onlinecampus.data.dto.CourseChapterDTO;
 import com.education.onlinecampus.data.dto.CourseDTO;
+import com.education.onlinecampus.data.dto.CourseStudentDTO;
 import com.education.onlinecampus.data.entity.Course;
 import com.education.onlinecampus.data.entity.CourseChapter;
+import com.education.onlinecampus.data.entity.Member;
 import com.education.onlinecampus.service.business.manager.CourseService;
 import com.education.onlinecampus.service.common.RepositoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,9 +35,10 @@ public class CourseServiceImpl implements CourseService {
         return byId;
     }
     @Override
-    public void CourseChapterSave(CourseChapterDTO courseChapter){
-        repositoryService.getCourseChapterRepository().save(courseChapter.toEntity());
+    public CourseChapter CourseChapterSave(CourseChapterDTO courseChapter){
+        return repositoryService.getCourseChapterRepository().save(courseChapter.toEntity());
     }
+
 
     @Override
     public void CourseChapterDelete(CourseChapter courseChapter){repositoryService.getCourseChapterRepository().delete(courseChapter);}
@@ -49,9 +54,18 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<CourseChapter> CourseChapterFindAll(){
-        List<CourseChapter> all = repositoryService.getCourseChapterRepository().findAll();
+        List<CourseChapter> all = repositoryService.getCourseChapterRepository().findAll(Sort.by(Sort.Order.asc("chapterOrder")));
         return all;
     }
+    @Override
+    public void CourseStudentAllSave(Long[] memberseqs, Long courseSeq, CourseStudentDTO courseStudentDTO){
+        for(int i=0;i<memberseqs.length;i++){
+            Member byId = repositoryService.getMemberRepository().findById(memberseqs[i]).orElseThrow();
+            Course byId1 = repositoryService.getCourseRepository().findById(courseSeq).orElseThrow();
+            courseStudentDTO.setStudentDTO(byId.toDTO());
+            courseStudentDTO.setCourseDTO(byId1.toDTO());
+            repositoryService.getCourseStudentRepository().save(courseStudentDTO.toEntity());
+        }
 
-    
+    }
 }

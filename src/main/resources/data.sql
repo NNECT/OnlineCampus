@@ -39,3 +39,4 @@ values ('Y004', 'Y', '업로드실패', true, 0, null);
 
 insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
 values ('테스트', '테스트', now(), now(), 'C001');
+

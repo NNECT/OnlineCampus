@@ -1,27 +1,24 @@
 package com.education.onlinecampus.controller.manager;
 
-import com.education.onlinecampus.data.dto.CommonCodeDTO;
-import com.education.onlinecampus.data.dto.CourseChapterContentDTO;
-import com.education.onlinecampus.data.dto.CourseChapterDTO;
-import com.education.onlinecampus.data.dto.CourseDTO;
+import com.education.onlinecampus.data.dto.*;
 import com.education.onlinecampus.data.entity.CommonCode;
 import com.education.onlinecampus.data.entity.Course;
 import com.education.onlinecampus.data.entity.CourseChapter;
+import com.education.onlinecampus.data.entity.CourseStudent;
 import com.education.onlinecampus.service.business.manager.CourseService;
 import com.education.onlinecampus.service.common.YouTubeService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -29,6 +26,7 @@ public class CourseController {
 
     private final CourseService courseService;
     private final YouTubeService youTubeService;
+    private final ObjectMapper objectMapper;
 
     @GetMapping("/Course")
     public String Course(){
@@ -59,14 +57,36 @@ public class CourseController {
         return "manager/CourseChapter";
     }
     @PostMapping("/CourseChapter_save")
-    public String CourseChapterSave(@ModelAttribute CourseChapterDTO courseChapter){
-        courseService.CourseChapterSave(courseChapter);
-        return "redirect:/";
+    @ResponseBody
+    public ResponseEntity<String> courseChapterSave(@ModelAttribute CourseChapterDTO courseChapter,Model model) {
+        CourseChapter courseChapter1 = courseService.CourseChapterSave(courseChapter);
+        try {
+            String jsonResponse = objectMapper.writeValueAsString(courseChapter1);
+            return ResponseEntity.ok(jsonResponse);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
+
     @PostMapping("/CourseChapter_delete")
-    public String CourseChapterDelete(@ModelAttribute CourseChapter courseChapter){
-        courseService.CourseChapterDelete(courseChapter);
-        return "manager/manager_main";
+    @ResponseBody
+    public Map<String, Object> deleteSelectedChapters(@RequestBody List<String> selectedChapters) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            for(String s:selectedChapters){
+                System.out.println("이건먼가요?"+s);
+            }
+            // 선택된 courseChapter 삭제 작업 수행
+            // courseService.deleteSelectedChapters(selectedChapters);
+
+            response.put("success", true);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "An error occurred during deletion.");
+        }
+
+        return response;
     }
     @GetMapping("/Course_findAll")
     public String CourseFindAll(@ModelAttribute Course course, Model model){
@@ -81,6 +101,23 @@ public class CourseController {
     @PostMapping("/CourseChapterContent_save")
     public String CourseChapterContentSave(@ModelAttribute CourseChapterContentDTO courseChapterContentDTO, @RequestParam("viedo") MultipartFile multipartFile) throws IOException {
         youTubeService.uploadVideo(courseChapterContentDTO, multipartFile);
-        return "manager/manager_main";
+        return "redirect:/";
+    }
+    @GetMapping("/CourseStudent")
+    public String CourseStudent(){
+        return "manager/CourseStudent";
+    }
+
+    @PostMapping("/CourseStudent_save")
+    @ResponseBody
+    public ResponseEntity<String> CourseStudentSave(@RequestParam("courseSeq") Long courseSeq,
+                                                    @RequestParam("cbox3") Long[] selectedMemberSeqs,
+                                                    CourseStudentDTO courseStudentDTO) {
+        try {
+            courseService.CourseStudentAllSave(selectedMemberSeqs, courseSeq, courseStudentDTO);
+            return ResponseEntity.ok("Success");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred: " + e.getMessage());
+        }
     }
 }
