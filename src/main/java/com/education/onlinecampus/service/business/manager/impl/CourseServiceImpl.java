@@ -9,7 +9,7 @@ import com.education.onlinecampus.service.common.RepositoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +52,4 @@ public class CourseServiceImpl implements CourseService {
         List<CourseChapter> all = repositoryService.getCourseChapterRepository().findAll();
         return all;
     }
-
-    
 }

@@ -4,10 +4,7 @@ import com.education.onlinecampus.data.entity.CourseChapter;
 import com.education.onlinecampus.service.business.manager.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,20 +16,14 @@ public class AjaxGetCourseChapterController {
 
     private final CourseService courseService;
 
-    @PostMapping("/ajax/getCourseChapter")
-    public ResponseEntity<Map<String,Object>> getCourseChapter(@RequestBody Map<String,String> map){
+    @RequestMapping("/ajax/getCourseChapter")
+    public ResponseEntity<Map<String,Object>> getCourseChapter(@RequestParam("courseSeq") Long courseSeq){
 
-        System.out.println("1111111111111111111111");
-
-        Long courseSeq = (long) Integer.parseInt(map.get("courseSeq"));
         List<CourseChapter> courseChapterList = courseService.findCourseChapter(courseSeq);
 
         Map<String, Object> resultMap = new HashMap<>();
 
-        System.out.println(courseSeq);
-
         if(courseChapterList!=null){
-            System.out.println("33333333333333");
             resultMap.put("result","success");
             resultMap.put("courseChapterList",courseChapterList);
             resultMap.put("length",courseChapterList.size());
@@ -40,7 +31,6 @@ public class AjaxGetCourseChapterController {
             resultMap.put("result", "failure");
             resultMap.put("errorMessage", "챕터 없음!");
         }
-        System.out.println("444444444444444444444");
         return ResponseEntity.ok(resultMap);
 
     }
