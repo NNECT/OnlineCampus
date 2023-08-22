@@ -17,7 +17,6 @@ public class FileDTO implements DTOMarker<File> {
     private String originalFileName;
     private String fileName;
     private Integer fileSize;
-    private String fileGuid;
 
     @Override
     public File toEntity() {

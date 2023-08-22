@@ -37,15 +37,6 @@ public class CourseChapterContent implements EntityMarker<CourseChapterContentDT
     )
     private File thumbnailFile;
 
-    /** 콘텐츠 파일 */
-    @ManyToOne
-    @JoinColumn(
-            name = "contentFileSeq",
-            referencedColumnName = "fileSeq",
-            nullable = false
-    )
-    private File contentFile;
-
     /** 유튜브 비디오 ID */
     @Column(length = 400)
     private String videoId;
