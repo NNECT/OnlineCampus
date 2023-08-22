@@ -33,10 +33,6 @@ public class File implements EntityMarker<FileDTO> {
     @Column
     private Integer fileSize;
 
-    /** 파일 GUID */
-    @Column(length = 40)
-    private String fileGuid;
-
     @Override
     public FileDTO toDTO() {
         return AdapterEntityToDTO.convert(this);

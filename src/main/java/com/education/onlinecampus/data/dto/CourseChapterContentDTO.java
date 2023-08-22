@@ -17,7 +17,6 @@ public class CourseChapterContentDTO implements DTOMarker<CourseChapterContent> 
     private String contentName;
     private String contentBrief;
     private FileDTO thumbnailFileDTO;
-    private FileDTO contentFileDTO;
     private String videoId;
     private CommonCodeDTO statusCodeDTO;
     private Integer runningTime;

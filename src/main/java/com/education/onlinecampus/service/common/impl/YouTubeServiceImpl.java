@@ -1,14 +1,12 @@
 package com.education.onlinecampus.service.common.impl;
 
 import com.education.onlinecampus.data.dto.CourseChapterContentDTO;
-import com.education.onlinecampus.data.dto.FileDTO;
-import com.education.onlinecampus.service.common.YouTubeService;
 import com.education.onlinecampus.service.common.RepositoryService;
+import com.education.onlinecampus.service.common.YouTubeService;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -75,15 +73,6 @@ public class YouTubeServiceImpl implements YouTubeService {
         } while (nextToken != null);
 
         return videos;
-    }
-
-    @Override
-    public CourseChapterContentDTO uploadVideo(CourseChapterContentDTO content, FileDTO file) throws IOException {
-        try (InputStream inputStream = new ClassPathResource("file/" + file.getFileName()).getInputStream()) {
-            content.setVideoId(uploadVideo(getVideoSnippet(content), getVideoStatus(), inputStream));
-            content.setContentFileDTO(file);
-        }
-        return repositoryService.getCourseChapterContentRepository().save(content.toEntity()).toDTO();
     }
 
     @Override
