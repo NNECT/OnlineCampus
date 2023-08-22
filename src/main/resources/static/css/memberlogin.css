@@ -3,30 +3,56 @@ body, html {
     margin: 0;
 }
 
+.login_bg{
+    width:100%;
+    height:100%;
+    background-image: url('../img/student.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    position:relative;
+    opacity: 0.9;
+}
+
+.login_bg::before {
+    content: ""; background-color:#000; opacity: 0.8;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
 #particles-js {
     position: absolute;
     width: 100%;
     height: 100%;
 }
 
+.logo_gif{ width: 250px; height:240px; }
+
 .container{
     margin: 0;
-    top: 75px;
+    top: 60px;
     left: 50%;
     position: absolute;
     text-align: center;
     transform: translateX(-50%);
     border-radius: 9px;
-    border-top: 10px solid #79a6fe;
-    border-bottom: 10px solid #8BD17C;
-    width: 400px;
-    height: 500px;
-    box-shadow: 0 3px 18px 3px rgb(0,0,0,0.1);
+/*    border-top: 10px solid #79a6fe;
+    border-bottom: 10px solid #8BD17C;*/
+    width: 380px;
+    height: 550px;
+    box-shadow: 0 3px 18px 3px rgb(0,0,0,0.4);
 }
+
+.login_wrap{/*width:100%;*/ display: flex; justify-content: center; align-content: center;}
+.login_formbox{width:400px; background-color: #fff; padding:20px 30px; border-radius: 5px; /*border:1px solid #999;*/ /*box-shadow: 0 3px 6px rgba(0,0,0,0.2);*/}
+.login_formbox a{text-decoration: none;}
+.fw-normal{padding-bottom:30px;}
 
 .box input[type = "text"],.box input[type = "password"] {
     display: block;
-    margin: 20px auto;
+    margin: 10px auto;
     background: #ededed;
     border: 0;
     border-radius: 5px;
@@ -51,11 +77,11 @@ body, html {
 .box label{color: #565f79;}
 .btn1 {
     border:0;
-    background: #7f5feb;
+    background: #333; /*#7f5feb;*/
     color: #dfdeee;
-    border-radius: 100px;
+    /*border-radius: 100px;*/
     width: 340px;
-    height: 49px;
+    height: 55px;
     font-size: 16px;
     transition: 0.3s;
     cursor: pointer;

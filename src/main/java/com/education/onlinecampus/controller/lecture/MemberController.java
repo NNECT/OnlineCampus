@@ -70,11 +70,11 @@ public class MemberController {
                 }
                 case "M002": {
                     model.addAttribute("loggedInMember", loggedInMember);
-                    return "/lecture/courseList";
+                    return "/lecture/MemberMain";
                 }
                 case "M003": {
                     model.addAttribute("loggedInMember", loggedInMember);
-                    return "/lecture/courseList";
+                    return "/lecture/MemberMain";
                 }
                 default: {
                     break;
