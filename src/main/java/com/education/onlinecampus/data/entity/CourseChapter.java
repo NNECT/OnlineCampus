@@ -64,8 +64,7 @@ public class CourseChapter implements EntityMarker<CourseChapterDTO> {
     @OneToOne
     @JoinColumn(
             name = "contentSeq",
-            referencedColumnName = "contentSeq",
-            nullable = false
+            referencedColumnName = "contentSeq"
     )
     private CourseChapterContent content;
 

@@ -25,6 +25,8 @@ public interface CourseChapterMapper {
 
     @Named("toEntityCourseChapterCompositeKeyMapping")
     default CourseChapter.CourseChapterCompositeKey toEntityCourseChapterCompositeKeyMapping(CourseChapterDTO courseChapterDTO) {
+        System.out.println("courseSeq: " + courseChapterDTO.getCourseDTO().getCourseSeq());
+        System.out.println("chapterSeq: " + courseChapterDTO.getChapterSeq());
         return new CourseChapter.CourseChapterCompositeKey(
                 courseChapterDTO.getCourseDTO().getCourseSeq(),
                 courseChapterDTO.getChapterSeq()

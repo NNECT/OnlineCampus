@@ -39,7 +39,7 @@ public class CourseController {
         courseService.CourseSave(course);
         List<Course> courses = courseService.CourseFindAll();
         model.addAttribute("courses",courses);
-        return "manager/manager_main";
+        return "redirect:/";
     }
     @PostMapping("/Course_delete")
     public String CourseDelete(@ModelAttribute Course course){
@@ -52,10 +52,16 @@ public class CourseController {
         model.addAttribute("coursefind",coursefind);
         return "manager/manager_main";
     }
+    @GetMapping("/CourseChapter_save")
+    public String GetCourseChapter_save(Model model){
+        List<Course> courses = courseService.CourseFindAll();
+        model.addAttribute("courses",courses);
+        return "manager/CourseChapter";
+    }
     @PostMapping("/CourseChapter_save")
-    public String CourseChapterSave(@ModelAttribute CourseChapter courseChapter){
+    public String CourseChapterSave(@ModelAttribute CourseChapterDTO courseChapter){
         courseService.CourseChapterSave(courseChapter);
-        return "manager/manager_main";
+        return "redirect:/";
     }
     @PostMapping("/CourseChapter_delete")
     public String CourseChapterDelete(@ModelAttribute CourseChapter courseChapter){
