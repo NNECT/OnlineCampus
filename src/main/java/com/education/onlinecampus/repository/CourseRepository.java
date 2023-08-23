@@ -9,4 +9,6 @@ import java.util.List;
 public interface CourseRepository extends JpaRepository<Course, Long> {
     Course findByCourseSeq(Long courseSeq);
     List<Course> findByStatusCode(CommonCode statusCode);
+    List<Course> findByCourseNameOrCourseNameContaining(String searchKeyword, String searchKeyword1);
+
 }

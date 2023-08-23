@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="../../css/manager_main.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <!-- 모달 스타일 -->
 <style>
@@ -46,13 +45,14 @@
 </style>
 <body>
 <!-- 헤더 -->
-<div class="header" style="background-color: #333; color: white; padding: 20px 0;"><h2 style="margin: 0 0 0 15px; font-size: 32px; display: flex; align-items: center;">
-        중앙정보처리학원
-        <small style="margin-left: auto; font-size: 16px; margin-right: 30px;"
-               th:text="${loggedInMember.nameKor} + ' 님 '"></small><a href="/Member_logout"
-                                                                      style="color: whitesmoke; font-size: 10px; margin-right: 10px;">
-        로그아웃</a>
-    </h2></div>
+<div class="header" style="background-color: #333; color: white; padding: 20px 0;"><h2
+        style="margin: 0 0 0 15px; font-size: 32px; display: flex; align-items: center;">
+    중앙정보처리학원
+    <small style="margin-left: auto; font-size: 16px; margin-right: 30px;"
+           th:text="${loggedInMember.nameKor} + ' 님 '"></small><a href="/Member_logout"
+                                                                  style="color: whitesmoke; font-size: 10px; margin-right: 10px;">
+    로그아웃</a>
+</h2></div>
 
 <!-- 메뉴 -->
 <div class="sidebar">
@@ -159,7 +159,7 @@
             });
         });
 
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const closeButton = document.querySelectorAll(".close-button");
             closeButton.forEach(button => {
                 button.addEventListener("click", function (event) {
@@ -183,34 +183,72 @@
     </script>
 
     <!-- 온라인 강의 -->
-    <div id="online-course" style="display: none;" >
+    <div id="online-course" style="display: none;">
         <a href="/Course_delete" class="new-course-link" style="margin-left: 10px">삭제</a>
         <a href="/Course" class="new-course-link" style="margin-left: 10px">수정</a>
         <a href="/Course" class="new-course-link" style="margin-left: 10px">강의 신규등록</a>
-        <a href="/Course_find" class="new-course-link" style="margin-left: 10px">조회</a><br><br>
-        <div class="search-bar">
-            <div class="search-bar-row">
-                <label for="courseName">온라인강좌구분</label>
-                <select name="courseName" id="courseName" style="margin-right: 20px;">
-                    <option value="국어">국어</option>
-                    <option value="영어">영어</option>
-                    <option value="수학">수학</option>
-                </select>
+        <form action="/Course_find" method="post" id="searchForm">
+            <button type="button" class="new-course-link" style="margin-left: 10px" id="searchButton1">조회</button>
+            <br><br>
+            <div class="search-bar">
+                <div class="search-bar-row">
+                    <label for="courseName">온라인강좌구분</label>
+                    <select name="searchcoursename" id="courseName" style="margin-right: 20px;">
+                        <option value="전체">전체</option>
+                        <option value="국어">국어</option>
+                        <option value="영어">영어</option>
+                        <option value="수학">수학</option>
+                    </select>
+                </div>
+                <div class="search-bar-row">
+                    <label for="courseSearch">온라인강좌명</label>
+                    <input type="text" name="searchcoursename1" id="courseSearch" placeholder="강좌번호 또는 강좌명을 검색해주세요...">
+                </div>
+                <div class="search-bar-row">
+                    <label for="courseStatus" style="margin-right: 105px;">강좌진행상태</label>
+                    <select name="searchcourseStatus" id="courseStatus">
+                        <option value="전체">전체</option>
+                        <option value="C001">대기</option>
+                        <option value="C002">진행</option>
+                        <option value="C003">종료</option>
+                    </select>
+                </div>
             </div>
-            <div class="search-bar-row">
-                <label for="courseSearch">온라인강좌명</label>
-                <input type="text" id="courseSearch" placeholder="강좌번호 또는 강좌명을 검색해주세요...">
-            </div>
-            <div class="search-bar-row">
-                <label for="courseStatus" style="margin-right: 105px;">강좌진행상태</label>
-                <select name="courseStatus" id="courseStatus">
-                    <option value="전체">전체</option>
-                    <option value="준비중">준비중</option>
-                    <option value="운영중">운영중</option>
-                    <option value="종료">종료</option>
-                </select>
-            </div>
-        </div>
+        </form>
+        <script>
+            $(document).ready(function () {
+                $("#searchButton1").click(function () {
+                    $.ajax({
+                        type: "POST",
+                        url: $("#searchForm").attr("action"),
+                        data: $("#searchForm").serialize(),
+                        dataType: "json",
+                        success: function (data) {
+                            updateCourseTable(data);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error:", error);
+                        }
+                    });
+                });
+
+                function updateCourseTable(data) {
+                    var table = $("#courseTable");
+                    table.find("tbody").empty();
+
+                    $.each(data, function (index, course) {
+                        var row = "<tr><td><input type='checkbox' name='cbox'></td>"
+                            + "<td>" + course.courseSeq + "</td>"
+                            + "<td><a href='#'>" + course.courseName + "</a></td>"
+                            + "<td>" + course.courseBrief + "</td>"
+                            + "<td>" + course.startDateTime + "</td>"
+                            + "<td>" + course.endDateTime + "</td>"
+                            + "<td>" + course.statusCode.name + "</td></tr>";
+                        table.append(row);
+                    });
+                }
+            });
+        </script>
         <div class="course-list">
             <h4>온라인강좌 <small>검색결과: ??건</small>
                 <select style="margin-left: 2px;">
@@ -222,7 +260,8 @@
                 </select>
             </h4>
             <div class="table-container">
-                <table>
+                <table id="courseTable">
+                    <thead>
                     <tr>
                         <th><input type="checkbox" id="cboxAll" name="cboxAll" onclick="checkAll()"></th>
                         <th>강좌번호</th>
@@ -232,6 +271,8 @@
                         <th>강좌 종료일</th>
                         <th>강좌 진행상태</th>
                     </tr>
+                    </thead>
+                    <tbody>
                     <tr th:each="course : ${courses}">
                         <td><input type="checkbox" name="cbox"></td>
                         <td th:text="${course.courseSeq}">001</td>
@@ -241,6 +282,7 @@
                         <td th:text="${course.endDateTime}">2023-09-15</td>
                         <td th:text="${course.statusCode.name}">진행중</td>
                     </tr>
+                    </tbody>
                 </table>
                 <script>
                     function checkAll() {
@@ -288,10 +330,13 @@
                         </tr>
                         <tbody id="courseChaptersTableBody">
                         <tr th:each="courseChapter : ${courseChapters}">
-                                <td><input type="checkbox" name="cbox1"></td>
-                                <td th:text="${courseChapter.chapterOrder}">001</td>
-                                <td><a href="#" th:text="${courseChapter.chapterName}">예쁘게 꾸며보기</a></td>
-                                <td th:text="${courseChapter.chapterBrief}">HTML과 CSS로 페이지 스타일링하기</td>
+                            <td><input type="checkbox" name="cbox1"></td>
+                            <td th:text="${courseChapter.chapterOrder}"
+                                th:data-chapter-order="${courseChapter.chapterOrder}"
+                                th:data-course-seq="${courseChapter.course.courseSeq}">001
+                            </td>
+                            <td><a href="#" th:text="${courseChapter.chapterName}">예쁘게 꾸며보기</a></td>
+                            <td th:text="${courseChapter.chapterBrief}">HTML과 CSS로 페이지 스타일링하기</td>
                         </tr>
                         </tbody>
                         <!-- Add more rows as needed -->
@@ -357,35 +402,55 @@
                        style="position: relative; right: 5px; top: 5px;" onclick="deleteSelectedChapters()">삭제</a>
                     <script>
                         function deleteSelectedChapters() {
+                            console.log("Delete button clicked!"); // 이 부분을 확인해보세요
                             const selectedChapters = [];
-                            $("input[name=cbox1]:checked").each(function() {
-                                // 선택된 courseChapter의 순서를 배열에 추가합니다.
-                                selectedChapters.push($(this).closest("tr").find("[th\\:text=${courseChapter.chapterOrder}]").text());
+                            const selectedCourseSeqs = [];
+
+                            $("input[name=cbox1]:checked").each(function () {
+                                const chapterOrder = $(this).closest("tr").find("[data-chapter-order]").data("chapter-order");
+                                selectedChapters.push(chapterOrder);
+
+                                const courseSeq = $(this).closest("tr").find("[data-course-seq]").data("course-seq");
+                                selectedCourseSeqs.push(courseSeq);
                             });
+                            console.log("Delete button clicked2!"); // 이 부분을 확인해보세요
 
                             $.ajax({
                                 type: "POST",
                                 url: "/CourseChapter_delete", // 실제 컨트롤러 URL로 변경
-                                data: JSON.stringify(selectedChapters),
+                                data: JSON.stringify({chapters: selectedChapters, courseSeqs: selectedCourseSeqs}),
                                 contentType: "application/json",
-                                success: function(data) {
+                                success: function (data) {
                                     if (data.success) {
+                                        console.log("Delete button clicked3!");
                                         // 업데이트 로직 호출
                                         updateCourseChapters();
                                     } else {
                                         console.error("An error occurred during deletion.");
                                     }
                                 },
-                                error: function(xhr, status, error) {
+                                error: function (xhr, status, error) {
                                     console.error("Error:", error);
                                 }
                             });
                         }
 
                         function updateCourseChapters() {
-                            // 선택한 courseChapter를 삭제하고 업데이트 로직 작성
-                            // 예를 들어, 서버에서 최신 courseChapters를 다시 받아와서 업데이트하는 방식을 사용
-                            // fetchAndShowCourseChapters(); // 예시로 데이터 업데이트 함수 호출
+                            const tableBody = $("#courseChaptersTableBody");
+                            tableBody.empty(); // 기존 테이블 내용 삭제
+
+                            // 업데이트된 데이터를 기반으로 테이블 내용 다시 생성
+                            for (const courseChapter of updatedData) {
+                                const newRow = `
+                                        <tr>
+                                            <td><input type="checkbox" name="cbox1"></td>
+                                            <td>${courseChapter.chapterOrder}</td>
+                                            <td><a href="#">${courseChapter.chapterName}</a></td>
+                                            <td>${courseChapter.chapterBrief}</td>
+                                        </tr>
+                                    `;
+                                tableBody.append(newRow);
+                            }
                         }
                     </script>
                     <a href="/CourseChapter_save" class="new-course-link"
@@ -393,15 +458,17 @@
 
                     <!-- 차시 신규등록 모달 -->
                     <button href="/CourseChapter_save" class="new-course-link" id="openContentRegistration"
-                       style="position: relative; right: 15px; top: 5px;">차시 신규등록</button>
+                            style="position: relative; right: 15px; top: 5px;">차시 신규등록
+                    </button>
                     <!-- 차시 신규등록 모달 오버레이 -->
                     <div id="modalOverlay" class="modal-overlay">
                         <div class="modal-content">
                             <span class="close-button1" id="closeModal">&times;</span>
                             <h2>강의 차시 등록</h2>
-                            <form action="/CourseChapter_save" method="post">
+                            <form action="/CourseChapter_save" method="post" id="saveform">
                                 강좌목록: <select name="courseDTO.courseSeq">
-                                <option th:each="course : ${courses}" th:value="${course.courseSeq}" th:text="${course.courseName}"></option>
+                                <option th:each="course : ${courses}" th:value="${course.courseSeq}"
+                                        th:text="${course.courseName}"></option>
                             </select><br>
                                 차시순서: <input type="number" name="chapterOrder" th:value="${i}"><br>
                                 쳅터제목: <input type="text" name="chapterName"><br>
@@ -432,8 +499,8 @@
                             modalOverlay.style.display = "block";
                             const chapterNameInput = document.querySelector("input[name='chapterName']");
                             const chapterBriefInput = document.querySelector("input[name='chapterBrief']");
-                            chapterNameInput.value="";
-                            chapterBriefInput.value="";
+                            chapterNameInput.value = "";
+                            chapterBriefInput.value = "";
                         });
 
                         //모달이 닫힐때
@@ -441,8 +508,8 @@
                             modalOverlay.style.display = "none";
                             const chapterNameInput = document.querySelector("input[name='chapterName']");
                             const chapterBriefInput = document.querySelector("input[name='chapterBrief']");
-                            chapterNameInput.value="";
-                            chapterBriefInput.value="";
+                            chapterNameInput.value = "";
+                            chapterBriefInput.value = "";
                         });
 
                         // 모달 콘텐츠 바깥을 클릭하면 모달 닫기
@@ -451,12 +518,12 @@
                                 modalOverlay.style.display = "none";
                                 const chapterNameInput = document.querySelector("input[name='chapterName']");
                                 const chapterBriefInput = document.querySelector("input[name='chapterBrief']");
-                                chapterNameInput.value="";
-                                chapterBriefInput.value="";
+                                chapterNameInput.value = "";
+                                chapterBriefInput.value = "";
                             }
                         });
 
-                        const form = document.querySelector("form"); // 여러 form 중 하나를 선택
+                        const form = document.querySelector("#saveform");
                         form.addEventListener("submit", async (event) => {
                             event.preventDefault(); // 폼 제출 기본 동작 중지
 
@@ -470,7 +537,7 @@
                                 // 응답 데이터를 JSON 형태로 파싱
                                 const responseData = await response.json();
                                 const newRow = document.createElement("tr");
-                                        newRow.innerHTML = `
+                                newRow.innerHTML = `
                                             <td><input type="checkbox" name="cbox1"></td>
                                             <td>${responseData.chapterOrder}</td>
                                             <td><a href="#">${responseData.chapterName}</a></td>
@@ -535,7 +602,8 @@
                        style="position: relative; right: 10px; top: 5px;">수정</a>
 
                     <!-- 수강생 신규등록 모달 -->
-                    <button id="openStudentRegistrationModal" class="new-course-link" style="position: relative; right: 15px; top: 5px;">
+                    <button id="openStudentRegistrationModal" class="new-course-link"
+                            style="position: relative; right: 15px; top: 5px;">
                         수강생 신규등록
                     </button>
                     <!-- 수강생 신규등록 모달-->
@@ -548,7 +616,8 @@
                                 <input type="hidden" name="courseSeq" value="1">
                                 <table>
                                     <tr>
-                                        <th><input type="checkbox" id="cboxAll3" name="cboxAll3" onclick="checkAll3()"></th>
+                                        <th><input type="checkbox" id="cboxAll3" name="cboxAll3" onclick="checkAll3()">
+                                        </th>
                                         <th>회원구분</th>
                                         <th>성명</th>
                                         <th>이메일</th>
@@ -559,7 +628,8 @@
                                     <tbody id="studentTableBody">
                                     <tr th:each="member, status : ${members}">
                                         <td>
-                                            <input type="checkbox" name="cbox3" th:data-index="${status.index}" th:value="${member.memberSeq}" onclick="toggleCheckbox(this)">
+                                            <input type="checkbox" name="cbox3" th:data-index="${status.index}"
+                                                   th:value="${member.memberSeq}" onclick="toggleCheckbox(this)">
                                         </td>
                                         <td th:text="${member.memberDivision.code}"></td>
                                         <td th:text="${member.nameKor}"></td>
@@ -582,6 +652,7 @@
                                 $("input[name=cbox3]").prop("checked", false);
                             }
                         }
+
                         function toggleCheckbox(checkbox) {
                             var hiddenInput = $(checkbox).siblings('.memberSeq');
                             if (checkbox.checked) {
@@ -602,6 +673,7 @@
                                 tableBody.removeChild(tableBody.firstChild);
                             }
                         }
+
                         function fetchAndShowStudentData() {
                             const tableBody = document.querySelector("#studentTableBody");
                             // 이전 데이터 삭제
@@ -629,6 +701,7 @@
                                 })
                                 .catch(error => console.error("An error occurred:", error));
                         }
+
                         openStudentRegistrationModal.addEventListener("click", () => {
                             studentRegistrationModalOverlay.style.display = "block";
                             clearStudentTable(); // 테이블 내용 지우기
@@ -673,6 +746,7 @@
                                 })
                                 .catch(error => console.error("An error occurred:", error));
                         }
+
                         function updatePageData() {
                         }
 

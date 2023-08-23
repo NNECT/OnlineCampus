@@ -38,5 +38,20 @@ insert ignore into common_code (code, division_code, name, in_use, order_number,
 values ('Y004', 'Y', '업로드실패', true, 0, null);
 
 insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
-values ('테스트', '테스트', now(), now(), 'C001');
+values ('국어', '국어수업', now(), now(), 'C001');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('국어', '국어수업', now(), now(), 'C001');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('국어', '국어수업', now(), now(), 'C002');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('국어', '국어수업', now(), now(), 'C002');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('국어', '국어수업', now(), now(), 'C003');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('국어', '국어수업', now(), now(), 'C003');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('영어', '영어수업', now(), now(), 'C002');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('수학', '수학수업', now(), now(), 'C003');
+
 

@@ -27,4 +27,8 @@ public interface CourseService {
     List<CourseChapter> CourseChapterFindAll();
 
     void CourseStudentAllSave(Long[] memberseqs, Long courseSeq, CourseStudentDTO courseStudentDTO);
+
+    CourseChapter findByCourseAndChapterOrder(Long courseSeq, Integer chapterorder);
+
+    List<Course> findByCourseNameContaining(String searchKeyword, String searchKeyword1);
 }

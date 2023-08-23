@@ -1,6 +1,5 @@
 package com.education.onlinecampus.service.business.manager.impl;
 
-import com.education.onlinecampus.data.dto.CourseChapterContentDTO;
 import com.education.onlinecampus.data.dto.CourseChapterDTO;
 import com.education.onlinecampus.data.dto.CourseDTO;
 import com.education.onlinecampus.data.dto.CourseStudentDTO;
@@ -39,7 +38,6 @@ public class CourseServiceImpl implements CourseService {
         return repositoryService.getCourseChapterRepository().save(courseChapter.toEntity());
     }
 
-
     @Override
     public void CourseChapterDelete(CourseChapter courseChapter){repositoryService.getCourseChapterRepository().delete(courseChapter);}
 
@@ -67,5 +65,14 @@ public class CourseServiceImpl implements CourseService {
             repositoryService.getCourseStudentRepository().save(courseStudentDTO.toEntity());
         }
 
+    }
+    @Override
+    public CourseChapter findByCourseAndChapterOrder(Long courseSeq, Integer chapterorder){
+        return repositoryService.getCourseChapterRepository().findByCourse_CourseSeqAndChapterOrder(courseSeq,chapterorder);
+    }
+
+    @Override
+    public List<Course> findByCourseNameContaining(String searchKeyword, String searchKeyword1){
+        return repositoryService.getCourseRepository().findByCourseNameOrCourseNameContaining(searchKeyword,searchKeyword1);
     }
 }

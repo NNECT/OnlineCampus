@@ -45,10 +45,34 @@ public class CourseController {
         return "manager/manager_main";
     }
     @PostMapping("/Course_find")
-    public String CourseFind(@ModelAttribute Course course, Model model){
-        Course coursefind = courseService.CourseFind(course.getCourseSeq());
-        model.addAttribute("coursefind",coursefind);
-        return "manager/manager_main";
+    @ResponseBody
+    public List<Course> CourseFind(@RequestParam("searchcoursename") String searchcoursename,
+                                   @RequestParam("searchcoursename1") String searchcoursename1,
+                                   @RequestParam("searchcourseStatus") String searchcourseStatus) {
+        if (searchcoursename1.equals("")) {
+            searchcoursename1 = "#";
+        }
+        List<Course> matchingCourses = new ArrayList<>();
+        if(searchcoursename.equals("전체")){
+            List<Course> courses = courseService.CourseFindAll();
+            for (Course course: courses){
+                if (searchcourseStatus.equals("전체")) {
+                    matchingCourses.add(course);
+                } else if (course.getStatusCode().getCode().equals(searchcourseStatus)) {
+                    matchingCourses.add(course);
+                }
+            }
+        }else {
+            List<Course> byCourseNameContaining = courseService.findByCourseNameContaining(searchcoursename, searchcoursename1);
+            for (Course course : byCourseNameContaining) {
+                if (searchcourseStatus.equals("전체")) {
+                    matchingCourses.add(course);
+                } else if (course.getStatusCode().getCode().equals(searchcourseStatus)) {
+                    matchingCourses.add(course);
+                }
+            }
+        }
+        return matchingCourses;
     }
     @GetMapping("/CourseChapter_save")
     public String GetCourseChapter_save(Model model){
@@ -70,16 +94,16 @@ public class CourseController {
 
     @PostMapping("/CourseChapter_delete")
     @ResponseBody
-    public Map<String, Object> deleteSelectedChapters(@RequestBody List<String> selectedChapters) {
+    public Map<String, Object> deleteSelectedChapters(@RequestBody Map<String, List<String>> requestData) {
         Map<String, Object> response = new HashMap<>();
+        List<String> selectedChapters = requestData.get("chapters");
+        List<String> selectedCourseSeqs = requestData.get("courseSeqs");
 
         try {
-            for(String s:selectedChapters){
-                System.out.println("이건먼가요?"+s);
+            for (int i=0;i<selectedChapters.size();i++) {
+                CourseChapter byCourseAndChapterOrder = courseService.findByCourseAndChapterOrder(Long.valueOf(selectedCourseSeqs.get(i)), Integer.valueOf(selectedChapters.get(i)));
+                courseService.CourseChapterDelete(byCourseAndChapterOrder);
             }
-            // 선택된 courseChapter 삭제 작업 수행
-            // courseService.deleteSelectedChapters(selectedChapters);
-
             response.put("success", true);
         } catch (Exception e) {
             response.put("success", false);
