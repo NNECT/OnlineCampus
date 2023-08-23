@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/1cfe6d92db.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../../css/membermain.css"/>
 </head>
 <body>
 <nav class="navbar navbar-default navbar-fixed-top bg-dark">
@@ -29,8 +31,8 @@
                         학사정보 <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">나의정보조회</a></li>
-                        <li><a href="#">수강이력조회</a></li>
+                        <li><a class="dropmenu_wrap_a" href="#">나의정보조회</a></li>
+                        <li><a class="dropmenu_wrap_a" href="#">수강이력조회</a></li>
                     </ul>
                 </li>
                 <li role="presentation" class="dropdown">
@@ -38,12 +40,12 @@
                         수업정보 <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">강의목록</a></li>
+                        <li><a class="dropmenu_wrap_b" href="/Course_findAll">강의목록</a></li>
                     </ul>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li role="presentation"><a href="/Member_logout">로그아웃</a></li>
+                <li role="presentation"><a th:href="@{/Member_logout}"><i class="fa-solid fa-right-from-bracket mr-2"></i>&nbsp;&nbsp;로그아웃</a></li>
             </ul>
         </div>
     </div>

@@ -4,6 +4,13 @@ body, html {
     margin: 0;
 }
 
+a.homebtn{
+    color:#333;
+}
+a.homebtn:hover {
+    color:#6610f2;
+}
+
 .login_bg{
     width:100%;
     height:950px;
