@@ -68,10 +68,6 @@ public class MemberController {
                     model.addAttribute("loggedInMember", loggedInMember);
                     List<Course> courses = courseService.CourseFindAll();
                     model.addAttribute("courses",courses);
-                    List<CourseChapter> courseChapters = courseService.CourseChapterFindAll();
-                    model.addAttribute("courseChapters",courseChapters);
-                    int i = courseChapters.size() + 1;
-                    model.addAttribute("i",i);
                     return "/manager/manager_main";
                 }
                 case "M002": {

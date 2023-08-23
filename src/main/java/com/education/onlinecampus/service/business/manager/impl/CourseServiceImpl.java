@@ -21,8 +21,13 @@ public class CourseServiceImpl implements CourseService {
     private final RepositoryService repositoryService;
 
     @Override
-    public void CourseSave(CourseDTO course){
-        repositoryService.getCourseRepository().save(course.toEntity());
+    public Course CourseSave(CourseDTO course){
+        return repositoryService.getCourseRepository().save(course.toEntity());
+    }
+
+    @Override
+    public RepositoryService repositoryService(){
+        return repositoryService;
     }
 
     @Override
@@ -74,5 +79,10 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<Course> findByCourseNameContaining(String searchKeyword, String searchKeyword1){
         return repositoryService.getCourseRepository().findByCourseNameOrCourseNameContaining(searchKeyword,searchKeyword1);
+    }
+
+    @Override
+    public List<CourseChapter> findByCourseChapterCompositeKeyCourseSeq(Long courseSeq){
+        return repositoryService.getCourseChapterRepository().findByCourseChapterCompositeKey_CourseSeq(courseSeq);
     }
 }

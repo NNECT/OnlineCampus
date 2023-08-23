@@ -31,18 +31,34 @@ public class CourseController {
     @GetMapping("/Course")
     public String Course(){
         return "manager/Course";}
-
     @PostMapping("/Course_save")
-    public String CourseSave(@ModelAttribute CourseDTO course,Model model){
-        courseService.CourseSave(course);
-        List<Course> courses = courseService.CourseFindAll();
-        model.addAttribute("courses",courses);
-        return "redirect:/";
+    @ResponseBody
+    public ResponseEntity<String> CourseSave(@ModelAttribute CourseDTO courseDTO,Model model) {
+        Course course = courseService.CourseSave(courseDTO);
+        try {
+            String jsonResponse = objectMapper.writeValueAsString(course);
+            return ResponseEntity.ok(jsonResponse);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
     @PostMapping("/Course_delete")
-    public String CourseDelete(@ModelAttribute Course course){
-        courseService.CourseDelete(course);
-        return "manager/manager_main";
+    @ResponseBody
+    public Map<String, Object> deleteSelectedCourse(@RequestBody Map<String, List<String>> requestData) {
+        Map<String, Object> response = new HashMap<>();
+        List<String> selectedCourseSeqs = requestData.get("courseSeqs");
+        try {
+            for (String s : selectedCourseSeqs) {
+                courseService.repositoryService().getCourseRepository().deleteById(Long.valueOf(s));
+            }
+            System.out.println("삭제성공");
+            response.put("success", true);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "An error occurred during deletion.");
+        }
+
+        return response;
     }
     @PostMapping("/Course_find")
     @ResponseBody
@@ -104,6 +120,8 @@ public class CourseController {
                 CourseChapter byCourseAndChapterOrder = courseService.findByCourseAndChapterOrder(Long.valueOf(selectedCourseSeqs.get(i)), Integer.valueOf(selectedChapters.get(i)));
                 courseService.CourseChapterDelete(byCourseAndChapterOrder);
             }
+            List<CourseChapter> retrievedData = courseService.findByCourseChapterCompositeKeyCourseSeq(Long.valueOf(selectedCourseSeqs.get(0)));
+            response.put("retrievedData", retrievedData);
             response.put("success", true);
         } catch (Exception e) {
             response.put("success", false);
@@ -144,4 +162,16 @@ public class CourseController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred: " + e.getMessage());
         }
     }
+
+    @PostMapping("/CourseChapter_find")
+    @ResponseBody
+    public ResponseEntity<List<CourseChapter>> CourseChapterFind(@RequestParam("courseSeq") Long courseSeq) {
+        try {
+            List<CourseChapter> byCourseChapterCompositeKeyCourseSeq = courseService.findByCourseChapterCompositeKeyCourseSeq(courseSeq);
+            return ResponseEntity.ok(byCourseChapterCompositeKeyCourseSeq);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
 }
