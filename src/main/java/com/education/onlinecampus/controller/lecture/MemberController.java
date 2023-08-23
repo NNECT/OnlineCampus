@@ -87,4 +87,7 @@ public class MemberController {
     public String Header(){
         return "lecture/header";
     }
+
+    @GetMapping("/Member_update")
+    public String updateForm() { return "lecture/MemberUpdate"; }
 }
