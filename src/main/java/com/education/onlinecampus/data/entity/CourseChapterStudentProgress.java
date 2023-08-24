@@ -84,6 +84,9 @@ public class CourseChapterStudentProgress implements EntityMarker<CourseChapterS
     @Column(nullable = false)
     private Integer maxPosition;
 
+    @Column(nullable = false)
+    private Boolean completed;
+
     /**
      * 새 데이터 저장 전 디폴트값 설정
      */
@@ -91,6 +94,7 @@ public class CourseChapterStudentProgress implements EntityMarker<CourseChapterS
     public void prePersist() {
         this.finalPosition = 0;
         this.maxPosition = 0;
+        this.completed = false;
     }
 
     @Override

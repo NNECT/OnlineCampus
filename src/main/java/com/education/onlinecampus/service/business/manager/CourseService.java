@@ -32,8 +32,13 @@ public interface CourseService {
     CourseChapterContentDTO courseChapterContentSave(CourseChapterContentDTO courseChapterContentDTO);
 
     // CourseStudent
+    CourseStudentDTO courseStudentFindByCourseAndMember(CourseDTO courseDTO, MemberDTO memberDTO);
     CourseStudentDTO courseStudentSave(CourseStudentDTO courseStudentDTO);
     CourseStudentDTO courseStudentFindByCourseAndStudent(CourseDTO courseDTO, MemberDTO memberDTO);
     List<CourseStudent> courseStudentFindByCourseSeq(Long courseSeq);
     List<CourseStudent> CourseStudentAllSave(Long[] memberseqs, Long courseSeq, CourseStudentDTO courseStudentDTO);
+
+    // CourseChapterStudentProgress
+    CourseChapterStudentProgressDTO courseChapterStudentProgressFindByChapterAndStudent(CourseChapterDTO courseChapterDTO, CourseStudentDTO courseStudentDTO);
+    CourseChapterStudentProgressDTO courseChapterStudentProgressSave(CourseChapterStudentProgressDTO courseChapterStudentProgressDTO);
 }

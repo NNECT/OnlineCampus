@@ -1,8 +1,6 @@
 package com.education.onlinecampus.controller.lecture;
 
-import com.education.onlinecampus.data.dto.CourseChapterDTO;
-import com.education.onlinecampus.data.dto.CourseDTO;
-import com.education.onlinecampus.data.dto.MemberDTO;
+import com.education.onlinecampus.data.dto.*;
 import com.education.onlinecampus.service.business.lecture.MemberService;
 import com.education.onlinecampus.service.business.manager.CourseService;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +27,19 @@ public class AsyncVideoController {
         MemberDTO member = memberService.findByUserName(username);
         CourseDTO course = courseService.CourseFind(courseId);
         CourseChapterDTO chapter = courseService.courseChapterFindByCourseAndSeq(course, chapterId);
+        CourseStudentDTO student = courseService.courseStudentFindByCourseAndMember(course, member);
+        CourseChapterStudentProgressDTO progress = courseService.courseChapterStudentProgressFindByChapterAndStudent(chapter, student);
+
+        if (progress == null) {
+            progress = CourseChapterStudentProgressDTO.builder()
+                    .courseDTO(course)
+                    .chapterDTO(chapter)
+                    .studentDTO(student)
+                    .build();
+            progress = courseService.courseChapterStudentProgressSave(progress);
+        }
 
         Map<String, String> result = new HashMap<>();
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok();
     }
 }
