@@ -11,6 +11,7 @@ input{
     border:none;
     width:100%;
 }
+
 /* HEADER */
 .dropdown-menu>li>a.dropmenu_wrap_a{padding:10px 35px;}
 .dropdown-menu>li>a.dropmenu_wrap_b{padding:10px 50px;}
@@ -19,7 +20,7 @@ section.info_content{
     margin-top:80px;
 }
 h2.headline{
-    margin:50px 0 20px;
+    margin:35px 0 20px;
     font-size: 20px;
 }
 table {
@@ -27,7 +28,7 @@ table {
     border-spacing: 0;
 }
 /*====================*/
-section {max-width:960px; margin:30px auto; padding:30px;}
+section {max-width:960px; margin:70px auto; padding:30px;}
 table {
     width: 100%;
 }
@@ -50,7 +51,8 @@ button.pwdupdatebtn{
     border: 0;
 }
 
-button.pwdupdatebtn:hover , button.infoupdate_btn:hover {
+/* button hover event 공통 */
+button.pwdupdatebtn:hover , button.infoupdate_btn:hover , button.update_pwdbtn:hover{
     background-color:#6610f2;
 }
 
@@ -60,15 +62,87 @@ form.info_form{
 button.infoupdate_btn{
     width:30%;
     height:50px;
-    margin-top:20px;
+    margin:20px 0;
     background-color: #444;
     color:#fff;
     border: 0;
     position:absolute;
     left:34%;
 }
+div.form-group>input.form-control{
+    display: block;
+    margin: 0 auto;
+    background: #ededed;
+    border: 0;
+    border-radius: 5px;
+    padding: 25px 10px;
+    width: 90%;
+    outline: none;
+    color: #333;
+    -webkit-transition: all .2s ease-out;
+    -moz-transition: all .2s ease-out;
+    -ms-transition: all .2s ease-out;
+    -o-transition: all .2s ease-out;
+    transition: all .2s ease-out;
+}
+/*.form-group input[type = "password"] {
+    display: block;!important
+    margin: 0 auto;!important
+    background: #ededed;!important
+    border: 0;!important
+    border-radius: 5px;!important
+    padding: 25px 10px;!important
+    width: 90%;!important
+    outline: none;!important
+    color: #333;!important
+    -webkit-transition: all .2s ease-out;!important
+    -moz-transition: all .2s ease-out;!important
+    -ms-transition: all .2s ease-out;!important
+    -o-transition: all .2s ease-out;!important
+    transition: all .2s ease-out;!important
+
+}*/
+
+::-webkit-input-placeholder {
+    color: #565f79;
+}
+
+.form-group input[type = "password"]:focus {
+    border: 1px solid #79A6FE;
+}
+.form-group label{color: #565f79;}
+
+.form-group{
+    position:relative;
+}
+.form-group i{
+    position:absolute;
+    left: 88%;
+    top: 25px;
+    color: #929292;
+}
+
+/* modal */
+.modal-content h4{
+    text-align: center;
+}
+h4.modal-title{
+    margin: 20px 0;
+    font-size: 20px;
+}
+.form-group{
+    margin-top:20px;
+}
+button.update_pwdbtn{
+    margin: 20px 35%;
+    padding: 10px 25px;
+    background-color: #444;
+    color:#fff;
+    border: 0;
+}
 
 
+/* MediaQuery */
 @media only screen and (max-width:768px) {
     .infodate {
         margin: 0 -10px;
@@ -87,7 +161,7 @@ button.infoupdate_btn{
 
     button.pwdupdatebtn{
         width:50%;
-        margin:auto;
+        margin:0 auto;
         padding:5px;
         background-color: #444;
         color:#fff;

@@ -21,4 +21,10 @@ public class MemberServiceImpl implements MemberService {
     public Member findByUserName(String username){
         return repositoryService.getMemberRepository().findByUsername(username);
     }
+    @Override
+    public void changePassword(Member loggedInMember, String encryptedPassword) {
+        loggedInMember.setPassword(encryptedPassword);
+        repositoryService.getMemberRepository().save(loggedInMember);
+}
+
 }

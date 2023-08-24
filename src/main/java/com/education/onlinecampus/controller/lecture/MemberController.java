@@ -76,6 +76,10 @@ public class MemberController {
                     model.addAttribute("loggedInMember", loggedInMember);
                     return "/lecture/MemberMain";
                 }
+                case "M004": {
+                    model.addAttribute("loggedInMember", loggedInMember);
+                    return "/lecture/MemberUpdate";
+                }
                 default: {
                     break;
                 }
@@ -89,5 +93,31 @@ public class MemberController {
     }
 
     @GetMapping("/Member_update")
-    public String updateForm() { return "lecture/MemberUpdate"; }
+    public String updateForm(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        Member loggedInMember = memberService.findByUserName(username);
+        model.addAttribute("loggedInMember",loggedInMember);
+        return "lecture/MemberUpdate"; }
+
+    @PostMapping("/changePassword")
+    public String changePassword(@RequestParam String currentPassword, @RequestParam String newPassword) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        Member loggedInMember = memberService.findByUserName(username);
+
+        // 현재 비밀번호 확인
+        if (passwordEncoder.matches(currentPassword, loggedInMember.getPassword())) {
+            // 새로운 비밀번호로 변경
+            String encryptedPassword = passwordEncoder.encode(newPassword);
+            memberService.changePassword(loggedInMember, encryptedPassword);
+
+            // 비밀번호 변경 완료 후 로그아웃
+            SecurityContextHolder.clearContext();
+            return "redirect:/Member_login?passwordChanged";
+        } else {
+            // 현재 비밀번호가 일치하지 않을 때 처리
+            return "redirect:/Member_update?error";
+        }
+    }
 }

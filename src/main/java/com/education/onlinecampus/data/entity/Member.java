@@ -115,4 +115,8 @@ public class Member implements EntityMarker<MemberDTO> {
     public MemberDTO toDTO() {
         return AdapterEntityToDTO.convert(this);
     }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
