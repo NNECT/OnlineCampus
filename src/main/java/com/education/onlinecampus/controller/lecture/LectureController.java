@@ -33,7 +33,7 @@ public class LectureController {
         try {
             MemberDTO authMember = memberService.findByUserName(userDetails.getUsername());
 
-            CourseDTO courseDTO = courseService.CourseFind(1L);
+            CourseDTO courseDTO = courseService.CourseFind(2L);
             CourseStudentDTO courseStudentDTO = CourseStudentDTO.builder()
                     .courseDTO(courseDTO)
                     .studentDTO(authMember)

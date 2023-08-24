@@ -30,6 +30,12 @@ public class CourseServiceImpl implements CourseService {
     public void CourseDelete(Course course){ repositoryService.getCourseRepository().delete(course);}
 
     @Override
+    public CourseChapterDTO courseChapterFindByCourseAndSeq(CourseDTO courseDTO, Long courseChapterSeq) {
+        Course course = courseDTO.toEntity();
+        return repositoryService.getCourseChapterRepository().findByCourseAndCourseChapterCompositeKey_ChapterSeq(course, courseChapterSeq).toDTO();
+    }
+
+    @Override
     public CourseDTO CourseFind(Long CourseSeq){
         return repositoryService.getCourseRepository().findByCourseSeq(CourseSeq).toDTO();
     }
@@ -40,6 +46,11 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void CourseChapterDelete(CourseChapter courseChapter){repositoryService.getCourseChapterRepository().delete(courseChapter);}
+
+    @Override
+    public CourseChapterContentDTO courseChapterContentFindByVideoId(String videoId) {
+        return null;
+    }
 
     @Override
     public List<Course> CourseFindAll(){ return repositoryService.getCourseRepository().findAll();}
