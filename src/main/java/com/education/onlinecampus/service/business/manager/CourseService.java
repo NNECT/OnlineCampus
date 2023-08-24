@@ -7,23 +7,23 @@ import com.education.onlinecampus.data.entity.CourseChapter;
 import java.util.List;
 
 public interface CourseService {
+    // Course
+    CourseDTO CourseFind(Long CourseSeq);
+    List<Course> CourseFindAll();
+    List<CourseDTO> courseFindAllByMember(MemberDTO memberDTO);
     void CourseSave(CourseDTO course);
-
     void CourseDelete(Course course);
 
-    CourseDTO CourseFind(Long CourseSeq);
-
-    List<Course> CourseFindAll();
-
+    // CourseChapter
+    CourseChapterDTO courseChapterFindByCourseAndSeq(CourseDTO courseDTO, Long courseChapterSeq);
+    List<List<CourseChapterDTO>> courseChapterFindAllByCourseList(List<CourseDTO> courseDTOList);
     CourseChapterDTO CourseChapterSave(CourseChapterDTO courseChapterDTO);
-
     void CourseChapterDelete(CourseChapter courseChapter);
 
-    List<CourseDTO> courseFindAllByMember(MemberDTO memberDTO);
-
-    List<List<CourseChapterDTO>> courseChapterFindAllByCourseList(List<CourseDTO> courseDTOList);
-
+    // CourseChapterContent
+    CourseChapterContentDTO courseChapterContentFindByVideoId(String videoId);
     CourseChapterContentDTO courseChapterContentSave(CourseChapterContentDTO courseChapterContentDTO);
 
+    // CourseStudent
     CourseStudentDTO courseStudentSave(CourseStudentDTO courseStudentDTO);
 }

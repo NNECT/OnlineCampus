@@ -77,7 +77,7 @@ public class CourseChapterStudentProgress implements EntityMarker<CourseChapterS
     private CourseStudent student;
 
     /** 최종 재생 위치 */
-    @Column
+    @Column(nullable = false)
     private Integer finalPosition;
 
     /** 최대 재생 위치 */
@@ -89,6 +89,7 @@ public class CourseChapterStudentProgress implements EntityMarker<CourseChapterS
      */
     @PrePersist
     public void prePersist() {
+        this.finalPosition = 0;
         this.maxPosition = 0;
     }
 

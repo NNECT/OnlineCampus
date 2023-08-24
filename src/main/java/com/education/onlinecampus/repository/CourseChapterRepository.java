@@ -14,7 +14,5 @@ public interface CourseChapterRepository extends JpaRepository<CourseChapter, Co
     CourseChapter findByContent(CourseChapterContent content);
     List<CourseChapter> findBySupplementaryFile(File supplementaryFile);
     List<CourseChapter> findByCourseChapterCompositeKey_CourseSeq(Long courseSeq);
-
-    @Query("SELECT COALESCE(MAX(cc.courseChapterCompositeKey.chapterSeq), 0) FROM CourseChapter cc WHERE cc.courseChapterCompositeKey.courseSeq = :courseSeq")
-    Long findMaxChapterSeqByCourseSeq(Long courseSeq);
+    CourseChapter findByCourseAndCourseChapterCompositeKey_ChapterSeq(Course course, Long chapterSeq);
 }
