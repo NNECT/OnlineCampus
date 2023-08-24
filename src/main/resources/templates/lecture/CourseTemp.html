@@ -99,8 +99,8 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     const username = /*[[${#authentication.name}]]*/ 'default-username';
-    const csrfToken = /*[[${_csrf.token}]]*/ 'default-token-value';
-    const csrfHeader = /*[[${_csrf.headerName}]]*/ 'default-header-name';
+    const csrfToken = /*[[${_csrf?.token}]]*/ 'default-token-value';
+    const csrfHeader = /*[[${_csrf?.headerName}]]*/ 'default-header-name';
     const urlVideoStartTime = /*[[@{/async/video_start_time}]]*/ 'default-url';
     /*]]>*/
 
