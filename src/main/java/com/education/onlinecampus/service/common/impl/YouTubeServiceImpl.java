@@ -114,7 +114,7 @@ public class YouTubeServiceImpl implements YouTubeService {
 
     private VideoStatus getVideoStatus() {
         VideoStatus status = new VideoStatus();
-        status.setPrivacyStatus("private");
+        status.setPrivacyStatus("unlisted");
         return status;
     }
 }

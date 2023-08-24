@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>강의보기 페이지</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/course.css}">
+    <link rel="stylesheet" th:href="@{https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css}" />
+</head>
+<body>
+<a th:href="@{Member_logout}">로그아웃</a>
+<div class="container" style="margin-top: 40px;">
+    <h3 style="margin-left: 30px;">강의목록</h3>
+    <div style="padding: 20px; border: 1px solid lightgray; border-radius: 10px; margin: 25px 10px;">
+        <span class="allProgress" style="display: inline-block; margin-bottom: 20px;">전체 진도율</span>
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
+        </div>
+    </div>
+    <div class="accordion" id="course-accordion">
+        <div class="accordion-item" th:each="course, courseStat : ${courses}">
+            <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapse' + ${course.courseSeq}" th:aria-expanded="false" th:aria-controls="'collapse' + ${course.courseSeq}">
+
+                </button>
+            </h2>
+            <div th:id="'collapse' + ${course.courseSeq}" class="accordion-collapse collapse" data-bs-parent="#course-accordion">
+                <div class="accordion-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">차시</th>
+                            <th scope="col">썸네일</th>
+                            <th scope="col">차시명</th>
+                            <th scope="col">학습시간</th>
+                            <th scope="col">시청</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="courseChapter : ${courseChapters[courseStat.index]}">
+                            <th scope="row" th:text="${courseChapter.chapterOrder}"></th>
+                            <td></td>
+                            <td th:text="${courseChapter.chapterName}"></td>
+                            <td th:text="${courseChapter.contentDTO.runningTime}"></td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/jquery-3.7.0.min.js}"></script>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js}"></script>
+<script th:src="@{https://www.youtube.com/iframe_api}"></script>
+</body>
+</html>

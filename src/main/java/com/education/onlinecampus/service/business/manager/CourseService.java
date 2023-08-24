@@ -1,7 +1,6 @@
 package com.education.onlinecampus.service.business.manager;
 
-import com.education.onlinecampus.data.dto.CourseChapterDTO;
-import com.education.onlinecampus.data.dto.CourseDTO;
+import com.education.onlinecampus.data.dto.*;
 import com.education.onlinecampus.data.entity.Course;
 import com.education.onlinecampus.data.entity.CourseChapter;
 
@@ -12,15 +11,19 @@ public interface CourseService {
 
     void CourseDelete(Course course);
 
-    Course CourseFind(Long CourseSeq);
+    CourseDTO CourseFind(Long CourseSeq);
 
     List<Course> CourseFindAll();
 
-    void CourseChapterSave(CourseChapterDTO courseChapter);
+    CourseChapterDTO CourseChapterSave(CourseChapterDTO courseChapterDTO);
 
     void CourseChapterDelete(CourseChapter courseChapter);
 
-    List<CourseChapter> findCourseChapter(Long CourseSeq);
+    List<CourseDTO> courseFindAllByMember(MemberDTO memberDTO);
 
-    List<CourseChapter> CourseChapterFindAll();
+    List<List<CourseChapterDTO>> courseChapterFindAllByCourseList(List<CourseDTO> courseDTOList);
+
+    CourseChapterContentDTO courseChapterContentSave(CourseChapterContentDTO courseChapterContentDTO);
+
+    CourseStudentDTO courseStudentSave(CourseStudentDTO courseStudentDTO);
 }
