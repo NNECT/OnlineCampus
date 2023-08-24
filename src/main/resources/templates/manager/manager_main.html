@@ -6,7 +6,12 @@
     <title>강의 관리 페이지</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="../../css/manager_main.css">
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/jquery/dist/jquery.min.js"></script>
+    <script src="https://unpkg.com/gridjs-jquery/dist/gridjs.production.min.js"></script>
+    <script src="https://unpkg.com/gridjs/dist/locale/ko.js"></script>
     <style>
         .active {
             border: 2px solid #3498db;
@@ -925,10 +930,252 @@
     </div>
 
     <!-- 강의 컨탠트 관리 -->
-    <div id="content-management" style="display: none;">
-        <br><br>
-        <button>강의컨텐트관리</button>
+    <div id="content-management" style="display: none; height: 900px;">
+        <a href="/Course_delete" class="new-course-link" style="margin-left: 10px">삭제</a>
+        <a href="/Course" class="new-course-link" style="margin-left: 10px">수정</a>
+        <a href="/Course" class="new-course-link" style="margin-left: 10px">강의 신규등록</a>
+        <form action="/" method="post" id="contentSearchForm">
+            <button type="button" class="new-course-link" style="margin-left: 10px" id="searchButton2">조회</button>
+            <br><br>
+            <div class="search-bar">
+                <div class="search-bar-row">
+                    <label for="courseSearch" style="width: 15%">콘텐츠명</label>
+                    <input type="text" name="searchcoursename1" id="courseContentSearch" style="width: 30%">
+                    <label for="courseSearch" style="width: 15%">교과목명</label>
+                    <input type="text" name="searchcoursename1" id="courseNameSearch" style="width: 30%">
+                </div>
+            </div>
+        </form>
+        <div style="display: flex; justify-content: space-between; margin-top: 10px; position: relative; height: 800px;">
+            <div style="width: 59%;">
+                <h4>온라인콘텐츠</h4>
+                <div class="table-container" >
+                    <table id="contentTable">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" id="cboxAll4" name="cboxAll4"  onclick="checkAll4()"></th>
+                            <th>콘텐츠명</th>
+                            <th>Youtube연동번호</th>
+                            <th>교과목</th>
+                            <th>학습시간</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><input type="checkbox" name="cbox4"></td>
+                            <td>콘텐ㅌ츠1</td>
+                            <td>콘텐ㅌ츠1</td>
+                            <td>과목1</td>
+                            <td>학습시간1</td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="cbox4"></td>
+                            <td>콘텐ㅌ츠2</td>
+                            <td>콘텐ㅌ츠2</td>
+                            <td>과목2</td>
+                            <td>학습시간2</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div style="max-width: 40%; width: 40%; margin-top: 63px; position: absolute; right: 5px;">
+                <div style="border: 1px solid #ccc; height: 520px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; padding: 3px 10px 0px;">
+                    <table style="width: 100%;">
+                        <colgroup>
+                            <col width="30%">
+                            <col width="70%">
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <label for="contentNum">콘텐츠관리번호</label>
+                            </td>
+                            <td>
+                                <input type="text" id="contentNum" disabled style="width: 90%">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="preContentNum">선행콘텐츠관리번호</label>
+                            </td>
+                            <td>
+                                <input type="text" id="preContentNum" style="width: 90%">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="contentName">콘텐츠명</label>
+                            </td>
+                            <td>
+                                <input type="text" id="contentName" style="width: 90%">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="contentDescription">콘텐츠설명</label>
+                            </td>
+                            <td>
+                                <textarea id="contentDescription" rows="2" style="width: 90%; resize: none; padding:5px; border: 1px solid lightgray; border-radius: 5px;"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="contentFileNum">콘텐츠파일번호</label>
+                            </td>
+                            <td>
+                                <div id="contentFileNum">
+                                    <input type="text" disabled style="width: 20%; float: left;">
+                                    <input type="text" disabled style="width: 58%; float: left;">
+                                    <a style="width: 10%; float: right; padding-top: 10px;" href="#" id="contentNumModal"><img th:src="@{/img/search.png}" alt="searchIcon" width="15" height="15"></a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="youtubeNum">Youtube연동번호</label>
+                            </td>
+                            <td>
+                                <input type="text" id="youtubeNum" disabled style="width: 70%; float: left;">
+                                <button type="button" style="margin-top: 7px;">연동확인</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="courseName2">교과목명</label>
+                            </td>
+                            <td>
+                                <input type="text" id="courseNum" disabled style="width: 20%; float: left;">
+                                <input type="text" id="courseName2" style="width: 58%; float: left;">
+                                <a style="width: 10%; float: right; padding-top: 10px;" href="#"><img th:src="@{/img/search.png}" alt="searchIcon" width="15" height="15"></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="contentNum">차시학습시간[초]</label>
+                            </td>
+                            <td>
+                                <input type="text" id="contentNum9" disabled style="width: 70%; float: left;">
+                                <button type="button" style="margin-top: 7px;">연동확인</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
+
+
+    <!-- 차시 신규등록 모달 오버레이 -->
+    <div id="findContentFileModal" style="width: 100%; background: lightgray; display: none;" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-button1" id="closeContentModal">&times;</span>
+            <h2>강의 차시 등록</h2>
+            <form method="post">
+                강좌목록: <select name="courseDTO.courseSeq" style="width: auto;">
+                <option></option>
+            </select><br>
+                차시순서: <input type="number" name="chapterOrder" th:value="${i}"><br>
+                쳅터제목: <input type="text" name="chapterName"><br>
+                <!--컨텐츠번호: <input type="text" name="content">
+                보조자료: <input type="file" name="supplementaryFile">-->
+                챕터설명: <input type="text" name="chapterBrief"><br>
+                <input type="submit" value="등록">
+            </form>
+        </div>
+    </div>
+
+
+
+<!--    <div id="findContentFileModal" style="width: 100%; background: lightgray; display: none;">
+        <div style="width: 70%; background: white;">
+            <div style="float: right;">
+                <img th:src="/img/search.png" width="20">
+                <img th:src="/img/search.png" width="20">
+            </div>
+            <div>
+                <div>
+                    <div style="float: left;">
+                        <button type="button" style="float: left;">파일선택</button>
+                        <button type="button" style="float: left;">선택다운로드</button>
+                        <button type="button" style="float: left;">선택삭제</button>
+                    </div>
+                    <div style="float: right;">
+                        <button type="button" id="closeContentModal">닫기</button>
+                    </div>
+                </div>
+                <h4>파일업로드<span>검색결과 : 0건</span></h4>
+                <table>
+                    <tr>
+                        <th><input type="checkbox"></th>
+                        <th>번호</th>
+                        <th>파일명</th>
+                        <th>파일크기</th>
+                        <th>등록일자</th>
+                        <th>파일받기</th>
+                    </tr>
+                </table>
+            </div>
+            <div>
+                <div>
+                    <span class="contentSpan" style="background-image: url('static/img/file.png')"></span>
+                    <h4>파일을 이곳에 드래그 앤 드롭하세요.</h4>
+                </div>
+            </div>
+        </div>
+    </div>-->
+
+    <script>
+        $(document).ready(function (){
+            function checkAll4() {
+                if ($("#cboxAll4").is(':checked')) {
+                    $("input[name=cbox4]").prop("checked", true);
+                } else {
+                    $("input[name=cbox4]").prop("checked", false);
+                }
+            }
+        })
+
+        $("#contentTable").Grid({
+            //search: true,
+            pagination: {
+                enabled: false,
+                limit : 7
+            },
+            multiselect : true,
+            multiboxonly : false,
+            language: {
+                'search' : {
+                    placeholder : '검색',
+                    //noResults: '검색결과가 없습니다.'
+                },
+                'pagination' : {
+                    'previous': '이전',
+                    'next': '다음'
+                }
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const findContentFileModal = document.getElementById("findContentFileModal");
+            const contentNumModal = document.getElementById("contentNumModal");
+            const closeContentModal = document.getElementById("closeContentModal");
+
+            contentNumModal.addEventListener("click", function() {
+                if (findContentFileModal) {
+                    findContentFileModal.style.display = "block";
+                }
+            });
+
+            closeContentModal.addEventListener("click", function() {
+                if (findContentFileModal) {
+                    findContentFileModal.style.display = "none";
+                }
+            });
+        });
+
+    </script>
 
     <!-- 회원 관리 박스 -->
     <div id="member-management" style="display: none;">
