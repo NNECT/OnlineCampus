@@ -7,6 +7,8 @@ import com.education.onlinecampus.service.common.RepositoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
@@ -18,7 +20,7 @@ public class MemberServiceImpl implements MemberService {
         repositoryService.getMemberRepository().save(repositoryService.convertDTOToEntity(memberDTO));
     }
     @Override
-    public Member findByUserName(String username){
-        return repositoryService.getMemberRepository().findByUsername(username);
+    public MemberDTO findByUserName(String username) throws NoSuchElementException {
+        return repositoryService.getMemberRepository().findByUsername(username).orElseThrow().toDTO();
     }
 }

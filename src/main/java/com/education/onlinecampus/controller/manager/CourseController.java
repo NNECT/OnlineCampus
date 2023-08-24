@@ -47,8 +47,8 @@ public class CourseController {
         return "manager/manager_main";
     }
     @PostMapping("/Course_find")
-    public String CourseFind(@ModelAttribute Course course, Model model){
-        Course coursefind = courseService.CourseFind(course.getCourseSeq());
+    public String CourseFind(@ModelAttribute CourseDTO courseDTO, Model model){
+        CourseDTO coursefind = courseService.CourseFind(courseDTO.getCourseSeq());
         model.addAttribute("coursefind",coursefind);
         return "manager/manager_main";
     }

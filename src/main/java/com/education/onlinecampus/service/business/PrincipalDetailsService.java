@@ -16,7 +16,7 @@
 
         @Override
         public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-            Member user = userRepository.findByUsername(username);
+            Member user = userRepository.findByUsername(username).orElseThrow();
             return new PrincipalDetails(user);
         }
     }

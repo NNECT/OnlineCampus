@@ -15,11 +15,10 @@ import javax.persistence.*;
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
 public class CourseChapterContent implements EntityMarker<CourseChapterContentDTO> {
-    /** 콘텐츠 번호 */
+    /** 유튜브 비디오 ID */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
-    private Long contentSeq;
+    @Column(length = 400, nullable = false)
+    private String videoId;
 
     /** 콘텐츠 이름 */
     @Column(length = 100, nullable = false)
@@ -36,19 +35,6 @@ public class CourseChapterContent implements EntityMarker<CourseChapterContentDT
             referencedColumnName = "fileSeq"
     )
     private File thumbnailFile;
-
-    /** 유튜브 비디오 ID */
-    @Column(length = 400)
-    private String videoId;
-
-    /** 강좌 상태 구분 공통 코드 */
-    @ManyToOne
-    @JoinColumn(
-            name = "statusCode",
-            referencedColumnName = "code",
-            nullable = false
-    )
-    private CommonCode statusCode;
 
     /** 동영상 길이 (초) */
     @Column
