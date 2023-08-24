@@ -6,7 +6,6 @@
     <title>강의 관리 페이지</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="../../css/manager_main.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <style>
         .active {
             border: 2px solid #3498db;
@@ -63,144 +62,12 @@
         </div>
     </div>
 
-    <!-- 네이베게이션 스크립트 -->
-    <script>
-        const menuLinks = document.querySelectorAll(".menu-link");
-        const contentBoxes = document.querySelectorAll(".content-box");
-        const closeButton = document.querySelectorAll(".close-button");
-
-        menuLinks.forEach(link => {
-            link.addEventListener("click", function (event) {
-                event.preventDefault();
-                const target = link.getAttribute("data-target");
-                contentBoxes.forEach(box => {
-                    if (box.id === target + "-box") {
-                        box.parentElement.appendChild(box);
-                        box.classList.add("show");
-                        box.classList.add("show1");
-                    } else {
-                        box.classList.remove("show");
-                    }
-                });
-                if (target === "online-course") {
-                    document.getElementById("online-course").style.display = "block";
-                } else {
-                    document.getElementById("online-course").style.display = "none";
-                }
-                if (target === "content-management") {
-                    document.getElementById("content-management").style.display = "block";
-                } else {
-                    document.getElementById("content-management").style.display = "none";
-                }
-                if (target === "member-management") {
-                    document.getElementById("member-management").style.display = "block";
-                } else {
-                    document.getElementById("member-management").style.display = "none";
-                }
-            });
-        });
-
-        contentBoxes.forEach(box => {
-            box.addEventListener("click", function () {
-                const target = box.getAttribute("data-target");
-                contentBoxes.forEach(otherBox => {
-                    if (otherBox === box) {
-                        box.classList.add("show");
-                        box.classList.add("show1");
-                    } else {
-                        otherBox.classList.remove("show");
-                    }
-                });
-                if (target === "online-course") {
-                    document.getElementById("online-course").style.display = "block";
-                } else {
-                    document.getElementById("online-course").style.display = "none";
-                }
-                if (target === "content-management") {
-                    document.getElementById("content-management").style.display = "block";
-                } else {
-                    document.getElementById("content-management").style.display = "none";
-                }
-                if (target === "member-management") {
-                    document.getElementById("member-management").style.display = "block";
-                } else {
-                    document.getElementById("member-management").style.display = "none";
-                }
-            });
-        });
-
-        document.addEventListener("DOMContentLoaded", function () {
-            const closeButton = document.querySelectorAll(".close-button");
-            closeButton.forEach(button => {
-                button.addEventListener("click", function (event) {
-                    const target = button.getAttribute("data-target");
-                    event.stopPropagation(); // 이벤트 버블링 방지
-                    const parentBox = button.closest(".content-box");
-                    parentBox.classList.remove("show");
-                    parentBox.classList.remove("show1");
-                    if (target === "online-course") {
-                        document.getElementById("online-course").style.display = "none";
-                    }
-                    if (target === "content-management") {
-                        document.getElementById("content-management").style.display = "none";
-                    }
-                    if (target === "member-management") {
-                        document.getElementById("member-management").style.display = "none";
-                    }
-                });
-            });
-        });
-    </script>
-
     <!-- 온라인 강의 -->
     <div id="online-course" style="display: none;">
-        <script>
-            $(document).ready(function () {
-                $(".clickable-row input[type='checkbox']").click(function (e) {
-                    e.stopPropagation(); // 이벤트 버블링 중단
-                });
-                $(".clickable-row").click(function () {
-                    $(this).toggleClass("active");
-                    $(".clickable-row").not(this).removeClass("active");
-                });
-            });
-        </script>
         <button type="button" class="new-course-link delete-course-link" style="margin-left: 10px" onclick="deleteSelectedChapters1()">삭제</button>
-        <!-- 강의 삭제 스크립트-->
-        <script>
-            function deleteSelectedChapters1() {
-                const selectedCourseSeqs = [];
-                $("input[name=cbox]:checked").each(function () {
-                    const courseSeq = $(this).closest("tr").find("[data-course-seq]").data("course-seq");
-                    selectedCourseSeqs.push(courseSeq);
-                });
 
-                $.ajax({
-                    type: "POST",
-                    url: "/Course_delete", // 실제 컨트롤러 URL로 변경
-                    data: JSON.stringify({courseSeqs: selectedCourseSeqs}),
-                    contentType: "application/json",
-                    success: function (data) {
-                        if (data.success) {
-                            removeDeletedChapters(selectedCourseSeqs);
-                        } else {
-                            console.error("An error occurred during deletion.");
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error:", error);
-                    }
-                });
-            }
-
-            function removeDeletedChapters(deletedCourseSeqs) {
-                // 삭제한 행을 찾아서 삭제
-                for (const courseSeq of deletedCourseSeqs) {
-                    $(`[data-course-seq="${courseSeq}"]`).closest("tr").remove();
-                }
-            }
-        </script>
         <a href="/Course" class="new-course-link" style="margin-left: 10px">수정</a>
+
         <!-- 강의 신규등록 모달창 버튼 -->
         <button id="openCourseModel" class="new-course-link" style="margin-left: 10px">강의 신규등록</button>
         <!-- 강의 신규등록 모달 오버레이 -->
@@ -222,6 +89,7 @@
                 </form>
             </div>
         </div>
+
         <!-- 조회 -->
         <form action="/Course_find" method="post" id="searchForm">
             <button type="button" class="new-course-link" style="margin-left: 10px" id="searchButton1">조회</button>
@@ -251,49 +119,6 @@
                 </div>
             </div>
         </form>
-        <!-- 조회 script -->
-        <script>
-            $(document).ready(function () {
-                $("#searchButton1").click(function () {
-                    $.ajax({
-                        type: "POST",
-                        url: $("#searchForm").attr("action"),
-                        data: $("#searchForm").serialize(),
-                        dataType: "json",
-                        success: function (data) {
-                            updateCourseTable(data);
-                        },
-                        error: function (xhr, status, error) {
-                            console.error("Error:", error);
-                        }
-                    });
-                });
-
-                function updateCourseTable(data) {
-                    var table = $("#courseTable");
-                    table.find("tbody").empty();
-
-                    $.each(data, function (index, course) {
-                        var row = "<tr class='clickable-row'><td><input type='checkbox' name='cbox'></td>"
-                            + "<td>" + course.courseSeq + "</td>"
-                            + "<td><a href='#' class='course-link' data-course-seq="+course.courseSeq+">" + course.courseName + "</a></td>"
-                            + "<td>" + course.courseBrief + "</td>"
-                            + "<td>" + course.startDateTime + "</td>"
-                            + "<td>" + course.endDateTime + "</td>"
-                            + "<td>" + course.statusCode.name + "</td></tr>";
-                        table.append(row);
-                    });
-                    $(".clickable-row").click(function () {
-                        $(".clickable-row input[type='checkbox']").click(function (e) {
-                            e.stopPropagation(); // 이벤트 버블링 중단
-                        });
-
-                        $(this).toggleClass("active");
-                        $(".clickable-row").not(this).removeClass("active");
-                    });
-                }
-            });
-        </script>
 
         <!-- 온라인 강좌 div -->
         <div class="course-list">
@@ -331,81 +156,6 @@
                     </tr>
                     </tbody>
                 </table>
-                <script>
-                    $(document).ready(function() {
-                        $(".clickable-row").click(function(e) {
-                            e.preventDefault();
-
-                            var courseSeq = $(this).find(".course-link").data("course-seq");
-
-                            $.ajax({
-                                type: "POST",  // POST 방식으로 변경
-                                url: "/CourseChapter_find?courseSeq=" + courseSeq,
-                                success: function(data) {
-                                    updateCourseChapters1(data);
-                                    updateCourseSelect(courseSeq);
-                                    chapterOrderValue=1;
-                                },
-                                error: function(xhr, status, error) {
-                                    console.error("Error:", error);
-                                }
-                            });
-                        });
-                    });
-                    function updateCourseSelect(courseSeq) {
-                        var courseSelect = $("select[name='courseDTO.courseSeq']");
-                        courseSelect.empty(); // 기존 옵션 제거
-
-                        // 선택한 강좌를 옵션으로 추가
-                        var selectedCourseName = $(".course-link[data-course-seq='" + courseSeq + "']").text();
-                        courseSelect.append("<option value='" + courseSeq + "' selected>" + selectedCourseName + "</option>");
-
-                    }
-                    function updateCourseChapters1(data) {
-                        var tableBody = $("#courseChaptersTableBody");
-                        tableBody.empty(); // 기존 테이블 내용 삭제
-                        if(data.length == 0){
-                            var chapterOrderInput = $("input[name='chapterOrder']");
-                            let newChapterOrderValue = data.length+1;
-                            chapterOrderInput.val(newChapterOrderValue);
-                        }
-                        // 업데이트된 데이터를 기반으로 테이블 내용 다시 생성
-                        for (const courseChapter of data) {
-                            var chapterOrderInput = $("input[name='chapterOrder']");
-                            let newChapterOrderValue = courseChapter.chapterOrder + 1;
-                            chapterOrderInput.val(newChapterOrderValue);
-
-                            var newRow = `
-            <tr class="clickable-row1">
-                <td><input type="checkbox" name="cbox1"></td>
-                <td data-chapter-order="${courseChapter.chapterOrder}" data-course-seq="${courseChapter.course.courseSeq}">
-                    ${courseChapter.chapterOrder}
-                </td>
-                <td><a href="#">${courseChapter.chapterName}</a></td>
-                <td>${courseChapter.chapterBrief}</td>
-            </tr>`;
-                            tableBody.append(newRow);
-                        }
-
-                        $(".clickable-row1").click(function () {
-                            $(".clickable-row1 input[type='checkbox']").click(function (e) {
-                                e.stopPropagation(); // 이벤트 버블링 중단
-                            });
-
-                            $(this).toggleClass("active");
-                            $(".clickable-row1").not(this).removeClass("active");
-                        });
-                    }
-                </script>
-                <script>
-                    function checkAll() {
-                        if ($("#cboxAll").is(':checked')) {
-                            $("input[name=cbox]").prop("checked", true);
-                        } else {
-                            $("input[name=cbox]").prop("checked", false);
-                        }
-                    }
-                </script>
                 <div class="pagination">
                     <p style="text-align: center"> 1 / 2 / 3</p>
                 </div>
@@ -446,15 +196,6 @@
                         </tbody>
                         <!-- Add more rows as needed -->
                     </table>
-                    <script>
-                        function checkAll1() {
-                            if ($("#cboxAll1").is(':checked')) {
-                                $("input[name=cbox1]").prop("checked", true);
-                            } else {
-                                $("input[name=cbox1]").prop("checked", false);
-                            }
-                        }
-                    </script>
                 </div>
                 <!-- 수강대상자 div-->
                 <div id="enrolleesContent" style="border: 1px solid #ccc; height: 520px; width: 98%; display: none; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; padding: 0px 10px 0px;">
@@ -469,6 +210,7 @@
                         </select>
                     </h3>
                     <table>
+                        <thead>
                         <tr>
                             <th><input type="checkbox" id="cboxAll2" name="cboxAll2" onclick="checkAll2()"></th>
                             <th>회원구분</th>
@@ -478,26 +220,11 @@
                             <th>접속종료시간</th>
                             <th>진도율</th>
                         </tr>
-                        <tr>
-                            <td><input type="checkbox" name="cbox2"></td>
-                            <td>일반회원</td>
-                            <td>조재건</td>
-                            <td>남자</td>
-                            <td>2014-08-07 11:20</td>
-                            <td>2014-08-07 12:20</td>
-                            <td>59%</td>
-                        </tr>
+                        </thead>
+                        <tbody id="courseStudentTableBody">
+                        </tbody>
                         <!-- Add more rows as needed -->
                     </table>
-                    <script>
-                        function checkAll2() {
-                            if ($("#cboxAll2").is(':checked')) {
-                                $("input[name=cbox2]").prop("checked", true);
-                            } else {
-                                $("input[name=cbox2]").prop("checked", false);
-                            }
-                        }
-                    </script>
                 </div>
             </div>
             <div style="max-width: 40%; width: 40%; margin-top: 79.5px; position: absolute; right: 5px;">
@@ -505,71 +232,6 @@
                     <a href="#" class="new-course-link" style="position: relative; right: 5px; top: 5px;" onclick="deleteSelectedChapters()">
                         삭제
                     </a>
-                    <!-- 강좌 차시 삭제 스크립트 -->
-                    <script>
-                        function deleteSelectedChapters() {
-                            console.log("Delete button clicked!");
-                            const selectedChapters = [];
-                            const selectedCourseSeqs = [];
-                            $("input[name=cbox1]:checked").each(function () {
-                                const chapterOrder = $(this).closest("tr").find("[data-chapter-order]").data("chapter-order");
-                                console.log(chapterOrder);
-                                selectedChapters.push(chapterOrder);
-
-                                const courseSeq = $(this).closest("tr").find("[data-course-seq]").data("course-seq");
-                                console.log(courseSeq);
-                                selectedCourseSeqs.push(courseSeq);
-                            });
-                            console.log("Delete button clicked2!");
-                            console.log(selectedChapters);
-                            console.log(selectedCourseSeqs);
-
-                            $.ajax({
-                                type: "POST",
-                                url: "/CourseChapter_delete", // 실제 컨트롤러 URL로 변경
-                                data: JSON.stringify({chapters: selectedChapters, courseSeqs: selectedCourseSeqs}),
-                                contentType: "application/json",
-                                success: function (data) {
-                                    if (data.success) {
-                                        console.log("Delete button clicked3!");
-                                        var retrievedData = data.retrievedData;
-                                        updateCourseChapters(retrievedData);
-                                    } else {
-                                        console.error("An error occurred during deletion.");
-                                    }
-                                },
-                                error: function (xhr, status, error) {
-                                    console.error("Error:", error);
-                                }
-                            });
-                        }
-
-                        function updateCourseChapters(retrievedData) {
-                            const tableBody = $("#courseChaptersTableBody");
-                            tableBody.empty(); // 기존 테이블 내용 삭제
-
-                            // 업데이트된 데이터를 기반으로 테이블 내용 다시 생성
-                            for (const courseChapter of retrievedData) {
-                                const newRow = `
-                                        <tr class="clickable-row1">
-                                            <td><input type="checkbox" name="cbox1"></td>
-                                            <td data-chapter-order="${courseChapter.chapterOrder}" data-course-seq="${courseChapter.course.courseSeq}">${courseChapter.chapterOrder}</td>
-                                            <td><a href="#">${courseChapter.chapterName}</a></td>
-                                            <td>${courseChapter.chapterBrief}</td>
-                                        </tr>
-                                    `;
-                                tableBody.append(newRow);
-                            }
-                            $(".clickable-row1").click(function () {
-                                $(".clickable-row1 input[type='checkbox']").click(function (e) {
-                                    e.stopPropagation(); // 이벤트 버블링 중단
-                                });
-
-                                $(this).toggleClass("active");
-                                $(".clickable-row1").not(this).removeClass("active");
-                            });
-                        }
-                    </script>
                     <a href="/CourseChapter_save" class="new-course-link" style="position: relative; right: 10px; top: 5px;">수정</a>
                     <!-- 차시 신규등록 모달 -->
                     <button href="/CourseChapter_save" class="new-course-link" id="openContentRegistration"
@@ -594,126 +256,43 @@
                             </form>
                         </div>
                     </div>
-                    <script th:inline="javascript">
-                        /*<![CDATA[*/
-                        const i = /*[[${i}]]*/ 0;
-                        /*]]>*/
-                    </script>
-                    <!-- 강의 차시등록 모달 스크립트 -->
-                    <script>
-                        // 모달을 위한 JavaScript
-                        const openContentRegistration = document.getElementById("openContentRegistration");
-                        const modalOverlay = document.getElementById("modalOverlay");
-                        const closeModal = document.getElementById("closeModal");
-
-                        // 전역 범위에서 chapterOrderValue 변수 선언
-                        let chapterOrderValue = 0;
-
-                        //모달이 열릴때
-                        openContentRegistration.addEventListener("click", () => {
-                            console.log("버튼 클릭됨");
-                            modalOverlay.style.display = "block";
-                            const chapterNameInput = document.querySelector("input[name='chapterName']");
-                            const chapterBriefInput = document.querySelector("input[name='chapterBrief']");
-                            chapterNameInput.value = "";
-                            chapterBriefInput.value = "";
-                        });
-
-                        //모달이 닫힐때
-                        closeModal.addEventListener("click", () => {
-                            modalOverlay.style.display = "none";
-                            const chapterNameInput = document.querySelector("input[name='chapterName']");
-                            const chapterBriefInput = document.querySelector("input[name='chapterBrief']");
-                            chapterNameInput.value = "";
-                            chapterBriefInput.value = "";
-                        });
-
-                        // 모달 콘텐츠 바깥을 클릭하면 모달 닫기
-                        window.addEventListener("click", (event) => {
-                            if (event.target === modalOverlay) {
-                                modalOverlay.style.display = "none";
-                                const chapterNameInput = document.querySelector("input[name='chapterName']");
-                                const chapterBriefInput = document.querySelector("input[name='chapterBrief']");
-                                chapterNameInput.value = "";
-                                chapterBriefInput.value = "";
-                            }
-                        });
-
-                        const form = document.querySelector("#saveform");
-                        form.addEventListener("submit", async (event) => {
-                            event.preventDefault(); // 폼 제출 기본 동작 중지
-
-                            const formData = new FormData(form);
-                            const response = await fetch("/CourseChapter_save", {
-                                method: "POST",
-                                body: formData,
-                            });
-                            if (response.ok) {
-                                modalOverlay.style.display = "none"; // 모달 닫기
-                                // 응답 데이터를 JSON 형태로 파싱
-                                const responseData = await response.json();
-                                const newRow = document.createElement("tr");
-                                newRow.classList.add("clickable-row1");
-                                newRow.innerHTML = `
-                                            <td><input type="checkbox" name="cbox1"></td>
-                        <td data-chapter-order="${responseData.chapterOrder}" data-course-seq="${responseData.course.courseSeq}">${responseData.chapterOrder}</td>
-                                            <td><a href="#">${responseData.chapterName}</a></td>
-                                            <td>${responseData.chapterBrief}</td>
-                                        `;
-                                chapterOrderValue = responseData.chapterOrder + 1; // chapterOrderValue 업데이트
-                                const chapterOrderInput = document.querySelector("input[name='chapterOrder']");
-                                chapterOrderInput.value = chapterOrderValue;
-
-                                courseChaptersTableBody.appendChild(newRow);
-                            } else {
-                            }
-                            $(".clickable-row1").click(function () {
-                                $(".clickable-row1 input[type='checkbox']").click(function (e) {
-                                    e.stopPropagation(); // 이벤트 버블링 중단
-                                });
-
-                                $(this).toggleClass("active");
-                                $(".clickable-row1").not(this).removeClass("active");
-                            });
-                        });
-                    </script>
                     <!-- 차시 디테일 테이블 -->
                     <table style="margin-top: 64px;">
                         <tr>
                             <td style="width: 30%;">차시 번호</td>
-                            <td>001</td>
+                            <td id="chapterDetailSeq"></td>
                         </tr>
                         <tr>
                             <td style="width: 30%;">강좌</td>
-                            <td>001</td>
+                            <td id="chapterDetailCourseName"></td>
                         </tr>
                         <tr>
                             <td style="width: 30%;">차시순서</td>
-                            <td colspan="3">1</td>
+                            <td colspan="3" id="chapterDetailOrder"></td>
                         </tr>
                         <tr>
                             <td style="width: 30%;">차시 제목</td>
-                            <td colspan="3">국어수업1</td>
+                            <td colspan="3" id="chapterDetailName"></td>
                         </tr>
                         <tr>
                             <td style="width: 30%;">차시 학습시간</td>
-                            <td colspan="3">1시간 30분 5초</td>
+                            <td colspan="3">??</td>
                         </tr>
                         <tr>
                             <td style="width: 30%;">썸네일파일</td>
-                            <td colspan="3">이러쿵저러쿵.pdf</td>
+                            <td colspan="3">??</td>
                         </tr>
                         <tr>
                             <td style="width: 30%;">차시강의 콘탠츠 번호</td>
-                            <td colspan="3">#A01i013</td>
+                            <td colspan="3" id="chapterDetailContentVideoId"></td>
                         </tr>
                         <tr>
                             <td style="width: 30%;">보조자료 파일</td>
-                            <td colspan="3">어쩌구저쩌구.pdf</td>
+                            <td colspan="3">??</td>
                         </tr>
                         <tr>
                             <td style="width: 30%;">차시내용 요약</td>
-                            <td colspan="3" height="100px;">재미없는 국어 수업시간</td>
+                            <td colspan="3" height="100px;" id="chapterDetailBrief"></td>
                         </tr>
                         <!-- Add more rows as needed -->
                     </table>
@@ -722,8 +301,8 @@
             <div style="max-width: 40%; width: 40%; margin-top: 79.5px; position: absolute; right: 5px;">
                 <div style="border: 1px solid #ccc; height: 520px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; padding: 3px 10px 0px; display: none;"
                      id="userInfoBox">
-                    <a href="/CourseStudent_delete" class="new-course-link"
-                       style="position: relative; right: 5px; top: 5px;">삭제</a>
+                    <a href="#" class="new-course-link"
+                       style="position: relative; right: 5px; top: 5px;" onclick="deleteSelectedStudents()">삭제</a>
                     <a href="/CourseStudent_save" class="new-course-link"
                        style="position: relative; right: 10px; top: 5px;">수정</a>
                     <!-- 수강생 신규등록 모달 -->
@@ -738,7 +317,7 @@
                             <h2>수강대상자등록</h2>
                             <a href="#" onclick="fetchAndShowStudentData()">조회</a>
                             <form action="/CourseStudent_save" method="post" id="courseStudentForm">
-                                <input type="hidden" name="courseSeq" value="1">
+                                <input type="hidden" name="CourseStudentcourseSeq">
                                 <table>
                                     <tr>
                                         <th><input type="checkbox" id="cboxAll3" name="cboxAll3" onclick="checkAll3()">
@@ -769,137 +348,30 @@
                             </form>
                         </div>
                     </div>
-                    <!-- 체크 -->
-                    <script>
-                        function checkAll3() {
-                            if ($("#cboxAll3").is(':checked')) {
-                                $("input[name=cbox3]").prop("checked", true);
-                            } else {
-                                $("input[name=cbox3]").prop("checked", false);
-                            }
-                        }
-
-                        function toggleCheckbox(checkbox) {
-                            var hiddenInput = $(checkbox).siblings('.memberSeq');
-                            if (checkbox.checked) {
-                                hiddenInput.prop('disabled', false);
-                            } else {
-                                hiddenInput.prop('disabled', true);
-                            }
-                        }
-                    </script>
-                    <script>
-                        const openStudentRegistrationModal = document.getElementById("openStudentRegistrationModal");
-                        const studentRegistrationModalOverlay = document.getElementById("studentRegistrationModalOverlay");
-                        const closeStudentRegistrationModal = document.getElementById("closeStudentRegistrationModal");
-
-                        function clearStudentTable() {
-                            const tableBody = document.querySelector("#studentTableBody");
-                            while (tableBody.firstChild) {
-                                tableBody.removeChild(tableBody.firstChild);
-                            }
-                        }
-
-                        function fetchAndShowStudentData() {
-                            const tableBody = document.querySelector("#studentTableBody");
-                            // 이전 데이터 삭제
-                            while (tableBody.firstChild) {
-                                tableBody.removeChild(tableBody.firstChild);
-                            }
-                            fetch("/Member_findAll") // 컨트롤러 URL로 수정
-                                .then(response => response.json())
-                                .then(data => {
-                                    data.forEach(member => {
-                                        const newRow = document.createElement("tr");
-                                        newRow.innerHTML = `
-                        <td>
-                            <input type="checkbox" name="cbox3" value="${member.memberSeq}" onclick="toggleCheckbox(this)">
-                        </td>
-                        <td>${member.memberDivision.code}</td>
-                        <td>${member.nameKor}</td>
-                        <td>${member.email}</td>
-                        <td>1</td>
-                        <td>2</td>
-                        <td>3</td>
-                    `;
-                                        tableBody.appendChild(newRow);
-                                    });
-                                })
-                                .catch(error => console.error("An error occurred:", error));
-                        }
-
-                        openStudentRegistrationModal.addEventListener("click", () => {
-                            studentRegistrationModalOverlay.style.display = "block";
-                            clearStudentTable();
-                        });
-
-                        closeStudentRegistrationModal.addEventListener("click", () => {
-                            studentRegistrationModalOverlay.style.display = "none";
-                            clearStudentTable();
-                            form.reset();
-                        });
-
-                        window.addEventListener("click", (event) => {
-                            if (event.target === studentRegistrationModalOverlay) {
-                                studentRegistrationModalOverlay.style.display = "none";
-                                clearStudentTable();
-                                form.reset();
-                            }
-                        });
-
-                        document.getElementById("submitRegistrationButton").addEventListener("click", (event) => {
-                            event.preventDefault();
-                            submitForm();
-                        });
-
-                        function submitForm() {
-                            const form = document.getElementById("courseStudentForm");
-                            const formData = new FormData(form);
-
-                            fetch("/CourseStudent_save", {
-                                method: "POST",
-                                body: formData
-                            })
-                                .then(response => response.text())
-                                .then(data => {
-                                    if (data === "Success") {
-                                        closeStudentRegistrationModal.click(); // 모달 닫기
-                                        updatePageData();
-                                    } else {
-                                        console.error("An error occurred during data processing.");
-                                    }
-                                })
-                                .catch(error => console.error("An error occurred:", error));
-                        }
-
-                        function updatePageData() {
-                        }
-
-                    </script>
 
                     <table style="margin-top: 64px; width: 100%;">
                         <tr>
                             <td>회원번호</td>
-                            <td colspan="2">1</td>
+                            <td colspan="2" id="memberDetailSeq">1</td>
                             <td rowspan="4" colspan="3"><img src="" alt="프로필사진"></td>
                         </tr>
                         <tr>
                             <td>회원구분</td>
-                            <td colspan="2">일반회원</td>
+                            <td colspan="2" id="memberDetailDivisionName"></td>
                         </tr>
                         <tr>
                             <td>성명</td>
-                            <td colspan="2">조재건</td>
+                            <td colspan="2" id="memberDetailName"></td>
                         </tr>
                         <tr>
                             <td>성별</td>
-                            <td colspan="2">남자</td>
+                            <td colspan="2" id="memberDetailGenderName"></td>
                         </tr>
                         <tr>
                             <td>이메일</td>
-                            <td>jaekun12345@naver.com</td>
+                            <td id="memberDetailEmail"></td>
                             <td>생년월일</td>
-                            <td>2002-01-01</td>
+                            <td id="memberDetailbirthDate"></td>
                         </tr>
                         <tr>
                             <td>접속시간</td>
@@ -936,32 +408,368 @@
         <a href="#">회원 관리 박스</a>
     </div>
 </div>
-<!-- 강의 신규등록 모달 스크립트 -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!-- 네이베게이션 스크립트 -->
 <script>
+    const menuLinks = document.querySelectorAll(".menu-link");
+    const contentBoxes = document.querySelectorAll(".content-box");
+    const closeButton = document.querySelectorAll(".close-button");
+
+    menuLinks.forEach(link => {
+        link.addEventListener("click", function (event) {
+            event.preventDefault();
+            const target = link.getAttribute("data-target");
+            contentBoxes.forEach(box => {
+                if (box.id === target + "-box") {
+                    box.parentElement.appendChild(box);
+                    box.classList.add("show");
+                    box.classList.add("show1");
+                } else {
+                    box.classList.remove("show");
+                }
+            });
+            if (target === "online-course") {
+                document.getElementById("online-course").style.display = "block";
+            } else {
+                document.getElementById("online-course").style.display = "none";
+            }
+            if (target === "content-management") {
+                document.getElementById("content-management").style.display = "block";
+            } else {
+                document.getElementById("content-management").style.display = "none";
+            }
+            if (target === "member-management") {
+                document.getElementById("member-management").style.display = "block";
+            } else {
+                document.getElementById("member-management").style.display = "none";
+            }
+        });
+    });
+
+    contentBoxes.forEach(box => {
+        box.addEventListener("click", function () {
+            const target = box.getAttribute("data-target");
+            contentBoxes.forEach(otherBox => {
+                if (otherBox === box) {
+                    box.classList.add("show");
+                    box.classList.add("show1");
+                } else {
+                    otherBox.classList.remove("show");
+                }
+            });
+            if (target === "online-course") {
+                document.getElementById("online-course").style.display = "block";
+            } else {
+                document.getElementById("online-course").style.display = "none";
+            }
+            if (target === "content-management") {
+                document.getElementById("content-management").style.display = "block";
+            } else {
+                document.getElementById("content-management").style.display = "none";
+            }
+            if (target === "member-management") {
+                document.getElementById("member-management").style.display = "block";
+            } else {
+                document.getElementById("member-management").style.display = "none";
+            }
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const closeButton = document.querySelectorAll(".close-button");
+        closeButton.forEach(button => {
+            button.addEventListener("click", function (event) {
+                const target = button.getAttribute("data-target");
+                event.stopPropagation(); // 이벤트 버블링 방지
+                const parentBox = button.closest(".content-box");
+                parentBox.classList.remove("show");
+                parentBox.classList.remove("show1");
+                if (target === "online-course") {
+                    document.getElementById("online-course").style.display = "none";
+                }
+                if (target === "content-management") {
+                    document.getElementById("content-management").style.display = "none";
+                }
+                if (target === "member-management") {
+                    document.getElementById("member-management").style.display = "none";
+                }
+            });
+        });
+    });
+</script>
+<!-- 조회 script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    $(document).ready(function () {
+        $("#searchButton1").click(function () {
+            $.ajax({
+                type: "POST",
+                url: $("#searchForm").attr("action"),
+                data: $("#searchForm").serialize(),
+                dataType: "json",
+                success: function (data) {
+                    updateCourseTable(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        });
+
+        function updateCourseTable(data) {
+            var table = $("#courseTable");
+            table.find("tbody").empty();
+
+            $.each(data, function (index, course) {
+                var row = "<tr class='clickable-row'><td><input type='checkbox' name='cbox'></td>"
+                    + "<td>" + course.courseSeq + "</td>"
+                    + "<td><a href='#' class='course-link' data-course-seq="+course.courseSeq+">" + course.courseName + "</a></td>"
+                    + "<td>" + course.courseBrief + "</td>"
+                    + "<td>" + course.startDateTime + "</td>"
+                    + "<td>" + course.endDateTime + "</td>"
+                    + "<td>" + course.statusCode.name + "</td></tr>";
+                table.append(row);
+            });
+            $(".clickable-row").click(function () {
+                $(".clickable-row input[type='checkbox']").click(function (e) {
+                    e.stopPropagation(); // 이벤트 버블링 중단
+                });
+                $(this).toggleClass("active");
+                $(".clickable-row").not(this).removeClass("active");
+            });
+        }
+    });
+    });
+</script>
+<!-- 선택한 강좌 차시 리스트, 수강생 리스트 보여주는 스크립트-->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        $(document).ready(function() {
+            $(document).on("click", ".clickable-row", function(e) {
+                e.preventDefault();
+
+                var courseSeq = $(this).find(".course-link").data("course-seq");
+
+                $.ajax({
+                    type: "POST",  // POST 방식으로 변경
+                    url: "/CourseChapter_find?courseSeq=" + courseSeq,
+                    success: function(data) {
+                        var chapters = data.chapters;
+                        var students = data.students;
+                        updateCourseChapters1(chapters);
+                        updateCourseSelect(courseSeq);
+                        updateCourseStudent(students);
+                        chapterOrderValue=1;
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error:", error);
+                    }
+                });
+            });
+        });
+
+        function updateCourseSelect(courseSeq) {
+            var CourseStudentcourseSeq = $("input[name='CourseStudentcourseSeq']");
+            CourseStudentcourseSeq.val(courseSeq);
+
+            var courseSelect = $("select[name='courseDTO.courseSeq']");
+            courseSelect.empty(); // 기존 옵션 제거
+            // 선택한 강좌를 옵션으로 추가
+            var selectedCourseName = $(".course-link[data-course-seq='" + courseSeq + "']").text();
+            courseSelect.append("<option value='" + courseSeq + "' selected>" + selectedCourseName + "</option>");
+        }
+
+        function updateCourseChapters1(chapters) {
+            var tableBody = $("#courseChaptersTableBody");
+            tableBody.empty(); // 기존 테이블 내용 삭제
+            if (chapters.length == 0) {
+                var chapterOrderInput = $("input[name='chapterOrder']");
+                let newChapterOrderValue = chapters.length + 1;
+                chapterOrderInput.val(newChapterOrderValue);
+            }
+            // 업데이트된 데이터를 기반으로 테이블 내용 다시 생성
+            for (const courseChapter of chapters) {
+                var chapterOrderInput = $("input[name='chapterOrder']");
+                let newChapterOrderValue = courseChapter.chapterOrder + 1;
+                chapterOrderInput.val(newChapterOrderValue);
+
+                var newRow = `
+            <tr class="clickable-row1">
+                <td><input type="checkbox" name="cbox1"></td>
+                <td data-chapter-order="${courseChapter.chapterOrder}" data-course-seq="${courseChapter.course.courseSeq}">
+                    ${courseChapter.chapterOrder}
+                </td>
+                <td><a href="#">${courseChapter.chapterName}</a></td>
+                <td>${courseChapter.chapterBrief}</td>
+            </tr>`;
+                tableBody.append(newRow);
+            }
+
+            $(document).on("click", ".clickable-row1", function () {
+                var clickedRow = $(this);
+
+                // 클릭한 체크박스의 이벤트 버블링 중단
+                if ($(event.target).is("input[type='checkbox']")) {
+                    event.stopPropagation();
+                    return;
+                }
+
+                clickedRow.toggleClass("active");
+                $(".clickable-row1").not(clickedRow).removeClass("active");
+            });
+        }
+        function updateCourseStudent(students){
+
+            var tableBody = $("#courseStudentTableBody");
+            tableBody.empty();
+
+            for (const student of students) {
+                var newRow = `
+            <tr>
+                <td><input type="checkbox" name="cbox2"></td>
+                <td data-student-seq="${student.student.memberSeq}" data-course-seq="${student.course.courseSeq}">${student.student.memberDivision.name}</td>
+                <td>${student.student.nameKor}</td>
+                <td>${student.student.genderCode.name}</td>
+                <td>??</td>
+                <td>??</td>
+                <td>??</td>
+            </tr>`;
+                tableBody.append(newRow);
+            }
+        }
+    });
+    function checkAll() {
+        if ($("#cboxAll").is(':checked')) {
+            $("input[name=cbox]").prop("checked", true);
+        } else {
+            $("input[name=cbox]").prop("checked", false);
+        }
+    }
+</script>
+<!-- 강의 삭제 스크립트-->
+<script>
+    function deleteSelectedChapters1() {
+        const selectedCourseSeqs = [];
+        $("input[name=cbox]:checked").each(function () {
+            const courseSeq = $(this).closest("tr").find("[data-course-seq]").data("course-seq");
+            selectedCourseSeqs.push(courseSeq);
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "/Course_delete", // 실제 컨트롤러 URL로 변경
+            data: JSON.stringify({courseSeqs: selectedCourseSeqs}),
+            contentType: "application/json",
+            success: function (data) {
+                if (data.success) {
+                    removeDeletedChapters(selectedCourseSeqs);
+                } else {
+                    showAlert();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    }
+
+    function removeDeletedChapters(deletedCourseSeqs) {
+        // 삭제한 행을 찾아서 삭제
+        for (const courseSeq of deletedCourseSeqs) {
+            $(`[data-course-seq="${courseSeq}"]`).closest("tr").remove();
+        }
+    }
+
+    function showAlert() {
+        alert("선택한 강의의 차시 강의를 먼저 삭제해주세요!");
+    }
+</script>
+<!-- 강의 차시등록 모달 스크립트 -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
     // 모달을 위한 JavaScript
-    const openCourseModel = document.getElementById("openCourseModel");
-    const courseModelOverlay = document.getElementById("courseModelOverlay");
-    const closeCourseModel = document.getElementById("closeCourseModel");
+    const openContentRegistration = document.getElementById("openContentRegistration");
+    const modalOverlay = document.getElementById("modalOverlay");
+    const closeModal = document.getElementById("closeModal");
+
+    // 전역 범위에서 chapterOrderValue 변수 선언
+    let chapterOrderValue = 0;
 
     //모달이 열릴때
-    openCourseModel.addEventListener("click", () => {
-        courseModelOverlay.style.display = "block";
+    openContentRegistration.addEventListener("click", () => {
+        console.log("버튼 클릭됨");
+        modalOverlay.style.display = "block";
+        const chapterNameInput = document.querySelector("input[name='chapterName']");
+        const chapterBriefInput = document.querySelector("input[name='chapterBrief']");
+        chapterNameInput.value = "";
+        chapterBriefInput.value = "";
     });
 
     //모달이 닫힐때
-    closeCourseModel.addEventListener("click", () => {
-        courseModelOverlay.style.display = "none";
+    closeModal.addEventListener("click", () => {
+        modalOverlay.style.display = "none";
+        const chapterNameInput = document.querySelector("input[name='chapterName']");
+        const chapterBriefInput = document.querySelector("input[name='chapterBrief']");
+        chapterNameInput.value = "";
+        chapterBriefInput.value = "";
     });
 
     // 모달 콘텐츠 바깥을 클릭하면 모달 닫기
     window.addEventListener("click", (event) => {
-        if (event.target === courseModelOverlay) {
-            courseModelOverlay.style.display = "none";
+        if (event.target === modalOverlay) {
+            modalOverlay.style.display = "none";
+            const chapterNameInput = document.querySelector("input[name='chapterName']");
+            const chapterBriefInput = document.querySelector("input[name='chapterBrief']");
+            chapterNameInput.value = "";
+            chapterBriefInput.value = "";
         }
     });
+
+    const form = document.querySelector("#saveform");
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault(); // 폼 제출 기본 동작 중지
+
+        const formData = new FormData(form);
+        const response = await fetch("/CourseChapter_save", {
+            method: "POST",
+            body: formData,
+        });
+        if (response.ok) {
+            modalOverlay.style.display = "none"; // 모달 닫기
+            // 응답 데이터를 JSON 형태로 파싱
+            const responseData = await response.json();
+            const newRow = document.createElement("tr");
+            newRow.classList.add("clickable-row1");
+            newRow.innerHTML = `
+                                            <td><input type="checkbox" name="cbox1"></td>
+                        <td data-chapter-order="${responseData.chapterOrder}" data-course-seq="${responseData.course.courseSeq}">${responseData.chapterOrder}</td>
+                                            <td><a href="#">${responseData.chapterName}</a></td>
+                                            <td>${responseData.chapterBrief}</td>
+                                        `;
+            chapterOrderValue = responseData.chapterOrder + 1; // chapterOrderValue 업데이트
+            const chapterOrderInput = document.querySelector("input[name='chapterOrder']");
+            chapterOrderInput.value = chapterOrderValue;
+
+            courseChaptersTableBody.appendChild(newRow);
+        } else {
+        }
+        $(".clickable-row1").click(function () {
+            // 클릭한 행에서 'active' 클래스 추가하고 다른 행에서 제거
+            $(this).addClass("active");
+            $(".clickable-row1").not(this).removeClass("active");
+
+            // 클릭한 체크박스의 이벤트 버블링 중단
+            $(this).find("input[type='checkbox']").click(function (e) {
+                e.stopPropagation();
+            });
+        });
+    });
+    });
 </script>
-<!-- 강의 모달 폼 스크립트 -->
+<!-- 강의 신규등록 모달 스크립트 -->
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
     const form = document.querySelector("#courseSaveForm");
     form.addEventListener("submit", async (event) => {
         event.preventDefault(); // 폼 제출 기본 동작 중지
@@ -972,10 +780,10 @@
             body: formData,
         });
         if (response.ok) {
-            courseModelOverlay.style.display = "none"; // 모달 닫기
+            courseModelOverlay1.style.display = "none"; // 모달 닫기
             const responseData = await response.json();
-
             const newRow = document.createElement("tr");
+            newRow.classList.add("clickable-row");
             newRow.innerHTML = `
                 <td><input type="checkbox" name="cbox"></td>
                 <td>${responseData.courseSeq}</td>
@@ -991,9 +799,382 @@
         } else {
             // 에러 처리
         }
+        $(".clickable-row").click(function () {
+            // 클릭한 행에서 'active' 클래스 추가하고 다른 행에서 제거
+            $(this).addClass("active");
+            $(".clickable-row").not(this).removeClass("active");
+
+            // 클릭한 체크박스의 이벤트 버블링 중단
+            $(this).find("input[type='checkbox']").click(function (e) {
+                e.stopPropagation();
+            });
+        });
+    });
+
+        // 모달을 위한 JavaScript
+        const openCourseModel1 = document.getElementById("openCourseModel");
+        const courseModelOverlay1 = document.getElementById("courseModelOverlay");
+        const closeCourseModel1 = document.getElementById("closeCourseModel");
+
+    //모달이 열릴때
+    openCourseModel1.addEventListener("click", () => {
+        courseModelOverlay1.style.display = "block";
+        form.reset();
+    });
+
+    //모달이 닫힐때
+    closeCourseModel1.addEventListener("click", () => {
+        courseModelOverlay1.style.display = "none";
+        form.reset();
+    });
+
+    // 모달 콘텐츠 바깥을 클릭하면 모달 닫기
+    window.addEventListener("click", (event) => {
+        if (event.target === courseModelOverlay1) {
+            courseModelOverlay1.style.display = "none";
+            form.reset();
+        }
+     });
     });
 </script>
+<!-- 차시 전체선택 스크립트-->
+<script>
+    function checkAll1() {
+        if ($("#cboxAll1").is(':checked')) {
+            $("input[name=cbox1]").prop("checked", true);
+        } else {
+            $("input[name=cbox1]").prop("checked", false);
+        }
+    }
+</script>
+<!-- 강좌 차시 삭제 스크립트 -->
+<script>
+    function deleteSelectedChapters() {
+        console.log("Delete button clicked!");
+        const selectedChapters = [];
+        const selectedCourseSeqs = [];
+        $("input[name=cbox1]:checked").each(function () {
+            const chapterOrder = $(this).closest("tr").find("[data-chapter-order]").data("chapter-order");
+            console.log(chapterOrder);
+            selectedChapters.push(chapterOrder);
 
+            const courseSeq = $(this).closest("tr").find("[data-course-seq]").data("course-seq");
+            console.log(courseSeq);
+            selectedCourseSeqs.push(courseSeq);
+        });
+        console.log("Delete button clicked2!");
+        console.log(selectedChapters);
+        console.log(selectedCourseSeqs);
+
+        $.ajax({
+            type: "POST",
+            url: "/CourseChapter_delete", // 실제 컨트롤러 URL로 변경
+            data: JSON.stringify({chapters: selectedChapters, courseSeqs: selectedCourseSeqs}),
+            contentType: "application/json",
+            success: function (data) {
+                if (data.success) {
+                    console.log("Delete button clicked3!");
+                    var retrievedData = data.retrievedData;
+                    updateCourseChapters(retrievedData);
+                } else {
+                    console.error("An error occurred during deletion.");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    }
+
+    function updateCourseChapters(retrievedData) {
+        const tableBody = $("#courseChaptersTableBody");
+        tableBody.empty(); // 기존 테이블 내용 삭제
+
+        // 업데이트된 데이터를 기반으로 테이블 내용 다시 생성
+        for (const courseChapter of retrievedData) {
+            const newRow = `
+                                        <tr class="clickable-row1">
+                                            <td><input type="checkbox" name="cbox1"></td>
+                                            <td data-chapter-order="${courseChapter.chapterOrder}" data-course-seq="${courseChapter.course.courseSeq}">${courseChapter.chapterOrder}</td>
+                                            <td><a href="#">${courseChapter.chapterName}</a></td>
+                                            <td>${courseChapter.chapterBrief}</td>
+                                        </tr>
+                                    `;
+            tableBody.append(newRow);
+        }
+        $(".clickable-row1").click(function () {
+            $(".clickable-row1 input[type='checkbox']").click(function (e) {
+                e.stopPropagation(); // 이벤트 버블링 중단
+            });
+
+            $(this).toggleClass("active");
+            $(".clickable-row1").not(this).removeClass("active");
+        });
+    }
+</script>
+<!-- 선택한 차시 목록을 보여주는 스크립트-->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        $(document).ready(function() {
+            $(document).on("click", ".clickable-row1", function(e) {
+                e.preventDefault();
+
+                const chapterOrder = $(this).find("[data-chapter-order]").data("chapter-order");
+                const courseSeq = $(this).find("[data-course-seq]").data("course-seq");
+
+                $.ajax({
+                    type: "POST",  // POST 방식으로 변경
+                    url: "/CourseChapter_detail",
+                    data: {
+                        chapterOrder: chapterOrder,
+                        courseSeq: courseSeq
+                    },
+                    success: function(data) {
+                        const chapterSeq = data.courseChapterCompositeKey.chapterSeq;
+                        $("#chapterDetailSeq").text(chapterSeq);
+                        $("#chapterDetailCourseName").text(data.course.courseName);
+                        $("#chapterDetailOrder").text(data.chapterOrder);
+                        $("#chapterDetailName").text(data.chapterName);
+                        /*$("#chapterDetailContentVideoId").text(data.content.videoId);*/
+                        $("#chapterDetailBrief").text(data.chapterBrief);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error:", error);
+                    }
+                });
+            });
+        });
+    });
+</script>
+<!-- 수강대상자 전체선택 스크립트-->
+<script>
+    function checkAll2() {
+        if ($("#cboxAll2").is(':checked')) {
+            $("input[name=cbox2]").prop("checked", true);
+        } else {
+            $("input[name=cbox2]").prop("checked", false);
+        }
+    }
+</script>
+<!-- 수강생 신규 등록 모달 스크립트 -->
+<script>
+    function checkAll3() {
+        if ($("#cboxAll3").is(':checked')) {
+            $("input[name=cbox3]").prop("checked", true);
+        } else {
+            $("input[name=cbox3]").prop("checked", false);
+        }
+    }
+
+    function toggleCheckbox(checkbox) {
+        var hiddenInput = $(checkbox).siblings('.memberSeq');
+        if (checkbox.checked) {
+            hiddenInput.prop('disabled', false);
+        } else {
+            hiddenInput.prop('disabled', true);
+        }
+    }
+    const openStudentRegistrationModal = document.getElementById("openStudentRegistrationModal");
+    const studentRegistrationModalOverlay = document.getElementById("studentRegistrationModalOverlay");
+    const closeStudentRegistrationModal = document.getElementById("closeStudentRegistrationModal");
+
+    function clearStudentTable() {
+        const tableBody = document.querySelector("#studentTableBody");
+        while (tableBody.firstChild) {
+            tableBody.removeChild(tableBody.firstChild);
+        }
+    }
+
+    function fetchAndShowStudentData() {
+        const tableBody = document.querySelector("#studentTableBody");
+        // 이전 데이터 삭제
+        while (tableBody.firstChild) {
+            tableBody.removeChild(tableBody.firstChild);
+        }
+        fetch("/Member_findAll") // 컨트롤러 URL로 수정
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(member => {
+                    const newRow = document.createElement("tr");
+                    newRow.innerHTML = `
+                        <td>
+                            <input type="checkbox" name="cbox3" value="${member.memberSeq}" onclick="toggleCheckbox(this)">
+                        </td>
+                        <td>${member.memberDivision.code}</td>
+                        <td>${member.nameKor}</td>
+                        <td>${member.email}</td>
+                        <td>1</td>
+                        <td>2</td>
+                        <td>3</td>
+                    `;
+                    tableBody.appendChild(newRow);
+                });
+            })
+            .catch(error => console.error("An error occurred:", error));
+    }
+
+    openStudentRegistrationModal.addEventListener("click", () => {
+        studentRegistrationModalOverlay.style.display = "block";
+        clearStudentTable();
+    });
+
+    closeStudentRegistrationModal.addEventListener("click", () => {
+        studentRegistrationModalOverlay.style.display = "none";
+        clearStudentTable();
+        form.reset();
+    });
+
+    window.addEventListener("click", (event) => {
+        if (event.target === studentRegistrationModalOverlay) {
+            studentRegistrationModalOverlay.style.display = "none";
+            clearStudentTable();
+            form.reset();
+        }
+    });
+
+    document.getElementById("submitRegistrationButton").addEventListener("click", (event) => {
+        event.preventDefault();
+        submitForm();
+    });
+
+    function submitForm() {
+        const form = document.getElementById("courseStudentForm");
+        const formData = new FormData(form);
+
+        fetch("/CourseStudent_save", {
+            method: "POST",
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data) {
+                    closeStudentRegistrationModal.click();
+                    console.log(data);
+                    updatePageData(data);
+                } else {
+                    console.error("An error occurred during data processing.");
+                }
+            })
+            .catch(error => console.error("An error occurred:", error));
+    }
+
+    function updatePageData(data) {
+        var tableBody = document.getElementById("courseStudentTableBody");
+
+        for (const newStudent of data) {
+            var newRow = document.createElement("tr");
+            newRow.classList.add("clickable-row2");
+            newRow.innerHTML = `
+            <td><input type="checkbox" name="cbox2"></td>
+            <td data-student-seq="${newStudent.student.memberSeq}" data-course-seq="${newStudent.course.courseSeq}">${newStudent.student.memberDivision.name}</td>
+            <td>${newStudent.student.nameKor}</td>
+            <td>${newStudent.student.genderCode.name}</td>
+            <td>??</td>
+            <td>??</td>
+            <td>??</td>
+        `;
+
+            tableBody.appendChild(newRow);
+        }
+
+    }
+
+</script>
+<!-- 선택한 수강생 정보를 보여주는 스크립트-->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        $(document).ready(function() {
+            $(document).on("click", ".clickable-row2", function(e) {
+                e.preventDefault();
+
+                const studentSeq = $(this).find("[data-student-seq]").data("student-seq");
+                const courseSeq = $(this).find("[data-course-seq]").data("course-seq");
+
+                $.ajax({
+                    type: "POST",  // POST 방식으로 변경
+                    url: "/CourseStudent_detail",
+                    data: {
+                        studentSeq: studentSeq,
+                        courseSeq: courseSeq
+                    },
+                    success: function(data) {
+                        console.log("데이터전달성공");
+                        $("#memberDetailSeq").text(data.student.memberSeq);
+                        $("#memberDetailDivisionName").text(data.student.memberDivision.name);
+                        $("#memberDetailName").text(data.student.nameKor);
+                        $("#memberDetailGenderName").text(data.student.genderCode.name);
+                        $("#memberDetailEmail").text(data.student.email);
+                        $("#memberDetailbirthDate").text(data.student.birthDate);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error:", error);
+                    }
+                });
+            });
+        });
+    });
+</script>
+<!-- 수강대상자 목록 삭제 스크립트 -->
+<script>
+    function deleteSelectedStudents() {
+        console.log("Delete button clicked!");
+        const selectedStudents = [];
+        const selectedCourseSeqs1 = [];
+        $("input[name=cbox2]:checked").each(function () {
+            const studentSeq = $(this).closest("tr").find("[data-student-seq]").data("student-seq");
+            console.log(studentSeq);
+            selectedStudents.push(studentSeq);
+
+            const courseSeq = $(this).closest("tr").find("[data-course-seq]").data("course-seq");
+            console.log(courseSeq);
+            selectedCourseSeqs1.push(courseSeq);
+        });
+        console.log("Delete button clicked2!");
+
+        $.ajax({
+            type: "POST",
+            url: "/CourseStudent_delete",
+            data: JSON.stringify({students: selectedStudents, courseSeqs1: selectedCourseSeqs1}),
+            contentType: "application/json",
+            success: function (data) {
+                if (data.success) {
+                    console.log("Delete button clicked3!");
+                    removeDeletedStudents(selectedStudents);
+                } else {
+                    console.error("An error occurred during deletion.");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+        $(".clickable-row2").click(function () {
+            $(".clickable-row2 input[type='checkbox']").click(function (e) {
+                e.stopPropagation(); // 이벤트 버블링 중단
+            });
+
+            $(this).toggleClass("active");
+            $(".clickable-row2").not(this).removeClass("active");
+        });
+    }
+    function removeDeletedStudents(selectedStudents) {
+        for (const studentSeq of selectedStudents) {
+            $(`[data-student-seq="${studentSeq}"]`).closest("tr").remove();
+        }
+    }
+</script>
+<!-- 이벤트 버블링 막는 스크립트 -->
+<script>
+    $(document).ready(function () {
+        $(".clickable-row input[type='checkbox']").click(function (e) {
+            e.stopPropagation(); // 이벤트 버블링 중단
+        });
+        $(".clickable-row").click(function () {
+            $(this).toggleClass("active");
+            $(".clickable-row").not(this).removeClass("active");
+        });
+    });
+</script>
 <script>
     const courseSessionsSection = document.getElementById("courseSessionsSection");
     const enrolleesSection = document.getElementById("enrolleesSection");

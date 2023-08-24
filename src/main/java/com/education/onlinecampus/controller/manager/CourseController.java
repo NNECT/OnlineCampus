@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -34,6 +35,8 @@ public class CourseController {
     @PostMapping("/Course_save")
     @ResponseBody
     public ResponseEntity<String> CourseSave(@ModelAttribute CourseDTO courseDTO,Model model) {
+        CommonCode byId = courseService.repositoryService().getCommonCodeRepository().findById(courseDTO.getStatusCodeDTO().getCode()).orElseThrow();
+        courseDTO.setStatusCodeDTO(byId.toDTO());
         Course course = courseService.CourseSave(courseDTO);
         try {
             String jsonResponse = objectMapper.writeValueAsString(course);
@@ -48,11 +51,23 @@ public class CourseController {
         Map<String, Object> response = new HashMap<>();
         List<String> selectedCourseSeqs = requestData.get("courseSeqs");
         try {
+            boolean allEmpty = true;
             for (String s : selectedCourseSeqs) {
-                courseService.repositoryService().getCourseRepository().deleteById(Long.valueOf(s));
+                List<CourseChapter> courseChapter = courseService.findCourseChapter(Long.valueOf(s));
+                if (!courseChapter.isEmpty()) {
+                    allEmpty = false;
+                    break; // 하나라도 비어있지 않은 경우 루프를 종료
+                }
             }
-            System.out.println("삭제성공");
-            response.put("success", true);
+            if (allEmpty) {
+                // 모든 강의에 대해 courseChapter가 비어있는 경우
+                for (String s : selectedCourseSeqs) {
+                    courseService.repositoryService().getCourseRepository().deleteById(Long.valueOf(s));
+                }
+                response.put("success", true);
+            } else {
+                response.put("success", false);
+            }
         } catch (Exception e) {
             response.put("success", false);
             response.put("message", "An error occurred during deletion.");
@@ -130,6 +145,29 @@ public class CourseController {
 
         return response;
     }
+
+    @PostMapping("/CourseStudent_delete")
+    @ResponseBody
+    public Map<String, Object> deleteSelectedStudents(@RequestBody Map<String, List<String>> requestData) {
+        Map<String, Object> response = new HashMap<>();
+        List<String> selectedstudents = requestData.get("students");
+        List<String> selectedCourseSeqs1 = requestData.get("courseSeqs1");
+
+        try {
+            for (int i = 0; i < selectedstudents.size(); i++) {
+                Long courseSeq = Long.valueOf(selectedCourseSeqs1.get(i));
+                Long studentSeq = Long.valueOf(selectedstudents.get(i));
+
+            }
+            response.put("success", true);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "An error occurred during deletion.");
+        }
+
+        return response;
+    }
+
     @GetMapping("/Course_findAll")
     public String CourseFindAll(@ModelAttribute Course course, Model model){
         List<Course> courseList = courseService.CourseFindAll();
@@ -152,23 +190,57 @@ public class CourseController {
 
     @PostMapping("/CourseStudent_save")
     @ResponseBody
-    public ResponseEntity<String> CourseStudentSave(@RequestParam("courseSeq") Long courseSeq,
-                                                    @RequestParam("cbox3") Long[] selectedMemberSeqs,
-                                                    CourseStudentDTO courseStudentDTO) {
+    public ResponseEntity<List<CourseStudent>> CourseStudentSave(@RequestParam("CourseStudentcourseSeq") Long courseSeq,
+                                                                 @RequestParam("cbox3") Long[] selectedMemberSeqs,
+                                                                 CourseStudentDTO courseStudentDTO) {
         try {
-            courseService.CourseStudentAllSave(selectedMemberSeqs, courseSeq, courseStudentDTO);
-            return ResponseEntity.ok("Success");
+            List<CourseStudent> courseStudents = courseService.CourseStudentAllSave(selectedMemberSeqs, courseSeq, courseStudentDTO);
+            return ResponseEntity.ok(courseStudents);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
     @PostMapping("/CourseChapter_find")
     @ResponseBody
-    public ResponseEntity<List<CourseChapter>> CourseChapterFind(@RequestParam("courseSeq") Long courseSeq) {
+    public ResponseEntity<Map<String, Object>> CourseChapterFind(@RequestParam("courseSeq") Long courseSeq) {
         try {
+            Map<String, Object> response = new HashMap<>();
+
             List<CourseChapter> byCourseChapterCompositeKeyCourseSeq = courseService.findByCourseChapterCompositeKeyCourseSeq(courseSeq);
-            return ResponseEntity.ok(byCourseChapterCompositeKeyCourseSeq);
+            List<CourseStudent> byCourseStudentCompositeKeyCourseSeq = courseService.repositoryService().getCourseStudentRepository().findByCourseStudentCompositeKey_CourseSeq(courseSeq);
+
+            response.put("chapters", byCourseChapterCompositeKeyCourseSeq);
+            response.put("students", byCourseStudentCompositeKeyCourseSeq);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @PostMapping("/CourseChapter_detail")
+    @ResponseBody
+    public ResponseEntity<CourseChapter> CourseChapterDetail(@RequestParam("chapterOrder") Integer chapterOrder, @RequestParam("courseSeq") Long courseSeq) {
+        try {
+            System.out.println(chapterOrder);
+            System.out.println(courseSeq);
+            CourseChapter byCourseCourseSeqAndChapterOrder = courseService.repositoryService().getCourseChapterRepository().findByCourse_CourseSeqAndChapterOrder(courseSeq, chapterOrder);
+            return ResponseEntity.ok(byCourseCourseSeqAndChapterOrder);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @PostMapping("/CourseStudent_detail")
+    @ResponseBody
+    public ResponseEntity<CourseStudent> CourseStudentDetail(@RequestParam("studentSeq") Long studentSeq, @RequestParam("courseSeq") Long courseSeq) {
+        try {
+            System.out.println(studentSeq);
+            System.out.println(courseSeq);
+            CourseStudent byCourseStudentCompositeKeyCourseSeqAndCourseStudentCompositeKeyStudentSeq =
+                    courseService.repositoryService().getCourseStudentRepository().findByCourseStudentCompositeKey_CourseSeqAndCourseStudentCompositeKey_StudentSeq(courseSeq, studentSeq);
+            return ResponseEntity.ok(byCourseStudentCompositeKeyCourseSeqAndCourseStudentCompositeKeyStudentSeq);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
