@@ -6,6 +6,7 @@ import com.education.onlinecampus.data.dto.CourseDTO;
 import com.education.onlinecampus.data.dto.CourseStudentDTO;
 import com.education.onlinecampus.data.entity.Course;
 import com.education.onlinecampus.data.entity.CourseChapter;
+import com.education.onlinecampus.data.entity.CourseChapterContent;
 import com.education.onlinecampus.data.entity.CourseStudent;
 import com.education.onlinecampus.service.common.RepositoryService;
 
@@ -37,4 +38,6 @@ public interface CourseService {
     List<Course> findByCourseNameContaining(String searchKeyword, String searchKeyword1);
 
     List<CourseChapter> findByCourseChapterCompositeKeyCourseSeq(Long courseSeq);
+
+    List<CourseChapterContent> findCourseContentFindAll();
 }

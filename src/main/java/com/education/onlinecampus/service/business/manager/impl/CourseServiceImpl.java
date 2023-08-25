@@ -3,10 +3,7 @@ package com.education.onlinecampus.service.business.manager.impl;
 import com.education.onlinecampus.data.dto.CourseChapterDTO;
 import com.education.onlinecampus.data.dto.CourseDTO;
 import com.education.onlinecampus.data.dto.CourseStudentDTO;
-import com.education.onlinecampus.data.entity.Course;
-import com.education.onlinecampus.data.entity.CourseChapter;
-import com.education.onlinecampus.data.entity.CourseStudent;
-import com.education.onlinecampus.data.entity.Member;
+import com.education.onlinecampus.data.entity.*;
 import com.education.onlinecampus.service.business.manager.CourseService;
 import com.education.onlinecampus.service.common.RepositoryService;
 import lombok.RequiredArgsConstructor;
@@ -87,5 +84,10 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<CourseChapter> findByCourseChapterCompositeKeyCourseSeq(Long courseSeq){
         return repositoryService.getCourseChapterRepository().findByCourseChapterCompositeKey_CourseSeq(courseSeq);
+    }
+
+    @Override
+    public List<CourseChapterContent> findCourseContentFindAll() {
+        return repositoryService.getCourseChapterContentRepository().findAll();
     }
 }

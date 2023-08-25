@@ -1,10 +1,7 @@
 package com.education.onlinecampus.controller.manager;
 
 import com.education.onlinecampus.data.dto.*;
-import com.education.onlinecampus.data.entity.CommonCode;
-import com.education.onlinecampus.data.entity.Course;
-import com.education.onlinecampus.data.entity.CourseChapter;
-import com.education.onlinecampus.data.entity.CourseStudent;
+import com.education.onlinecampus.data.entity.*;
 import com.education.onlinecampus.service.business.manager.CourseService;
 import com.education.onlinecampus.service.common.YouTubeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -245,5 +242,18 @@ public class CourseController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+    @GetMapping("/CourseChapterContent_save")
+    @ResponseBody
+    public ResponseEntity<Map<String,Object>> getCourseContent(@RequestParam Map<String, String> map){
+        return ResponseEntity.ok(Map.of("courseChapterContentList ",courseService.findCourseContentFindAll()));
+    }
+
+/*    @PostMapping("/CourseContent_detail")
+    @ResponseBody
+    public ResponseEntity<CourseChapterContentDTO> courseContentDetail(@RequestParam("contentSeq") Long contentSeq){
+
+
+    }*/
 
 }
