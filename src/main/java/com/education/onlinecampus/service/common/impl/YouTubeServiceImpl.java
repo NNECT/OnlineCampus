@@ -19,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -82,6 +83,23 @@ public class YouTubeServiceImpl implements YouTubeService {
 
         return videos;
     }
+
+    @Override
+    public int getVideoDurationInSeconds(String videoId) throws IOException {
+        YouTube.Videos.List videoRequest = youtube.videos().list(List.of("contentDetails"));
+        videoRequest.setId(List.of(videoId));
+        VideoListResponse videoListResponse = videoRequest.execute();
+        Video video = videoListResponse.getItems().get(0);
+        String duration = video.getContentDetails().getDuration(); // PT1M13S와 같은 ISO 8601 형식
+
+        return convertISO8601DurationToSeconds(duration);
+    }
+
+    private int convertISO8601DurationToSeconds(String duration) {
+        Duration d = Duration.parse(duration);
+        return (int) d.getSeconds();
+    }
+
 
     @Override
     public CourseChapterContentDTO uploadVideo(CourseChapterContentDTO content, MultipartFile multipartFile) throws IOException {
@@ -161,6 +179,16 @@ public class YouTubeServiceImpl implements YouTubeService {
     public boolean setThumbnail(String videoId, FileDTO file) throws IOException {
         Resource resource = resourceLoader.getResource("classpath:static/img/thumbnail/" + file.getFileName());
         try (InputStream inputStream = resource.getInputStream()) {
+            InputStreamContent mediaContent = new InputStreamContent("image/jpeg", inputStream);
+            YouTube.Thumbnails.Set thumbnailSet = youtube.thumbnails().set(videoId, mediaContent);
+            ThumbnailSetResponse result = thumbnailSet.execute();
+            return !result.getItems().isEmpty();
+        }
+    }
+
+    @Override
+    public boolean setThumbnail(String videoId, MultipartFile multipartFile) throws IOException {
+        try (InputStream inputStream = multipartFile.getInputStream()) {
             InputStreamContent mediaContent = new InputStreamContent("image/jpeg", inputStream);
             YouTube.Thumbnails.Set thumbnailSet = youtube.thumbnails().set(videoId, mediaContent);
             ThumbnailSetResponse result = thumbnailSet.execute();

@@ -51,6 +51,7 @@ public class LectureController {
                         .videoId(video.getId())
                         .contentName(video.getSnippet().getTitle())
                         .contentBrief(video.getSnippet().getDescription())
+                        .runningTime(youTubeService.getVideoDurationInSeconds(video.getId()))
                         .build();
                 courseChapterContentDTO = courseService.courseChapterContentSave(courseChapterContentDTO);
 
@@ -63,7 +64,7 @@ public class LectureController {
                 courseService.CourseChapterSave(courseChapterDTO);
             }
         } catch (NoSuchElementException e) {
-            return "redirect:Member_logout";
+            return "redirect:/Member_logout";
         }
         return "redirect:/lecture";
     }

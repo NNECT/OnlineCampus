@@ -82,4 +82,39 @@ public class AsyncVideoController {
             ));
         }
     }
+
+    @RequestMapping("/async/video_end")
+    public ResponseEntity<Map<String, String>> videoEnd(@RequestBody Map<String, String> params) {
+        String username = params.get("username");
+        Long courseId = Long.parseLong(params.get("courseId"));
+        Long chapterId = Long.parseLong(params.get("chapterId"));
+        Integer videoTime = Integer.parseInt(params.get("videoCurrentTime").split("\\.")[0]);
+
+        MemberDTO member = memberService.findByUserName(username);
+        CourseDTO course = courseService.CourseFind(courseId);
+        CourseChapterDTO chapter = courseService.courseChapterFindByCourseAndSeq(course, chapterId);
+        CourseStudentDTO student = courseService.courseStudentFindByCourseAndMember(course, member);
+        CourseChapterStudentProgressDTO progress = courseService.courseChapterStudentProgressFindByChapterAndStudentOrCreateNewInstance(chapter, student);
+
+        int maxTime = progress.getMaxPosition();
+
+        // 기본 시간 차이는 1초
+        // 오차 포함 3초 이상 차이가 나면 false
+        if (maxTime + 3 < videoTime) {
+            return ResponseEntity.ok(Map.of(
+                    "result", "false",
+                    "videoMaxTime", progress.getMaxPosition().toString()
+            ));
+        }
+
+        progress.setFinalPosition(videoTime);
+        progress.setMaxPosition(videoTime);
+        progress.setCompleted(true);
+        courseService.courseChapterStudentProgressSave(progress);
+
+        return ResponseEntity.ok(Map.of(
+                "result", "true",
+                "videoMaxTime", progress.getMaxPosition().toString()
+        ));
+    }
 }

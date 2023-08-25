@@ -60,7 +60,13 @@
                             </td>
                             <td th:text="${courseChapter.chapterBrief}"></td>
                             <td th:text="${courseChapter.chapterName}"></td>
-                            <td class="text-center" th:text="${courseChapter.contentDTO.runningTime}"></td>
+                            <td class="text-center">
+                                <th:block th:if="${courseChapter.contentDTO != null and courseChapter.contentDTO.runningTime != null}">
+                                    <span th:if="${courseChapter.contentDTO.runningTime >= 60}"
+                                          th:text="${courseChapter.contentDTO.runningTime/60 + '분 '}" />
+                                    <span th:text="${courseChapter.contentDTO.runningTime%60 + '초'}"></span>
+                                </th:block>
+                            </td>
                             <td class="text-center">
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#videoModal"
                                         th:data-bs-course-id="${course.courseSeq}"
@@ -103,6 +109,7 @@
     // const csrfHeader = /*[[${_csrf?.headerName}]]*/ 'default-header-name';
     const urlVideoStartTime = /*[[@{/async/video_start_time}]]*/ 'default-url';
     const urlVideoTimeCheck = /*[[@{/async/video_time_check}]]*/ 'default-url';
+    const urlVideoEnd = /*[[@{/async/video_end}]]*/ 'default-url';
     /*]]>*/
 
     const tag = document.createElement('script');
@@ -143,6 +150,37 @@
                     videoTimeCheck();
                 }, 1000); // 1000ms = 1s
             }
+        }
+
+        // 비디오가 종료되면
+        else if (event.data === YT.PlayerState.ENDED) {
+            $.ajax({
+                type: 'POST',
+                url: urlVideoEnd,
+                // headers: {
+                //     [csrfHeader]: csrfToken,
+                // },
+                data: JSON.stringify({
+                    courseId: courseId,
+                    chapterId: chapterId,
+                    username: username,
+                    videoCurrentTime: player.getDuration()
+                }),
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    if (response.result === "false") {
+                        player.seekTo(response.videoMaxTime);
+                    }
+                    else {
+                        completed = true;
+                        maxTime = Number(response.videoMaxTime);
+                    }
+                },
+                error: function (request, status, error) {
+                    alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                }
+            });
         }
 
         // 비디오가 일시정지되거나 종료되면
