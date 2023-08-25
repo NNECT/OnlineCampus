@@ -1,5 +1,6 @@
 package com.education.onlinecampus.service.common.impl;
 
+import com.education.onlinecampus.config.VideoLengthExtractor;
 import com.education.onlinecampus.data.dto.CourseChapterContentDTO;
 import com.education.onlinecampus.service.common.RepositoryService;
 import com.education.onlinecampus.service.common.YouTubeService;
@@ -80,8 +81,8 @@ public class YouTubeServiceImpl implements YouTubeService {
         try (InputStream inputStream = multipartFile.getInputStream()) {
             content.setVideoId(uploadVideo(getVideoSnippet(content), getVideoStatus(), inputStream));
 
-            double videoLength = VideoLengthExtractor.getVideoLength(inputStream);
-            content.setRunningTime(videoLength); // Set the running time
+            double videoLength = VideoLengthExtractor.getVideoLength(multipartFile.getInputStream());
+            content.setRunningTime((int) videoLength); // Set the running time
 
         } catch (Exception e) {
             e.printStackTrace();
