@@ -1,12 +1,16 @@
 package com.education.onlinecampus.controller.lecture;
 
 import com.education.onlinecampus.config.SecurityConfig;
+import com.education.onlinecampus.data.dto.FileDTO;
 import com.education.onlinecampus.data.dto.MemberDTO;
 import com.education.onlinecampus.data.entity.Course;
 import com.education.onlinecampus.data.entity.Member;
 import com.education.onlinecampus.service.business.lecture.MemberService;
 import com.education.onlinecampus.service.business.manager.CourseService;
+import com.education.onlinecampus.service.common.ImageService;
 import com.education.onlinecampus.service.common.CommonCodeService;
+import com.education.onlinecampus.service.common.CommonCodeService;
+import com.education.onlinecampus.service.common.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -19,6 +23,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -28,6 +33,7 @@ public class MemberController {
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
     private final CourseService courseService;
+    private final ImageService imageService;
     private final CommonCodeService commonCodeService;
 
     @Autowired
@@ -49,10 +55,18 @@ public class MemberController {
         return ResponseEntity.ok(members);
     }
     @PostMapping("/Member_signup")
-    public String PostMemberSignup(@ModelAttribute MemberDTO member, @RequestParam("profileImage") MultipartFile profileImage){
+    public String PostMemberSignup(@ModelAttribute MemberDTO member, @RequestParam("profileImage") MultipartFile profileImage) throws IOException {
+        if(profileImage.isEmpty() || profileImage.equals(null)){
+
+        }else {
+            FileDTO fileDTO = imageService.saveProfileImage(profileImage);
+            FileDTO fileSave = imageService.filesave(fileDTO);
+            member.setPictureFileDTO(fileSave);
+        }
         member.setMemberDivisionDTO(commonCodeService.findByDivisionAndCode('M', 3));
         member.setPassword(passwordEncoder.encode(member.getPassword()));
         memberService.MemberSave(member);
+
         return "lecture/MemberLogin";
     }
     @GetMapping("/")

@@ -9,11 +9,33 @@
 <form action="/CourseChapterContent_save" method="post" enctype="multipart/form-data">
     컨탠트 이름: <input name="contentName">
     컨탠트 설명: <input name="contentBrief">
-    썬네일 파일: <input name="thumbnailFile">
+    썬네일 파일: <input type="file" accept="image/*" name="thumbnailFile" id="logo-upload"
+           onchange='previewPicture(event)'/>
+                <div id="logo-preview">
+                </div>
     컨탠드 비디오: <input type="file" accept="video/*" name="viedo">
-    <input type="hidden" name="statusCodeDTO.code" value="Y001">
-    영상 길이:<input type="number" name="runningTime" value="5">
     <input type="submit" value="등록">
 </form>
+<script>
+    function previewPicture(event) {
+        const pictureInput = event.target;
+        const picturePreview = document.getElementById('logo-preview');
+
+        if (pictureInput.files && pictureInput.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const imgElement = document.createElement('img');
+                imgElement.src = e.target.result;
+                imgElement.style.maxWidth = '100%';
+                imgElement.style.height = "auto";
+                picturePreview.innerHTML = '';
+                picturePreview.appendChild(imgElement);
+            };
+
+            reader.readAsDataURL(pictureInput.files[0]);
+        }
+    }
+</script>
 </body>
 </html>

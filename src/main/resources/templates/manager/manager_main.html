@@ -6,12 +6,6 @@
     <title>강의 관리 페이지</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="../../css/manager_main.css">
-    <style>
-        .active {
-            border: 2px solid #3498db;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-    </style>
 </head>
 <body>
 <!-- 헤더 -->
@@ -64,12 +58,16 @@
 
     <!-- 온라인 강의 -->
     <div id="online-course" style="display: none;">
+
+        <!-- 강의 삭제 버튼 -->
         <button type="button" class="new-course-link delete-course-link" style="margin-left: 10px" onclick="deleteSelectedChapters1()">삭제</button>
 
-        <a href="/Course" class="new-course-link" style="margin-left: 10px">수정</a>
+        <!-- 강의 수정 버튼 -->
+        <a href="/Course" class="new-course-link" id="courseUpdate" style="margin-left: 10px">수정</a>
 
         <!-- 강의 신규등록 모달창 버튼 -->
         <button id="openCourseModel" class="new-course-link" style="margin-left: 10px">강의 신규등록</button>
+
         <!-- 강의 신규등록 모달 오버레이 -->
         <div id="courseModelOverlay" class="modal-overlay">
             <div class="modal-content">
@@ -120,7 +118,7 @@
             </div>
         </form>
 
-        <!-- 온라인 강좌 div -->
+        <!-- 온라인 강의 div -->
         <div class="course-list">
             <h4>온라인강좌 <small>검색결과: ??건</small>
                 <select style="margin-left: 2px;">
@@ -132,6 +130,7 @@
                 </select>
             </h4>
             <div class="table-container">
+                <!-- 강의 목록 테이블 -->
                 <table id="courseTable">
                     <thead>
                     <tr>
@@ -172,6 +171,7 @@
                 <div id="enrolleesSection" style="border: 1px solid #ccc; width: 140px; text-align: center; position: absolute; top: 15px; left: 150px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; border-bottom-color: transparent;">
                     <h3>수강대상자</h3>
                 </div>
+
                 <!-- 강좌 차시정보 div -->
                 <div id="courseSessionsContent" style="border: 1px solid #ccc; height: 520px; width: 98%; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; padding: 0px 10px 0px;">
                     <h3>강좌차시정보
@@ -184,19 +184,23 @@
                             <option>500</option>
                         </select>
                     </h3>
+
+                    <!-- 차시 목록 테이블 -->
                     <table>
-                        <tr>
-                            <th><input type="checkbox" id="cboxAll1" name="cboxAll1" onclick="checkAll1()"></th>
-                            <th>차시순서</th>
-                            <th>차시명</th>
-                            <th>차시학습시간</th>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="cboxAll1" name="cboxAll1" onclick="checkAll1()"></th>
+                                <th>차시순서</th>
+                                <th>차시명</th>
+                                <th>차시학습시간</th>
+                            </tr>
+                        </thead>
                         <tbody id="courseChaptersTableBody">
 
                         </tbody>
-                        <!-- Add more rows as needed -->
                     </table>
                 </div>
+
                 <!-- 수강대상자 div-->
                 <div id="enrolleesContent" style="border: 1px solid #ccc; height: 520px; width: 98%; display: none; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; padding: 0px 10px 0px;">
                     <h3>수강대상자
@@ -209,6 +213,7 @@
                             <option>500</option>
                         </select>
                     </h3>
+                    <!-- 수강대상자 목록 테이블 -->
                     <table>
                         <thead>
                         <tr>
@@ -229,15 +234,13 @@
             </div>
             <div style="max-width: 40%; width: 40%; margin-top: 79.5px; position: absolute; right: 5px;">
                 <div style="border: 1px solid #ccc; height: 520px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; padding: 3px 10px 0px;" id="courseInfoBox">
-                    <a href="#" class="new-course-link" style="position: relative; right: 5px; top: 5px;" onclick="deleteSelectedChapters()">
-                        삭제
-                    </a>
+                    <!-- 차시 목록 삭제 버튼-->
+                    <a href="#" class="new-course-link" style="position: relative; right: 5px; top: 5px;" onclick="deleteSelectedChapters()">삭제</a>
+                    <!-- 차시 수정 버튼-->
                     <a href="/CourseChapter_save" class="new-course-link" style="position: relative; right: 10px; top: 5px;">수정</a>
-                    <!-- 차시 신규등록 모달 -->
-                    <button href="/CourseChapter_save" class="new-course-link" id="openContentRegistration"
-                            style="position: relative; right: 15px; top: 5px;">
-                        차시 신규등록
-                    </button>
+                    <!-- 차시 신규등록 버튼 -->
+                    <button href="/CourseChapter_save" class="new-course-link" id="openContentRegistration" style="position: relative; right: 15px; top: 5px;">차시 신규등록</button>
+
                     <!-- 차시 신규등록 모달 오버레이 -->
                     <div id="modalOverlay" class="modal-overlay">
                         <div class="modal-content">
@@ -256,6 +259,7 @@
                             </form>
                         </div>
                     </div>
+
                     <!-- 차시 디테일 테이블 -->
                     <table style="margin-top: 64px;">
                         <tr>
@@ -299,17 +303,19 @@
                 </div>
             </div>
             <div style="max-width: 40%; width: 40%; margin-top: 79.5px; position: absolute; right: 5px;">
-                <div style="border: 1px solid #ccc; height: 520px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; padding: 3px 10px 0px; display: none;"
-                     id="userInfoBox">
-                    <a href="#" class="new-course-link"
-                       style="position: relative; right: 5px; top: 5px;" onclick="deleteSelectedStudents()">삭제</a>
-                    <a href="/CourseStudent_save" class="new-course-link"
-                       style="position: relative; right: 10px; top: 5px;">수정</a>
+                <div style="border: 1px solid #ccc; height: 520px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; padding: 3px 10px 0px; display: none;" id="userInfoBox">
+                    <!-- 수강생 삭제 버튼 -->
+                    <a href="#" class="new-course-link" style="position: relative; right: 5px; top: 5px;" onclick="deleteSelectedStudents()">삭제</a>
+
+                    <!-- 수강생 수정 버튼 -->
+                    <a href="/CourseStudent_save" class="new-course-link" style="position: relative; right: 10px; top: 5px;">수정</a>
+
                     <!-- 수강생 신규등록 모달 -->
                     <button id="openStudentRegistrationModal" class="new-course-link"
                             style="position: relative; right: 15px; top: 5px;">
                         수강생 신규등록
                     </button>
+
                     <!-- 수강생 신규등록 모달-->
                     <div id="studentRegistrationModalOverlay" class="modal-overlay">
                         <div class="modal-content">
@@ -349,11 +355,12 @@
                         </div>
                     </div>
 
+                    <!-- 수강대상자 회원 디테일 테이블 -->
                     <table style="margin-top: 64px; width: 100%;">
                         <tr>
                             <td>회원번호</td>
                             <td colspan="2" id="memberDetailSeq">1</td>
-                            <td rowspan="4" colspan="3"><img src="" alt="프로필사진"></td>
+                            <td rowspan="4" colspan="3" style="width: 100px; height: 120px; margin: 0; padding: 0;"><img src="" alt="프로필사진" id="memberDetailImage" style="width: 100%; height: 150px;"></td>
                         </tr>
                         <tr>
                             <td>회원구분</td>
@@ -606,7 +613,7 @@
 
             for (const student of students) {
                 var newRow = `
-            <tr>
+            <tr class="clickable-row2">
                 <td><input type="checkbox" name="cbox2"></td>
                 <td data-student-seq="${student.student.memberSeq}" data-course-seq="${student.course.courseSeq}">${student.student.memberDivision.name}</td>
                 <td>${student.student.nameKor}</td>
@@ -1035,7 +1042,6 @@
     document.addEventListener("DOMContentLoaded", function() {
         $(document).ready(function() {
             $(document).on("click", ".clickable-row2", function(e) {
-                e.preventDefault();
 
                 const studentSeq = $(this).find("[data-student-seq]").data("student-seq");
                 const courseSeq = $(this).find("[data-course-seq]").data("course-seq");
@@ -1048,7 +1054,8 @@
                         courseSeq: courseSeq
                     },
                     success: function(data) {
-                        console.log("데이터전달성공");
+                        var imageUrl = "../../img/member/"+data.student.pictureFile.fileName;
+                        $("#memberDetailImage").attr("src", imageUrl);
                         $("#memberDetailSeq").text(data.student.memberSeq);
                         $("#memberDetailDivisionName").text(data.student.memberDivision.name);
                         $("#memberDetailName").text(data.student.nameKor);
@@ -1106,44 +1113,89 @@
         }
     }
 </script>
-<!-- 강의 목록 버블링 막는 스크립트 -->
+<!-- 강의 목록 클릭 활성화 스크립트 -->
 <script>
-    $(document).ready(function () {
-        $(".clickable-row input[type='checkbox']").click(function (e) {
-            e.stopPropagation(); // 이벤트 버블링 중단
-        });
-        $(".clickable-row").click(function () {
-            $(this).toggleClass("active");
-            $(".clickable-row").not(this).removeClass("active");
+    $(document).on("click", ".clickable-row", function () {
+        $(this).addClass("active");
+        $(".clickable-row").not(this).removeClass("active");
+
+        $(this).find("input[type='checkbox']").click(function (e) {
+            e.stopPropagation();
         });
     });
 </script>
 <!-- 강좌 차시 목록 클릭 활성화 스크립트-->
 <script>
     $(document).on("click", ".clickable-row1", function () {
-        // 클릭한 행에서 'active' 클래스 추가하고 다른 행에서 제거
         $(this).addClass("active");
         $(".clickable-row1").not(this).removeClass("active");
 
-        // 클릭한 체크박스의 이벤트 버블링 중단
         $(this).find("input[type='checkbox']").click(function (e) {
             e.stopPropagation();
         });
     });
+
+    /*$(document).on("dblclick", ".clickable-row", function () {
+        var $row = $(this);
+
+        if ($row.hasClass("editing")) {
+            return;
+        }
+
+        $row.addClass("editing");
+        $row.find("td:not(:first-child)").each(function (index) {
+            var value = $(this).text();
+            var inputHtml = "";
+            var originalContent = $row.html();
+
+            switch (index) {
+                case 1:
+                case 2:
+                    inputHtml = "<input type='text' value='" + value + "'>";
+                    break;
+                case 3:
+                case 4:
+                    inputHtml = "<input type='date' value='" + value + "'>";
+                    break;
+                case 5:
+                    inputHtml = "<select style='width: auto;'><option value='대기'>대기</option><option value='진행'>진행</option><option value='종료'>종료</option></select>";
+                    break;
+                default:
+                    inputHtml = value;
+                    break;
+            }
+            $(this).html(inputHtml);
+        });
+    });
+
+    $(document).on("click", "#courseUpdate", function () {
+        var $row = $(this).closest(".clickable-row");
+
+        if ($row.hasClass("editing")) {
+            // 수정 사항 처리 및 업데이트 로직 구현
+            // 예: AJAX를 사용하여 서버에 수정 사항을 전송하고 업데이트
+
+            // 편집 모드 종료
+            $row.removeClass("editing");
+            $row.find("td:not(:first-child)").each(function () {
+                var value = $(this).find("input").val();
+                $(this).html(value);
+            });
+        }
+    });*/
 </script>
 <!-- 수강대상자 목록 클릭 활성화 스크립트-->
 <script>
     $(document).on("click", ".clickable-row2", function () {
-        // 클릭한 행에서 'active' 클래스 추가하고 다른 행에서 제거
         $(this).addClass("active");
         $(".clickable-row2").not(this).removeClass("active");
 
-        // 클릭한 체크박스의 이벤트 버블링 중단
         $(this).find("input[type='checkbox']").click(function (e) {
             e.stopPropagation();
         });
     });
 </script>
+<!-- 모달 스크립트 -->
 <script>
     const courseSessionsSection = document.getElementById("courseSessionsSection");
     const enrolleesSection = document.getElementById("enrolleesSection");
@@ -1164,7 +1216,5 @@
         document.getElementById("userInfoBox").style.display = "block";
     });
 </script>
-<h2>zz</h2>
 </body>
-
 </html>
