@@ -1064,27 +1064,30 @@
                 </div>
             </div>
         </div>
-    </div>
 
-
-    <!-- 차시 신규등록 모달 오버레이 -->
-    <div id="findContentFileModal" style="width: 100%; background: lightgray; display: none;" class="modal-overlay">
-        <div class="modal-content">
-            <span class="close-button1" id="closeContentModal">&times;</span>
-            <h2>강의 차시 등록</h2>
-            <form method="post">
-                강좌목록: <select name="courseDTO.courseSeq" style="width: auto;">
-                <option></option>
-            </select><br>
-                차시순서: <input type="number" name="chapterOrder" th:value="${i}"><br>
-                쳅터제목: <input type="text" name="chapterName"><br>
-                <!--컨텐츠번호: <input type="text" name="content">
-                보조자료: <input type="file" name="supplementaryFile">-->
-                챕터설명: <input type="text" name="chapterBrief"><br>
-                <input type="submit" value="등록">
-            </form>
+        <!-- 차시 신규등록 모달 오버레이 -->
+        <div id="findContentFileModal" style="width: 100%; background: lightgray; display: none;" class="modal-overlay">
+            <div class="modal-content">
+                <span class="close-button1" id="closeContentModal">&times;</span>
+                <h2>강의 차시 등록</h2>
+                <form method="post">
+                    강좌목록: <select name="courseDTO.courseSeq" style="width: auto;">
+                    <option></option>
+                </select><br>
+                    차시순서: <input type="number" name="chapterOrder" th:value="${i}"><br>
+                    쳅터제목: <input type="text" name="chapterName"><br>
+                    <!--컨텐츠번호: <input type="text" name="content">
+                    보조자료: <input type="file" name="supplementaryFile">-->
+                    챕터설명: <input type="text" name="chapterBrief"><br>
+                    <input type="submit" value="등록">
+                </form>
+            </div>
         </div>
+
     </div>
+
+
+
 
 
 
