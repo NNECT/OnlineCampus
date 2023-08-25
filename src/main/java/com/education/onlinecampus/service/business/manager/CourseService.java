@@ -1,9 +1,6 @@
 package com.education.onlinecampus.service.business.manager;
 
-import com.education.onlinecampus.data.dto.CourseChapterContentDTO;
-import com.education.onlinecampus.data.dto.CourseChapterDTO;
-import com.education.onlinecampus.data.dto.CourseDTO;
-import com.education.onlinecampus.data.dto.CourseStudentDTO;
+import com.education.onlinecampus.data.dto.*;
 import com.education.onlinecampus.data.entity.Course;
 import com.education.onlinecampus.data.entity.CourseChapter;
 import com.education.onlinecampus.data.entity.CourseStudent;
@@ -12,29 +9,28 @@ import com.education.onlinecampus.service.common.RepositoryService;
 import java.util.List;
 
 public interface CourseService {
+    // Course
+    CourseDTO CourseFind(Long CourseSeq);
+    List<Course> CourseFindAll();
+    List<CourseDTO> courseFindAllByMember(MemberDTO memberDTO);
+    List<Course> findByCourseNameContaining(String searchKeyword, String searchKeyword1);
     Course CourseSave(CourseDTO course);
-
-    RepositoryService repositoryService();
-
     void CourseDelete(Course course);
 
-    Course CourseFind(Long CourseSeq);
-
-    List<Course> CourseFindAll();
-
-    CourseChapter CourseChapterSave(CourseChapterDTO courseChapter);
-
+    // CourseChapter
+    CourseChapter findByCourseAndChapterOrder(Long courseSeq, Integer chapterorder);
+    List<CourseChapter> CourseChapterFindAll();
+    List<CourseChapter> findByCourseChapterCompositeKeyCourseSeq(Long courseSeq);
+    CourseChapterDTO courseChapterFindByCourseAndSeq(CourseDTO courseDTO, Long courseChapterSeq);
+    List<List<CourseChapterDTO>> courseChapterFindAllByCourseList(List<CourseDTO> courseDTOList);
+    CourseChapterDTO CourseChapterSave(CourseChapterDTO courseChapterDTO);
     void CourseChapterDelete(CourseChapter courseChapter);
 
-    List<CourseChapter> findCourseChapter(Long CourseSeq);
+    // CourseChapterContent
+    CourseChapterContentDTO courseChapterContentFindByVideoId(String videoId);
+    CourseChapterContentDTO courseChapterContentSave(CourseChapterContentDTO courseChapterContentDTO);
 
-    List<CourseChapter> CourseChapterFindAll();
-
+    // CourseStudent
+    CourseStudentDTO courseStudentSave(CourseStudentDTO courseStudentDTO);
     List<CourseStudent> CourseStudentAllSave(Long[] memberseqs, Long courseSeq, CourseStudentDTO courseStudentDTO);
-
-    CourseChapter findByCourseAndChapterOrder(Long courseSeq, Integer chapterorder);
-
-    List<Course> findByCourseNameContaining(String searchKeyword, String searchKeyword1);
-
-    List<CourseChapter> findByCourseChapterCompositeKeyCourseSeq(Long courseSeq);
 }

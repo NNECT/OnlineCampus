@@ -11,12 +11,8 @@ public interface CourseChapterContentMapper {
     CourseChapterContentMapper INSTANCE = Mappers.getMapper(CourseChapterContentMapper.class);
 
     @Mapping(source = "thumbnailFileDTO", target = "thumbnailFile")
-    @Mapping(source = "contentFileDTO", target = "contentFile")
-    @Mapping(source = "statusCodeDTO", target = "statusCode")
     CourseChapterContent toEntity(CourseChapterContentDTO courseChapterContentDTO);
 
     @Mapping(source = "thumbnailFile", target = "thumbnailFileDTO")
-    @Mapping(source = "contentFile", target = "contentFileDTO")
-    @Mapping(source = "statusCode", target = "statusCodeDTO")
     CourseChapterContentDTO toDTO(CourseChapterContent courseChapterContent);
 }

@@ -28,16 +28,15 @@ values ('C002', 'C', '진행', true, 0, null);
 insert ignore into common_code (code, division_code, name, in_use, order_number, note)
 values ('C003', 'C', '종료', true, 0, null);
 
-insert ignore into common_code (code, division_code, name, in_use, order_number, note)
-values ('Y001', 'Y', '대기', true, 0, null);
-insert ignore into common_code (code, division_code, name, in_use, order_number, note)
-values ('Y002', 'Y', '업로드진행중', true, 0, null);
-insert ignore into common_code (code, division_code, name, in_use, order_number, note)
-values ('Y003', 'Y', '업로드완료', true, 0, null);
-insert ignore into common_code (code, division_code, name, in_use, order_number, note)
-values ('Y004', 'Y', '업로드실패', true, 0, null);
-
+insert ignore into course (course_seq, course_brief, course_name, end_date_time, start_date_time, status_code)
+values ('1','강의1 내용','강의1','2023-08-12','2023-08-24', 'C002');
+insert ignore into course (course_seq, course_brief, course_name, end_date_time, start_date_time, status_code)
+values ('2','강의2 내용','강의2','2023-08-14','2023-08-28', 'C002');
+insert ignore into course (course_seq, course_brief, course_name, end_date_time, start_date_time, status_code)
+values ('3','강의3 내용','강의3','2023-08-18','2023-08-30', 'C002');
 insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+
+
 values ('국어', '국어수업', now(), now(), 'C001');
 insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
 values ('국어', '국어수업', now(), now(), 'C001');
@@ -54,4 +53,4 @@ values ('영어', '영어수업', now(), now(), 'C002');
 insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
 values ('수학', '수학수업', now(), now(), 'C003');
 
-
+values ('테스트', '테스트', now(), now(), 'C001');

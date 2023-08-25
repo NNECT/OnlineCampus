@@ -9,6 +9,4 @@ import java.util.List;
 
 public interface CourseChapterContentRepository extends JpaRepository<CourseChapterContent, Long> {
     List<CourseChapterContent> findByThumbnailFile(File thumbnailFile);
-    List<CourseChapterContent> findByContentFile(File contentFile);
-    List<CourseChapterContent> findByStatusCode(CommonCode statusCode);
 }

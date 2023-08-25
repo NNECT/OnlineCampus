@@ -76,6 +76,7 @@ public class CourseController {
         return response;
     }
     @PostMapping("/Course_find")
+  
     @ResponseBody
     public List<Course> CourseFind(@RequestParam("searchcoursename") String searchcoursename,
                                    @RequestParam("searchcoursename1") String searchcoursename1,
@@ -105,6 +106,7 @@ public class CourseController {
         }
         return matchingCourses;
     }
+  
     @GetMapping("/CourseChapter_save")
     public String GetCourseChapter_save(Model model){
         List<Course> courses = courseService.CourseFindAll();

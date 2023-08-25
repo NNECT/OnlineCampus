@@ -1,5 +1,6 @@
 package com.education.onlinecampus.repository;
 
+import com.education.onlinecampus.data.entity.CommonCode;
 import com.education.onlinecampus.data.entity.Course;
 import com.education.onlinecampus.data.entity.CourseStudent;
 import com.education.onlinecampus.data.entity.Member;
@@ -12,6 +13,4 @@ public interface CourseStudentRepository extends JpaRepository<CourseStudent, Co
     List<CourseStudent> findByStudent(Member student);
     List<CourseStudent> findByCourseStudentCompositeKey_CourseSeq(Long courseSeq);
     CourseStudent findByCourseStudentCompositeKey_CourseSeqAndCourseStudentCompositeKey_StudentSeq(Long courseSeq,Long studentSeq);
-
-
 }

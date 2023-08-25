@@ -4,16 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>강의보기 페이지</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/course.css}">
     <style>
+        /* 클릭된 행의 배경색 */
         .active-row {
-            background-color: black; /* 클릭된 행의 배경색 */
+            background-color: black;
             color: white;
         }
     </style>
 </head>
 <body>
+<a th:href="@{Member_logout}">로그아웃</a>
 <div class="container" style="margin-top: 40px;">
     <h3 style="margin-left: 30px;">강의목록</h3>
     <div style="padding: 20px; border: 1px solid lightgray; border-radius: 10px; margin: 25px 10px;">
@@ -67,6 +69,19 @@
         </div>
     </div>
 </div>
+<footer>
+    <div id="footerWrap">
+        <div>
+            <div>
+
+            </div>
+            <div>
+
+            </div>
+        </div>
+        <hr>
+    </div>
+</footer>
 
 <!-- 강의 모달창 -->
 <div id="courseModal" class="modal" style="display: none; margin-top: 80px;">
@@ -81,27 +96,26 @@
             <div class="modal-body">
                 <div id="youtubePlayer"></div>
                 <iframe id="ytplayer" type="text/html" width="920" height="605"
-                        src="https://www.youtube.com/watch?v=AgtBj7XVToQ"
                         frameborder="0" allowfullscreen></iframe>
             </div>
         </div>
     </div>
 </div>
 
-</body>
 <!-- jQuery 라이브러리 -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/jquery-3.7.0.min.js}"></script>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 <script>
     document.querySelector(".view-chapters-btn").addEventListener("click", function () {
         const courseSeq = $(this).attr('id');
+        const ytplayer = document.getElementById("ytplayer");
 
         $.ajax({
             type: 'GET',
             url: "/ajax/getCourseChapter",
-            data: JSON.stringify({
+            data: {
                 "courseSeq": courseSeq
-            }),
+            },
             dataType: "json",
             async: false,
             contentType: "application/json; charset=utf-8",
@@ -109,29 +123,43 @@
                 if(response.result === "success"){
                     const length = response.length;
                     const courseChapterTable = document.getElementById("courseChapterTable");
+                    const courseChapterList = response.courseChapterList;
+
+                    courseChapterTable.innerHTML = '';
+
                     for(var i=0; i<length; i++){
+                        let courseChapter = courseChapterList[i];
+                        let chapterSeq = courseChapter.courseChapterCompositeKey.chapterSeq;
+                        let thumbnailFile = courseChapter.content.thumbnailFile;
+                        //let maxPosition = courseChapter.maxPosition;
+
                         let chapterRow = document.createElement("tr");
                         chapterRow.style.textAlign = "left";
 
                         let chapterNumberCell = document.createElement("td");
-                        chapterNumberCell.colSpan = 5;
-                        chapterNumberCell.innerHTML = courseSeq+"차시";
+                        chapterNumberCell.className = "col-1";
+                        chapterNumberCell.style.textAlign = "center";
+                        chapterNumberCell.innerHTML = chapterSeq+"차시";
 
-                        let emptyCell = document.createElement("td");
+                        //let thumbNailCell = document.createElement("td");
+                        //let thumbNail = document.createElement("img");
+                        //thumbNail.className = "col-2";
+                        //thumbNail.style.textAlign = "center";
 
                         let viewButtonCell = document.createElement("td");
                         let viewButton = document.createElement("button");
                         viewButton.type = "button";
-                        viewButton.className = "startCourse float-right";
+                        viewButton.className = "startCourse col-1";
                         viewButton.onclick = openModalAndPlayYoutube;
                         viewButton.innerHTML = "강의보기";
+                        viewButton.id = courseChapter.content.videoId;
                         viewButtonCell.appendChild(viewButton);
 
                         chapterRow.appendChild(chapterNumberCell);
-                        chapterRow.appendChild(emptyCell);
                         chapterRow.appendChild(viewButtonCell);
-
                         courseChapterTable.appendChild(chapterRow);
+
+                        ytplayer.src = "https://www.youtube.com/embed/" + videoId;
                     }
                 }
             }
@@ -161,4 +189,5 @@
 
 </script>
 <script src="https://www.youtube.com/iframe_api"></script>
+</body>
 </html>

@@ -1,34 +1,5 @@
-/*.courseDetail{
-    width: 35px;
-    height: 35px;
-    margin-bottom: 20px;
-}*/
-
-/*.courseHeader{
-    border: 1px solid lightgray;
+footer{
     width: 100%;
-    padding: 20px;
-    border-radius: 10px;
-}*/
-
-/*.allProgress{
-    float: left;
-    margin-right: 20px;
-    line-height: 15px;
-}*/
-
-.progress{
-    max-width: 100%;
-}
-
-/*#courseDetails{
-    display: none;
-}*/
-
-.table{
-    line-height: 50px;
-}
-
-.startCourse{
-    height: 30px; line-height: 0;
+    height: 100px;
+    background-color: lightsteelblue;
 }

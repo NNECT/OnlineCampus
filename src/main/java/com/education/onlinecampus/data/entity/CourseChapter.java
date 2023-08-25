@@ -54,17 +54,21 @@ public class CourseChapter implements EntityMarker<CourseChapterDTO> {
 
     /** 순서 번호 */
     @Column(nullable = false)
-    private Integer chapterOrder;
+    private Long chapterOrder;
+
+    private void setChapterOrder(Long chapterOrder) {
+        this.chapterOrder = chapterOrder;
+    }
 
     /** 챕터 제목 */
     @Column(length = 150, nullable = false)
     private String chapterName;
 
     /** 콘텐츠 번호 */
-    @OneToOne
+    @ManyToOne
     @JoinColumn(
             name = "contentSeq",
-            referencedColumnName = "contentSeq"
+            referencedColumnName = "videoId"
     )
     private CourseChapterContent content;
 
@@ -103,6 +107,7 @@ public class CourseChapter implements EntityMarker<CourseChapterDTO> {
             Long maxChapterSeq = query.getSingleResult();
 
             courseChapter.getCourseChapterCompositeKey().setChapterSeq(maxChapterSeq + 1);
+            courseChapter.setChapterOrder(maxChapterSeq + 1);
         }
     }
 }

@@ -1,14 +1,10 @@
 package com.education.onlinecampus.controller.lecture;
 
 import com.education.onlinecampus.config.SecurityConfig;
-import com.education.onlinecampus.data.dto.CommonCodeDTO;
 import com.education.onlinecampus.data.dto.MemberDTO;
 import com.education.onlinecampus.data.entity.Course;
-import com.education.onlinecampus.data.entity.CourseChapter;
-import com.education.onlinecampus.data.entity.Member;
 import com.education.onlinecampus.service.business.lecture.MemberService;
 import com.education.onlinecampus.service.business.manager.CourseService;
-import com.education.onlinecampus.service.common.RepositoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -21,7 +17,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -62,27 +57,26 @@ public class MemberController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             String username = authentication.getName();
-            Member loggedInMember = memberService.findByUserName(username);
-            switch (loggedInMember.getMemberDivision().getCode()) {
+            MemberDTO loggedInMember = memberService.findByUserName(username);
+            switch (loggedInMember.getMemberDivisionDTO().getCode()) {
                 case "M001": {
                     model.addAttribute("loggedInMember", loggedInMember);
                     List<Course> courses = courseService.CourseFindAll();
                     model.addAttribute("courses",courses);
                     return "/manager/manager_main";
                 }
-                case "M002": {
-                    model.addAttribute("loggedInMember", loggedInMember);
-                    return "/lecture/courseList";
-                }
+                case "M002":
                 case "M003": {
-                    model.addAttribute("loggedInMember", loggedInMember);
-                    return "/lecture/courseList";
+                    return "redirect:lecture";
                 }
                 default: {
                     break;
                 }
             }
         }
-        return "/lecture/courseList";
+        return "redirect:Member_logout";
     }
+
+    @GetMapping("/Member_update")
+    public String updateForm() { return "lecture/MemberUpdate"; }
 }
