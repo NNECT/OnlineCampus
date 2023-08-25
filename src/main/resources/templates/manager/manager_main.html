@@ -265,28 +265,29 @@
                     <!-- 차시 디테일 테이블 -->
                     <table style="margin-top: 64px;">
                         <tr>
+                            여기
                             <td style="width: 30%;">차시 번호</td>
-                            <td>001</td>
+                            <td id="chapterDetailSeq"></td>
                         </tr>
                         <tr>
                             <td style="width: 30%;">강좌</td>
-                            <td>001</td>
+                            <td id="chapterDetailCourseName"></td>
                         </tr>
                         <tr>
                             <td style="width: 30%;">차시순서</td>
-                            <td colspan="3">1</td>
+                            <td colspan="3" id="chapterDetailOrder"></td>
                         </tr>
                         <tr>
                             <td style="width: 30%;">차시 제목</td>
-                            <td colspan="3">국어수업1</td>
+                            <td colspan="3" id="chapterDetailName"></td>
                         </tr>
                         <tr>
                             <td style="width: 30%;">차시 학습시간</td>
-                            <td colspan="3">1시간 30분 5초</td>
+                            <td colspan="3"></td>
                         </tr>
                         <tr>
                             <td style="width: 30%;">썸네일파일</td>
-                            <td colspan="3">이러쿵저러쿵.pdf</td>
+                            <td colspan="3"></td>
                         </tr>
                         <tr>
                             <td style="width: 30%;">차시강의 콘탠츠 번호</td>
@@ -542,16 +543,14 @@
         <div id="findContentFileModal" style="width: 100%; background: lightgray; display: none;" class="modal-overlay">
             <div class="modal-content">
                 <span class="close-button1" id="closeContentModal">&times;</span>
-                <h2>강의 차시 등록</h2>
-                <form method="post">
-                    강좌목록: <select name="courseDTO.courseSeq" style="width: auto;">
-                    <option></option>
-                </select><br>
-                    차시순서: <input type="number" name="chapterOrder" th:value="${i}"><br>
-                    쳅터제목: <input type="text" name="chapterName"><br>
-                    <!--컨텐츠번호: <input type="text" name="content">
-                    보조자료: <input type="file" name="supplementaryFile">-->
-                    챕터설명: <input type="text" name="chapterBrief"><br>
+                <h2>강의컨탠트등록</h2>
+                <form action="/CourseChapterContent_save" method="post" enctype="multipart/form-data">
+                    컨탠트 이름: <input name="contentName">
+                    컨탠트 설명: <input name="contentBrief">
+                    썬네일 파일: <input name="thumbnailFile">
+                    컨탠드 비디오: <input type="file" accept="video/*" name="viedo">
+                    <input type="hidden" name="statusCodeDTO.code" value="Y001">
+                    영상 길이:<input type="number" name="runningTime" value="5">
                     <input type="submit" value="등록">
                 </form>
             </div>
@@ -1181,6 +1180,7 @@
                         courseSeq: courseSeq
                     },
                     success: function(data) {
+                        저기
                         const chapterSeq = data.courseChapterCompositeKey.chapterSeq;
                         $("#chapterDetailSeq").text(chapterSeq);
                         $("#chapterDetailCourseName").text(data.course.courseName);
