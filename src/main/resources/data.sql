@@ -52,3 +52,17 @@ insert ignore into course (course_name, course_brief, start_date_time, end_date_
 values ('체육', '체육수업', now(), now(), 'C002');
 insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
 values ('미술', '미술수업', now(), now(), 'C003');
+
+insert ignore into member (member_division_code, name_kor, email, username, password, password_change_date, password_change_required, password_error_count, last_login_date, register_date)
+values (
+        'M003',
+        '홍길동',
+        'testuser@email.com',
+        'testuser',
+        '$2a$10$9rkBzIxbQHWziANogd9Q..h5Oayqcf/aYM4qQrJ8gEJm5v/.5TUdS',
+        now(),
+        0,
+        0,
+        now(),
+        now()
+       );

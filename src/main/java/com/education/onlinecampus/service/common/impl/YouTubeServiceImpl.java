@@ -2,17 +2,24 @@ package com.education.onlinecampus.service.common.impl;
 
 import com.education.onlinecampus.config.VideoLengthExtractor;
 import com.education.onlinecampus.data.dto.CourseChapterContentDTO;
+import com.education.onlinecampus.data.dto.FileDTO;
 import com.education.onlinecampus.service.common.RepositoryService;
 import com.education.onlinecampus.service.common.YouTubeService;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.*;
 import lombok.RequiredArgsConstructor;
+import org.bytedeco.javacv.FFmpegFrameGrabber;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,6 +29,7 @@ import java.util.List;
 public class YouTubeServiceImpl implements YouTubeService {
     private final YouTube youtube;
     private final RepositoryService repositoryService;
+    private final ResourceLoader resourceLoader;
 
     @Override
     public ChannelListResponse getChannelList() throws IOException {
@@ -78,15 +86,31 @@ public class YouTubeServiceImpl implements YouTubeService {
 
     @Override
     public CourseChapterContentDTO uploadVideo(CourseChapterContentDTO content, MultipartFile multipartFile) throws IOException {
-        try (InputStream inputStream = multipartFile.getInputStream()) {
-            content.setVideoId(uploadVideo(getVideoSnippet(content), getVideoStatus(), inputStream));
+        File tempFile = File.createTempFile("video", "tmp");
 
-            double videoLength = VideoLengthExtractor.getVideoLength(multipartFile.getInputStream());
-            content.setRunningTime((int) videoLength); // Set the running time
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        try (InputStream inputStream = multipartFile.getInputStream();
+             FileOutputStream out = new FileOutputStream(tempFile)) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                out.write(buffer, 0, bytesRead);
+            }
         }
+
+        // 길이 구하기
+        try (InputStream isForLength = Files.newInputStream(tempFile.toPath())) {
+            int lengthInSeconds = getVideoLength(isForLength);
+            content.setRunningTime(lengthInSeconds);
+        }
+
+        // 업로드
+        try (InputStream isForUpload = Files.newInputStream(tempFile.toPath())) {
+            content.setVideoId(uploadVideo(getVideoSnippet(content), getVideoStatus(), isForUpload));
+        }
+
+        // 임시 파일 삭제
+        tempFile.delete();
+
         return repositoryService.getCourseChapterContentRepository().save(content.toEntity()).toDTO();
     }
 
@@ -123,5 +147,25 @@ public class YouTubeServiceImpl implements YouTubeService {
         VideoStatus status = new VideoStatus();
         status.setPrivacyStatus("unlisted");
         return status;
+    }
+
+    private int getVideoLength(InputStream inputStream) throws IOException {
+        int lengthInSeconds = 0;
+        FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(inputStream);
+        grabber.start();
+        lengthInSeconds = (int) (grabber.getLengthInTime() / 1000000);  // micro to seconds
+        grabber.stop();
+        return lengthInSeconds;
+    }
+
+    @Override
+    public boolean setThumbnail(String videoId, FileDTO file) throws IOException {
+        Resource resource = resourceLoader.getResource("classpath:static/img/thumbnail/" + file.getFileName());
+        try (InputStream inputStream = resource.getInputStream()) {
+            InputStreamContent mediaContent = new InputStreamContent("image/jpeg", inputStream);
+            YouTube.Thumbnails.Set thumbnailSet = youtube.thumbnails().set(videoId, mediaContent);
+            ThumbnailSetResponse result = thumbnailSet.execute();
+            return !result.getItems().isEmpty();
+        }
     }
 }

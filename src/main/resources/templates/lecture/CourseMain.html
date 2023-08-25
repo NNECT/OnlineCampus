@@ -80,7 +80,7 @@
 
 <!-- 모달 -->
 <div class="modal fade" id="videoModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg modal-fullscreen-lg-down">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-fullscreen-lg-down" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="videoModalLabel">Modal title</h1>
@@ -99,9 +99,10 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     const username = /*[[${#authentication.name}]]*/ 'default-username';
-    const csrfToken = /*[[${_csrf?.token}]]*/ 'default-token-value';
-    const csrfHeader = /*[[${_csrf?.headerName}]]*/ 'default-header-name';
+    // const csrfToken = /*[[${_csrf?.token}]]*/ 'default-token-value';
+    // const csrfHeader = /*[[${_csrf?.headerName}]]*/ 'default-header-name';
     const urlVideoStartTime = /*[[@{/async/video_start_time}]]*/ 'default-url';
+    const urlVideoTimeCheck = /*[[@{/async/video_time_check}]]*/ 'default-url';
     /*]]>*/
 
     const tag = document.createElement('script');
@@ -110,6 +111,11 @@
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
     let player;
+    let courseId;
+    let chapterId;
+    let completed = false;
+    let interval;
+    let maxTime = 0;
 
     // 1. YouTube API가 로드되면 실행할 함수
     function onYouTubeIframeAPIReady() {
@@ -117,44 +123,109 @@
             height: '360',
             width: '640',
             videoId: '', // 초기 영상 ID (빈 문자열이면 영상이 로드되지 않음)
+            events: {
+                'onStateChange': onPlayerStateChange // 플레이어 상태가 변경될 때마다 실행할 함수 지정
+            }
         });
     }
 
-    // 2. Bootstrap 모달 이벤트
-    document.addEventListener('DOMContentLoaded', function () {
-        const videoModal = document.getElementById('videoModal');
+    // 3. 플레이어 상태가 변경될 때마다 실행할 함수
+    function onPlayerStateChange(event) {
+        // 반복 실행을 종료
+        if (interval) {
+            clearInterval(interval);
+        }
 
-        videoModal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget; // 시청 버튼을 클릭하여 모달을 열게 한 요소
-            const courseId = button.getAttribute('data-bs-course-id'); // 강의 ID를 가져옴
-            const chapterId = button.getAttribute('data-bs-chapter-id'); // 차시 ID를 가져옴
-            const videoId = button.getAttribute('data-bs-video-id'); // YouTube 영상 ID를 가져옴
+        if (event.data === YT.PlayerState.PLAYING) {
+            if (!completed) {
+                // 1초마다 videoTimeCheck 함수를 실행
+                interval = setInterval(() => {
+                    videoTimeCheck();
+                }, 1000); // 1000ms = 1s
+            }
+        }
 
-            // $.ajax({
-            //     type: 'POST',
-            //     url: urlVideoStartTime,
-            //     headers: {
-            //         [csrfHeader]: csrfToken,
-            //     },
-            //     data: JSON.stringify({
-            //         courseId: courseId,
-            //         chapterId: chapterId,
-            //         username: username
-            //     }),
-            //     dataType: 'json',
-            //     contentType: 'application/json; charset=utf-8',
-            //     success: function (response) {
-                    player.loadVideoById(videoId); // 가져온 ID로 YouTube 플레이어의 영상을 변경
-            //         player.seekTo(response.startTime); // 가져온 시작 시간으로 영상을 이동
-            //     },
-            //     error: function (request, status, error) {
-            //         alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-            //     }
-            // });
+        // 비디오가 일시정지되거나 종료되면
+        // else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
+        //     // 반복 실행을 종료
+        //     if (interval) {
+        //         clearInterval(interval);
+        //     }
+        // }
+    }
+
+    function videoStart(event) {
+        const button = event.relatedTarget; // 시청 버튼을 클릭하여 모달을 열게 한 요소
+        const videoId = button.getAttribute('data-bs-video-id'); // YouTube 영상 ID를 가져옴
+
+        courseId = button.getAttribute('data-bs-course-id'); // 강의 ID를 가져옴
+        chapterId = button.getAttribute('data-bs-chapter-id'); // 차시 ID를 가져옴
+
+        $.ajax({
+            type: 'POST',
+            url: urlVideoStartTime,
+            // headers: {
+            //     [csrfHeader]: csrfToken,
+            // },
+            data: JSON.stringify({
+                courseId: courseId,
+                chapterId: chapterId,
+                username: username
+            }),
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                player.loadVideoById({
+                    videoId: videoId,
+                    startSeconds: Number(response.videoStartTime)
+                }); // 가져온 ID로 YouTube 플레이어의 영상을 변경
+                completed = response.completed === "true";
+                maxTime = Number(response.videoMaxTime);
+            },
+            error: function (request, status, error) {
+                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            }
         });
+    }
 
+    function videoTimeCheck() {
+        $.ajax({
+            type: 'POST',
+            url: urlVideoTimeCheck,
+            // headers: {
+            //     [csrfHeader]: csrfToken,
+            // },
+            data: JSON.stringify({
+                courseId: courseId,
+                chapterId: chapterId,
+                username: username,
+                videoCurrentTime: player.getCurrentTime()
+            }),
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                if (response.result === "false") {
+                    player.seekTo(response.videoMaxTime);
+                }
+                else {
+                    maxTime = Number(response.videoMaxTime);
+                }
+            },
+            error: function (request, status, error) {
+                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // 2. Bootstrap 모달 이벤트
+        const videoModal = document.getElementById('videoModal');
+        videoModal.addEventListener('show.bs.modal', videoStart);
         videoModal.addEventListener('hide.bs.modal', function (event) {
             player.stopVideo(); // 모달이 닫힐 때 영상을 정지
+            if (interval) {
+                clearInterval(interval); // 모달이 닫힐 때 반복 실행을 종료
+            }
         });
     });
 </script>

@@ -1,11 +1,7 @@
 package com.education.onlinecampus.service.business.manager.impl;
 
 import com.education.onlinecampus.data.dto.*;
-import com.education.onlinecampus.data.entity.CommonCode;
-import com.education.onlinecampus.data.entity.Course;
-import com.education.onlinecampus.data.entity.CourseChapter;
-import com.education.onlinecampus.data.entity.CourseStudent;
-import com.education.onlinecampus.data.entity.Member;
+import com.education.onlinecampus.data.entity.*;
 import com.education.onlinecampus.service.business.manager.CourseService;
 import com.education.onlinecampus.service.common.RepositoryService;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +43,7 @@ public class CourseServiceImpl implements CourseService {
     public CourseDTO CourseFind(Long CourseSeq){
         return repositoryService.getCourseRepository().findByCourseSeq(CourseSeq).toDTO();
     }
-    
+
     @Override
     public CourseChapterDTO CourseChapterSave(CourseChapterDTO courseChapterDTO){
         return repositoryService.getCourseChapterRepository().save(courseChapterDTO.toEntity()).toDTO();
@@ -76,7 +72,7 @@ public class CourseServiceImpl implements CourseService {
         List<CourseChapter> all = repositoryService.getCourseChapterRepository().findAll(Sort.by(Sort.Order.asc("chapterOrder")));
         return all;
     }
-    
+
     @Override
     public List<List<CourseChapterDTO>> courseChapterFindAllByCourseList(List<CourseDTO> courseDTOList) {
         List<List<CourseChapterDTO>> resultList = new ArrayList<>();
@@ -86,7 +82,7 @@ public class CourseServiceImpl implements CourseService {
         }
         return resultList;
     }
-    
+
     @Override
     public List<CourseStudent> CourseStudentAllSave(Long[] memberseqs, Long courseSeq, CourseStudentDTO courseStudentDTO){
         List<CourseStudent> savedCourseStudents = new ArrayList<>();
@@ -99,7 +95,7 @@ public class CourseServiceImpl implements CourseService {
         }
             return savedCourseStudents;
     }
-  
+
     @Override
     public CourseChapter findByCourseAndChapterOrder(Long courseSeq, Long chapterorder){
         return repositoryService.getCourseChapterRepository().findByCourse_CourseSeqAndChapterOrder(courseSeq, chapterorder);
@@ -114,10 +110,19 @@ public class CourseServiceImpl implements CourseService {
     public List<CourseChapter> findByCourseChapterCompositeKeyCourseSeq(Long courseSeq){
         return repositoryService.getCourseChapterRepository().findByCourseChapterCompositeKey_CourseSeq(courseSeq);
     }
-  
+
     @Override
     public CourseChapterContentDTO courseChapterContentSave(CourseChapterContentDTO courseChapterContentDTO) {
         return repositoryService.getCourseChapterContentRepository().save(courseChapterContentDTO.toEntity()).toDTO();
+    }
+
+    @Override
+    public CourseStudentDTO courseStudentFindByCourseAndMember(CourseDTO courseDTO, MemberDTO memberDTO) {
+        CourseStudent courseStudent = repositoryService.getCourseStudentRepository()
+                .findByCourseAndStudent(courseDTO.toEntity(), memberDTO.toEntity())
+                .orElse(null);
+        if (courseStudent == null) return null;
+        return courseStudent.toDTO();
     }
 
     @Override
@@ -127,11 +132,41 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseStudentDTO courseStudentFindByCourseAndStudent(CourseDTO courseDTO, MemberDTO memberDTO) {
-        return repositoryService.getCourseStudentRepository().findByCourseAndStudent(courseDTO.toEntity(), memberDTO.toEntity()).toDTO();
+        return repositoryService.getCourseStudentRepository().findByCourseAndStudent(courseDTO.toEntity(), memberDTO.toEntity()).orElseThrow().toDTO();
     }
 
     @Override
     public List<CourseStudent> courseStudentFindByCourseSeq(Long courseSeq) {
         return repositoryService.getCourseStudentRepository().findByCourseStudentCompositeKey_CourseSeq(courseSeq);
+    }
+
+    @Override
+    public CourseChapterStudentProgressDTO courseChapterStudentProgressFindByChapterAndStudentOrCreateNewInstance(CourseChapterDTO courseChapterDTO, CourseStudentDTO courseStudentDTO) {
+        CourseChapterStudentProgressDTO courseChapterStudentProgress = courseChapterStudentProgressFindByChapterAndStudent(courseChapterDTO, courseStudentDTO);
+        if (courseChapterStudentProgress == null) {
+            courseChapterStudentProgress = CourseChapterStudentProgressDTO.builder()
+                    .courseDTO(courseChapterDTO.getCourseDTO())
+                    .chapterDTO(courseChapterDTO)
+                    .studentDTO(courseStudentDTO)
+                    .build();
+            courseChapterStudentProgress = repositoryService.getCourseChapterStudentProgressRepository().save(courseChapterStudentProgress.toEntity()).toDTO();
+        }
+        return courseChapterStudentProgress;
+    }
+
+    @Override
+    public CourseChapterStudentProgressDTO courseChapterStudentProgressFindByChapterAndStudent(CourseChapterDTO courseChapterDTO, CourseStudentDTO courseStudentDTO) {
+        CourseChapterStudentProgress courseChapterStudentProgress = repositoryService.getCourseChapterStudentProgressRepository()
+                .findByChapterAndStudent(courseChapterDTO.toEntity(), courseStudentDTO.toEntity())
+                .orElse(null);
+        if (courseChapterStudentProgress == null) return null;
+        return courseChapterStudentProgress.toDTO();
+    }
+
+    @Override
+    public CourseChapterStudentProgressDTO courseChapterStudentProgressSave(CourseChapterStudentProgressDTO courseChapterStudentProgressDTO) {
+        return repositoryService.getCourseChapterStudentProgressRepository()
+                .save(courseChapterStudentProgressDTO.toEntity())
+                .toDTO();
     }
 }
