@@ -17,9 +17,9 @@ public interface YouTubeService {
 
     List<Video> getAllUploadedVideos() throws IOException;
 
-    CourseChapterContentDTO uploadVideo(CourseChapterContentDTO content, FileDTO file) throws IOException;
-
     CourseChapterContentDTO uploadVideo(CourseChapterContentDTO content, MultipartFile multipartFile) throws IOException;
 
     String uploadVideo(VideoSnippet snippet, VideoStatus status, InputStream file) throws IOException;
+
+    boolean setThumbnail(String videoId, FileDTO file) throws IOException;
 }

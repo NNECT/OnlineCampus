@@ -1,0 +1,96 @@
+/* reset.css */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+input{
+    border:none;
+    width:100%;
+}
+/* HEADER */
+.dropdown-menu>li>a.dropmenu_wrap_a{padding:10px 35px;}
+.dropdown-menu>li>a.dropmenu_wrap_b{padding:10px 50px;}
+
+section.info_content{
+    margin-top:80px;
+}
+h2.headline{
+    margin:50px 0 20px;
+    font-size: 20px;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+/*====================*/
+section {max-width:960px; margin:30px auto; padding:30px;}
+table {
+    width: 100%;
+}
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+th {
+    background: #f4f4f4;
+}
+.infodate th {
+    width: 30%;
+    text-align: left;
+}
+
+button.pwdupdatebtn{
+    padding: 3px 40px;
+    background-color: #444;
+    color:#fff;
+    border: 0;
+}
+
+button.pwdupdatebtn:hover , button.infoupdate_btn:hover {
+    background-color:#6610f2;
+}
+
+form.info_form{
+    position:relative;
+}
+button.infoupdate_btn{
+    width:30%;
+    height:50px;
+    margin-top:20px;
+    background-color: #444;
+    color:#fff;
+    border: 0;
+    position:absolute;
+    left:34%;
+}
+
+
+@media only screen and (max-width:768px) {
+    .infodate {
+        margin: 0 -10px;
+    }
+    .infodate th, .infodate td {
+        width: 100%;
+        display: block;
+        border-top: none;
+    }
+    .infodate td.center_td , .infodate td.pwd_td{
+        text-align: center;
+    }
+    .infodate tr:first-child th {
+        border-top: 1px solid #ddd;
+    }
+
+    button.pwdupdatebtn{
+        width:50%;
+        margin:auto;
+        padding:5px;
+        background-color: #444;
+        color:#fff;
+        border: 0;
+    }
+}

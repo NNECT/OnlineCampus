@@ -4,9 +4,11 @@ import com.education.onlinecampus.data.dto.MemberDTO;
 import com.education.onlinecampus.data.entity.Member;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public interface MemberService {
-    void MemberSave(MemberDTO memberDTO);
-    Member findByUserName(String username);
+    MemberDTO findBySeq(Long seq) throws NoSuchElementException;
+    MemberDTO findByUserName(String username) throws NoSuchElementException;
     List<Member> MemberfindAll();
+    void MemberSave(MemberDTO memberDTO);
 }

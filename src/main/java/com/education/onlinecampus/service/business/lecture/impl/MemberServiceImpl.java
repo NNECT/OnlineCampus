@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -19,9 +20,15 @@ public class MemberServiceImpl implements MemberService {
     public void MemberSave(MemberDTO memberDTO){
         repositoryService.getMemberRepository().save(repositoryService.convertDTOToEntity(memberDTO));
     }
+
     @Override
-    public Member findByUserName(String username){
-        return repositoryService.getMemberRepository().findByUsername(username);
+    public MemberDTO findBySeq(Long seq) throws NoSuchElementException {
+        return repositoryService.getMemberRepository().findById(seq).orElseThrow().toDTO();
+    }
+
+    @Override
+    public MemberDTO findByUserName(String username) throws NoSuchElementException {
+        return repositoryService.getMemberRepository().findByUsername(username).orElseThrow().toDTO();
     }
 
     @Override
