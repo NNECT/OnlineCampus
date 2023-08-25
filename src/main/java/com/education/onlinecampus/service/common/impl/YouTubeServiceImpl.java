@@ -1,5 +1,6 @@
 package com.education.onlinecampus.service.common.impl;
 
+import com.education.onlinecampus.config.VideoLengthExtractor;
 import com.education.onlinecampus.data.dto.CourseChapterContentDTO;
 import com.education.onlinecampus.data.dto.FileDTO;
 import com.education.onlinecampus.service.common.RepositoryService;
