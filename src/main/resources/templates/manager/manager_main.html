@@ -501,45 +501,38 @@
 <!-- 조회 script -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-    $(document).ready(function () {
-        $("#searchButton1").click(function () {
-            $.ajax({
-                type: "POST",
-                url: $("#searchForm").attr("action"),
-                data: $("#searchForm").serialize(),
-                dataType: "json",
-                success: function (data) {
-                    updateCourseTable(data);
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error:", error);
-                }
-            });
-        });
-
-        function updateCourseTable(data) {
-            var table = $("#courseTable");
-            table.find("tbody").empty();
-
-            $.each(data, function (index, course) {
-                var row = "<tr class='clickable-row'><td><input type='checkbox' name='cbox'></td>"
-                    + "<td>" + course.courseSeq + "</td>"
-                    + "<td><a href='#' class='course-link' data-course-seq="+course.courseSeq+">" + course.courseName + "</a></td>"
-                    + "<td>" + course.courseBrief + "</td>"
-                    + "<td>" + course.startDateTime + "</td>"
-                    + "<td>" + course.endDateTime + "</td>"
-                    + "<td>" + course.statusCode.name + "</td></tr>";
-                table.append(row);
-            });
-            $(".clickable-row").click(function () {
-                $(".clickable-row input[type='checkbox']").click(function (e) {
-                    e.stopPropagation(); // 이벤트 버블링 중단
+        $(document).ready(function () {
+            $("#searchButton1").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: $("#searchForm").attr("action"),
+                    data: $("#searchForm").serialize(),
+                    dataType: "json",
+                    success: function (data) {
+                        updateCourseTable(data);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error:", error);
+                    }
                 });
-                $(this).toggleClass("active");
-                $(".clickable-row").not(this).removeClass("active");
             });
-        }
-    });
+
+            function updateCourseTable(data) {
+                var table = $("#courseTable");
+                table.find("tbody").empty();
+
+                $.each(data, function (index, course) {
+                    var row = "<tr class='clickable-row'><td><input type='checkbox' name='cbox'></td>"
+                        + "<td>" + course.courseSeq + "</td>"
+                        + "<td><a href='#' class='course-link' data-course-seq="+course.courseSeq+">" + course.courseName + "</a></td>"
+                        + "<td>" + course.courseBrief + "</td>"
+                        + "<td>" + course.startDateTime + "</td>"
+                        + "<td>" + course.endDateTime + "</td>"
+                        + "<td>" + course.statusCode.name + "</td></tr>";
+                    table.append(row);
+                });
+            }
+        });
     });
 </script>
 <!-- 선택한 강좌 차시 리스트, 수강생 리스트 보여주는 스크립트-->
@@ -605,19 +598,6 @@
             </tr>`;
                 tableBody.append(newRow);
             }
-
-            $(document).on("click", ".clickable-row1", function () {
-                var clickedRow = $(this);
-
-                // 클릭한 체크박스의 이벤트 버블링 중단
-                if ($(event.target).is("input[type='checkbox']")) {
-                    event.stopPropagation();
-                    return;
-                }
-
-                clickedRow.toggleClass("active");
-                $(".clickable-row1").not(clickedRow).removeClass("active");
-            });
         }
         function updateCourseStudent(students){
 
@@ -688,103 +668,93 @@
 <!-- 강의 차시등록 모달 스크립트 -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-    // 모달을 위한 JavaScript
-    const openContentRegistration = document.getElementById("openContentRegistration");
-    const modalOverlay = document.getElementById("modalOverlay");
-    const closeModal = document.getElementById("closeModal");
+        // 모달을 위한 JavaScript
+        const openContentRegistration = document.getElementById("openContentRegistration");
+        const modalOverlay = document.getElementById("modalOverlay");
+        const closeModal = document.getElementById("closeModal");
 
-    // 전역 범위에서 chapterOrderValue 변수 선언
-    let chapterOrderValue = 0;
+        // 전역 범위에서 chapterOrderValue 변수 선언
+        let chapterOrderValue = 0;
 
-    //모달이 열릴때
-    openContentRegistration.addEventListener("click", () => {
-        console.log("버튼 클릭됨");
-        modalOverlay.style.display = "block";
-        const chapterNameInput = document.querySelector("input[name='chapterName']");
-        const chapterBriefInput = document.querySelector("input[name='chapterBrief']");
-        chapterNameInput.value = "";
-        chapterBriefInput.value = "";
-    });
+        //모달이 열릴때
+        openContentRegistration.addEventListener("click", () => {
+            console.log("버튼 클릭됨");
+            modalOverlay.style.display = "block";
+            const chapterNameInput = document.querySelector("input[name='chapterName']");
+            const chapterBriefInput = document.querySelector("input[name='chapterBrief']");
+            chapterNameInput.value = "";
+            chapterBriefInput.value = "";
+        });
 
-    //모달이 닫힐때
-    closeModal.addEventListener("click", () => {
-        modalOverlay.style.display = "none";
-        const chapterNameInput = document.querySelector("input[name='chapterName']");
-        const chapterBriefInput = document.querySelector("input[name='chapterBrief']");
-        chapterNameInput.value = "";
-        chapterBriefInput.value = "";
-    });
-
-    // 모달 콘텐츠 바깥을 클릭하면 모달 닫기
-    window.addEventListener("click", (event) => {
-        if (event.target === modalOverlay) {
+        //모달이 닫힐때
+        closeModal.addEventListener("click", () => {
             modalOverlay.style.display = "none";
             const chapterNameInput = document.querySelector("input[name='chapterName']");
             const chapterBriefInput = document.querySelector("input[name='chapterBrief']");
             chapterNameInput.value = "";
             chapterBriefInput.value = "";
-        }
-    });
-
-    const form = document.querySelector("#saveform");
-    form.addEventListener("submit", async (event) => {
-        event.preventDefault(); // 폼 제출 기본 동작 중지
-
-        const formData = new FormData(form);
-        const response = await fetch("/CourseChapter_save", {
-            method: "POST",
-            body: formData,
         });
-        if (response.ok) {
-            modalOverlay.style.display = "none"; // 모달 닫기
-            // 응답 데이터를 JSON 형태로 파싱
-            const responseData = await response.json();
-            const newRow = document.createElement("tr");
-            newRow.classList.add("clickable-row1");
-            newRow.innerHTML = `
+
+        // 모달 콘텐츠 바깥을 클릭하면 모달 닫기
+        window.addEventListener("click", (event) => {
+            if (event.target === modalOverlay) {
+                modalOverlay.style.display = "none";
+                const chapterNameInput = document.querySelector("input[name='chapterName']");
+                const chapterBriefInput = document.querySelector("input[name='chapterBrief']");
+                chapterNameInput.value = "";
+                chapterBriefInput.value = "";
+            }
+        });
+
+        const form = document.querySelector("#saveform");
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault(); // 폼 제출 기본 동작 중지
+
+            const formData = new FormData(form);
+            const response = await fetch("/CourseChapter_save", {
+                method: "POST",
+                body: formData,
+            });
+            if (response.ok) {
+                modalOverlay.style.display = "none"; // 모달 닫기
+                // 응답 데이터를 JSON 형태로 파싱
+                const responseData = await response.json();
+                const newRow = document.createElement("tr");
+                newRow.classList.add("clickable-row1");
+                newRow.innerHTML = `
                                             <td><input type="checkbox" name="cbox1"></td>
                         <td data-chapter-order="${responseData.chapterOrder}" data-course-seq="${responseData.course.courseSeq}">${responseData.chapterOrder}</td>
                                             <td><a href="#">${responseData.chapterName}</a></td>
                                             <td>${responseData.chapterBrief}</td>
                                         `;
-            chapterOrderValue = responseData.chapterOrder + 1; // chapterOrderValue 업데이트
-            const chapterOrderInput = document.querySelector("input[name='chapterOrder']");
-            chapterOrderInput.value = chapterOrderValue;
+                chapterOrderValue = responseData.chapterOrder + 1; // chapterOrderValue 업데이트
+                const chapterOrderInput = document.querySelector("input[name='chapterOrder']");
+                chapterOrderInput.value = chapterOrderValue;
 
-            courseChaptersTableBody.appendChild(newRow);
-        } else {
-        }
-        $(".clickable-row1").click(function () {
-            // 클릭한 행에서 'active' 클래스 추가하고 다른 행에서 제거
-            $(this).addClass("active");
-            $(".clickable-row1").not(this).removeClass("active");
-
-            // 클릭한 체크박스의 이벤트 버블링 중단
-            $(this).find("input[type='checkbox']").click(function (e) {
-                e.stopPropagation();
-            });
+                courseChaptersTableBody.appendChild(newRow);
+            } else {
+            }
         });
-    });
     });
 </script>
 <!-- 강의 신규등록 모달 스크립트 -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-    const form = document.querySelector("#courseSaveForm");
-    form.addEventListener("submit", async (event) => {
-        event.preventDefault(); // 폼 제출 기본 동작 중지
+        const form = document.querySelector("#courseSaveForm");
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault(); // 폼 제출 기본 동작 중지
 
-        const formData = new FormData(form);
-        const response = await fetch("/Course_save", {
-            method: "POST",
-            body: formData,
-        });
-        if (response.ok) {
-            courseModelOverlay1.style.display = "none"; // 모달 닫기
-            const responseData = await response.json();
-            const newRow = document.createElement("tr");
-            newRow.classList.add("clickable-row");
-            newRow.innerHTML = `
+            const formData = new FormData(form);
+            const response = await fetch("/Course_save", {
+                method: "POST",
+                body: formData,
+            });
+            if (response.ok) {
+                courseModelOverlay1.style.display = "none"; // 모달 닫기
+                const responseData = await response.json();
+                const newRow = document.createElement("tr");
+                newRow.classList.add("clickable-row");
+                newRow.innerHTML = `
                 <td><input type="checkbox" name="cbox"></td>
                 <td>${responseData.courseSeq}</td>
                 <td><a href="#" class="course-link" data-course-seq="${responseData.courseSeq}">${responseData.courseName}</a></td>
@@ -793,48 +763,38 @@
                 <td>${responseData.endDateTime}</td>
                 <td>${responseData.statusCode.name}</td>
             `;
-            // 새로운 행을 목록에 추가
-            const tableBody = document.querySelector("#courseTable tbody");
-            tableBody.appendChild(newRow);
-        } else {
-            // 에러 처리
-        }
-        $(".clickable-row").click(function () {
-            // 클릭한 행에서 'active' 클래스 추가하고 다른 행에서 제거
-            $(this).addClass("active");
-            $(".clickable-row").not(this).removeClass("active");
-
-            // 클릭한 체크박스의 이벤트 버블링 중단
-            $(this).find("input[type='checkbox']").click(function (e) {
-                e.stopPropagation();
-            });
+                // 새로운 행을 목록에 추가
+                const tableBody = document.querySelector("#courseTable tbody");
+                tableBody.appendChild(newRow);
+            } else {
+                // 에러 처리
+            }
         });
-    });
 
         // 모달을 위한 JavaScript
         const openCourseModel1 = document.getElementById("openCourseModel");
         const courseModelOverlay1 = document.getElementById("courseModelOverlay");
         const closeCourseModel1 = document.getElementById("closeCourseModel");
 
-    //모달이 열릴때
-    openCourseModel1.addEventListener("click", () => {
-        courseModelOverlay1.style.display = "block";
-        form.reset();
-    });
+        //모달이 열릴때
+        openCourseModel1.addEventListener("click", () => {
+            courseModelOverlay1.style.display = "block";
+            form.reset();
+        });
 
-    //모달이 닫힐때
-    closeCourseModel1.addEventListener("click", () => {
-        courseModelOverlay1.style.display = "none";
-        form.reset();
-    });
-
-    // 모달 콘텐츠 바깥을 클릭하면 모달 닫기
-    window.addEventListener("click", (event) => {
-        if (event.target === courseModelOverlay1) {
+        //모달이 닫힐때
+        closeCourseModel1.addEventListener("click", () => {
             courseModelOverlay1.style.display = "none";
             form.reset();
-        }
-     });
+        });
+
+        // 모달 콘텐츠 바깥을 클릭하면 모달 닫기
+        window.addEventListener("click", (event) => {
+            if (event.target === courseModelOverlay1) {
+                courseModelOverlay1.style.display = "none";
+                form.reset();
+            }
+        });
     });
 </script>
 <!-- 차시 전체선택 스크립트-->
@@ -902,14 +862,6 @@
                                     `;
             tableBody.append(newRow);
         }
-        $(".clickable-row1").click(function () {
-            $(".clickable-row1 input[type='checkbox']").click(function (e) {
-                e.stopPropagation(); // 이벤트 버블링 중단
-            });
-
-            $(this).toggleClass("active");
-            $(".clickable-row1").not(this).removeClass("active");
-        });
     }
 </script>
 <!-- 선택한 차시 목록을 보여주는 스크립트-->
@@ -917,7 +869,6 @@
     document.addEventListener("DOMContentLoaded", function() {
         $(document).ready(function() {
             $(document).on("click", ".clickable-row1", function(e) {
-                e.preventDefault();
 
                 const chapterOrder = $(this).find("[data-chapter-order]").data("chapter-order");
                 const courseSeq = $(this).find("[data-course-seq]").data("course-seq");
@@ -1076,7 +1027,6 @@
 
             tableBody.appendChild(newRow);
         }
-
     }
 
 </script>
@@ -1110,6 +1060,7 @@
                         console.error("Error:", error);
                     }
                 });
+
             });
         });
     });
@@ -1148,14 +1099,6 @@
                 console.error("Error:", error);
             }
         });
-        $(".clickable-row2").click(function () {
-            $(".clickable-row2 input[type='checkbox']").click(function (e) {
-                e.stopPropagation(); // 이벤트 버블링 중단
-            });
-
-            $(this).toggleClass("active");
-            $(".clickable-row2").not(this).removeClass("active");
-        });
     }
     function removeDeletedStudents(selectedStudents) {
         for (const studentSeq of selectedStudents) {
@@ -1163,7 +1106,7 @@
         }
     }
 </script>
-<!-- 이벤트 버블링 막는 스크립트 -->
+<!-- 강의 목록 버블링 막는 스크립트 -->
 <script>
     $(document).ready(function () {
         $(".clickable-row input[type='checkbox']").click(function (e) {
@@ -1172,6 +1115,32 @@
         $(".clickable-row").click(function () {
             $(this).toggleClass("active");
             $(".clickable-row").not(this).removeClass("active");
+        });
+    });
+</script>
+<!-- 강좌 차시 목록 클릭 활성화 스크립트-->
+<script>
+    $(document).on("click", ".clickable-row1", function () {
+        // 클릭한 행에서 'active' 클래스 추가하고 다른 행에서 제거
+        $(this).addClass("active");
+        $(".clickable-row1").not(this).removeClass("active");
+
+        // 클릭한 체크박스의 이벤트 버블링 중단
+        $(this).find("input[type='checkbox']").click(function (e) {
+            e.stopPropagation();
+        });
+    });
+</script>
+<!-- 수강대상자 목록 클릭 활성화 스크립트-->
+<script>
+    $(document).on("click", ".clickable-row2", function () {
+        // 클릭한 행에서 'active' 클래스 추가하고 다른 행에서 제거
+        $(this).addClass("active");
+        $(".clickable-row2").not(this).removeClass("active");
+
+        // 클릭한 체크박스의 이벤트 버블링 중단
+        $(this).find("input[type='checkbox']").click(function (e) {
+            e.stopPropagation();
         });
     });
 </script>
@@ -1195,7 +1164,6 @@
         document.getElementById("userInfoBox").style.display = "block";
     });
 </script>
-<h2>ㅎㅎㅎㅎㅎ</h2>
 </body>
 
 </html>
