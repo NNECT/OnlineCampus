@@ -27,7 +27,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
-    implementation 'org.jetbrains:annotations:24.0.0'
+	implementation 'org.jetbrains:annotations:24.0.0'
 
 	// Lombok and MapStruct
 	implementation 'org.mapstruct:mapstruct:1.5.5.Final'

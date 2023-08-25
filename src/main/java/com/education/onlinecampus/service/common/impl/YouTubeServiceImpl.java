@@ -79,6 +79,12 @@ public class YouTubeServiceImpl implements YouTubeService {
     public CourseChapterContentDTO uploadVideo(CourseChapterContentDTO content, MultipartFile multipartFile) throws IOException {
         try (InputStream inputStream = multipartFile.getInputStream()) {
             content.setVideoId(uploadVideo(getVideoSnippet(content), getVideoStatus(), inputStream));
+
+            double videoLength = VideoLengthExtractor.getVideoLength(inputStream);
+            content.setRunningTime(videoLength); // Set the running time
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return repositoryService.getCourseChapterContentRepository().save(content.toEntity()).toDTO();
     }

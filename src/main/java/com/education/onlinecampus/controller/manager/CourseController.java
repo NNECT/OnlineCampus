@@ -8,6 +8,7 @@ import com.education.onlinecampus.data.entity.CourseStudent;
 import com.education.onlinecampus.service.business.lecture.MemberService;
 import com.education.onlinecampus.service.business.manager.CourseService;
 import com.education.onlinecampus.service.common.CommonCodeService;
+import com.education.onlinecampus.service.common.ImageService;
 import com.education.onlinecampus.service.common.YouTubeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class CourseController {
     private final CourseService courseService;
     private final YouTubeService youTubeService;
     private final ObjectMapper objectMapper;
+    private final ImageService imageService;
 
     @GetMapping("/Course")
     public String Course(){
@@ -184,7 +186,15 @@ public class CourseController {
         return "manager/CourseChapterContent";
     }
     @PostMapping("/CourseChapterContent_save")
-    public String CourseChapterContentSave(@ModelAttribute CourseChapterContentDTO courseChapterContentDTO, @RequestParam("viedo") MultipartFile multipartFile) throws IOException {
+    public String CourseChapterContentSave(@ModelAttribute CourseChapterContentDTO courseChapterContentDTO, @RequestParam("viedo") MultipartFile multipartFile,
+                                           @RequestParam("thumbnailFile") MultipartFile thumbnailFile) throws IOException {
+        if(thumbnailFile.isEmpty() || thumbnailFile.equals(null)){
+
+        }else {
+            FileDTO fileDTO = imageService.saveContentImage(thumbnailFile);
+            FileDTO fileSave = imageService.filesave(fileDTO);
+            courseChapterContentDTO.setThumbnailFileDTO(fileSave);
+        }
         youTubeService.uploadVideo(courseChapterContentDTO, multipartFile);
         return "redirect:/";
     }
