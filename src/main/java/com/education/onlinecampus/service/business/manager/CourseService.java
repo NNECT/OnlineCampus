@@ -6,6 +6,7 @@ import com.education.onlinecampus.data.dto.CourseDTO;
 import com.education.onlinecampus.data.dto.CourseStudentDTO;
 import com.education.onlinecampus.data.entity.Course;
 import com.education.onlinecampus.data.entity.CourseChapter;
+import com.education.onlinecampus.data.entity.CourseStudent;
 import com.education.onlinecampus.service.common.RepositoryService;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public interface CourseService {
 
     List<CourseChapter> CourseChapterFindAll();
 
-    void CourseStudentAllSave(Long[] memberseqs, Long courseSeq, CourseStudentDTO courseStudentDTO);
+    List<CourseStudent> CourseStudentAllSave(Long[] memberseqs, Long courseSeq, CourseStudentDTO courseStudentDTO);
 
     CourseChapter findByCourseAndChapterOrder(Long courseSeq, Integer chapterorder);
 
