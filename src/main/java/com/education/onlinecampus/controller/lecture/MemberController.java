@@ -3,20 +3,19 @@ package com.education.onlinecampus.controller.lecture;
 import com.education.onlinecampus.config.SecurityConfig;
 import com.education.onlinecampus.data.dto.MemberDTO;
 import com.education.onlinecampus.data.entity.Course;
+import com.education.onlinecampus.data.entity.Member;
 import com.education.onlinecampus.service.business.lecture.MemberService;
 import com.education.onlinecampus.service.business.manager.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -40,6 +39,12 @@ public class MemberController {
     @GetMapping("/Member_signup")
     public String GetMemberSignup(){
         return "/lecture/MemberJoin";
+    }
+    @GetMapping("/Member_findAll")
+    @ResponseBody
+    public ResponseEntity<List<Member>> Member_findAll() {
+        List<Member> members = memberService.MemberfindAll();
+        return ResponseEntity.ok(members);
     }
     @PostMapping("/Member_signup")
     public String PostMemberSignup(@ModelAttribute MemberDTO member, @RequestParam("profileImage") MultipartFile profileImage){

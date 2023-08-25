@@ -11,5 +11,7 @@ import java.util.List;
 public interface CourseStudentRepository extends JpaRepository<CourseStudent, CourseStudent.CourseStudentCompositeKey> {
     List<CourseStudent> findByCourse(Course course);
     List<CourseStudent> findByStudent(Member student);
-    List<CourseStudent> findByStudentAndCourse_StatusCode(Member student, CommonCode course_statusCode);
+    List<CourseStudent> findByCourseStudentCompositeKey_CourseSeq(Long courseSeq);
+    CourseStudent findByCourseAndStudent(Course course, Member student);
+    List<CourseStudent> findByStudentAndCourse_StatusCode(Member entity, CommonCode code);
 }

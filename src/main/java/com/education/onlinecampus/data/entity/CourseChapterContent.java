@@ -35,7 +35,7 @@ public class CourseChapterContent implements EntityMarker<CourseChapterContentDT
             referencedColumnName = "fileSeq"
     )
     private File thumbnailFile;
-
+  
     /** 동영상 길이 (초) */
     @Column
     private Integer runningTime;

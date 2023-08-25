@@ -1,490 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>강의 관리 페이지</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="../../css/manager_main.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-
-        .header {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 20px 0;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .search-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 20px 0;
-            border: 1px solid black;
-        }
-
-        .search-bar-row {
-            display: flex;
-            align-items: center;
-        }
-
-        .search-bar select,
-        .search-bar input[type="text"] {
-            padding: 10px;
-            margin-right: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        select, input[type="text"] {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            color: #333; /* Change text color to make selected options visible */
-            background-color: white; /* Add background color for better visibility */
-        }
-
-        /* Style the selected option */
-        option:checked {
-            background-color: #555;
-            color: white;
-        }
-
-        select {
-            width: 20%;
-        }
-
-        input[type="text"] {
-            width: 50%;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: center;
-            border: 1px solid #ccc;
-        }
-
-        th {
-            background-color: #555;
-            color: white;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        .new-course-link {
-            display: inline-block;
-            background-color: #333;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            float: right;
-        }
-
-        .new-course-link:hover {
-            background-color: #555;
-        }
-
-        select option:checked {
-            background-color: #555;
-            color: white;
-        }
-
-        /* Additional styles for improved alignment */
-        .search-bar-row {
-            margin: 10px 0;
-        }
-
-        .search-bar-row label {
-            width: 150px;
-        }
-
-        .search-bar-row select,
-        .search-bar-row input[type="text"] {
-            width: 130%; /* Adjust the width as needed */
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-
-        .header {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 20px 0;
-        }
-
-        .container {
-            max-width: 1585px;
-            margin: 0 auto;
-            padding: 20px;
-            margin-right: 10px;
-            width: 100%;
-
-        }
-
-        .search-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 20px 0;
-        }
-
-        .search-bar-row {
-            display: flex;
-            align-items: center;
-            width: 33.33%; /* Divide into three equal parts for left, center, and right */
-            justify-content: space-between;
-            margin: 10px 0;
-        }
-
-        .search-bar select,
-        .search-bar input[type="text"] {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            color: #333;
-            background-color: white;
-        }
-
-        select, input[type="text"] {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        /* Style the selected option */
-        option:checked {
-            background-color: #555;
-            color: white;
-        }
-
-        /* Additional styles for improved alignment */
-        .search-bar-row label {
-            width: 150px;
-        }
-
-        .search-bar-row select,
-        .search-bar-row input[type="text"] {
-            width: 70%; /* Adjust the width as needed */
-        }
-
-        .search-bar-row:last-child {
-            justify-content: flex-end;
-        }
-
-        .new-course-link {
-            background-color: #333;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-
-        .new-course-link:hover {
-            background-color: #555;
-        }
-        #courseSessionsSection,
-        #enrolleesSection {
-            cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        #courseSessionsSection:hover,
-        #enrolleesSection:hover {
-            background-color: #555;
-            color: white;
-        }
-        select {
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background: url('https://cdn.iconscout.com/icon/free/png-256/arrow-1767537-1501935.png') no-repeat right center; /* Custom arrow icon */
-            background-size: 12px; /* Size of the arrow icon */
-            cursor: pointer;
-            width: 57px; /* Adjust the width as needed */
-        }
-
-        /* Style for the arrow icon */
-        select::-ms-expand {
-            display: none; /* Hide the arrow in IE */
-        }
-        .search-bar {
-            background-color: #f9f9f9;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 20px 0;
+        .active {
+            border: 2px solid #3498db;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-
-        .search-bar-row {
-            display: flex;
-            align-items: center;
-        }
-
-        .search-bar label {
-            margin-right: 10px;
-            font-weight: bold;
-        }
-
-        /* Style for select elements */
-        .search-bar select,
-        .search-bar input[type="text"] {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .search-bar select {
-            width: 120px;
-            background-color: #fff;
-            background-image: url('https://cdn.iconscout.com/icon/free/png-256/arrow-1767537-1501935.png');
-            background-repeat: no-repeat;
-            background-position: right center;
-            background-size: 12px;
-            cursor: pointer;
-        }
-
-        .search-bar input[type="text"] {
-            width: 250px;
-        }
-        .search-bar-row {
-            /* ... (이전 스타일 코드) ... */
-            display: flex; /* Display elements in a row */
-            justify-content: space-between; /* Distribute space between elements */
-            align-items: center; /* Vertically center items */
-        }
-        .table-container {
-            overflow-x: auto;
-            max-width: 100%;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #f0f0f0;
-        }
-
-        td input[type="checkbox"] {
-            margin: 0;
-        }
-        .pagination {
-            text-align: center;
-            margin-top: 10px;
-            font-size: 14px;
-        }
-        th {
-            background-color: #f0f0f0;
-            color: #333; /* Change the text color to black */
-        }
-        .sidebar {
-            width: 270px; /* Adjust the width as needed */
-            background-color: #f9f9f9;
-            border: 1px solid #ccc;
-            padding: 10px;
-            height: 89.5vh;
-            /* Add any other styling you want */
-        }
-        .sidebar-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .sidebar-list li {
-            margin-bottom: 10px;
-        }
-
-        .sidebar-list a {
-            text-decoration: none;
-            color: #333;
-            font-weight: bold;
-        }
-        .container {
-            position: relative;
-            max-height: calc(100vh - 80px); /* 뷰포트 높이에서 헤더의 높이만큼 빼줌 */
-            overflow-y: auto; /* 세로 스크롤 바가 필요한 경우만 표시 */
-        }
-        body {
-            overflow: hidden;
-        }
-        .sidebar {
-            position: absolute;
-            width: 255px;
-            background-color: #f5f5f5;
-            color: #333;
-            padding: 20px;
-            height: calc(100vh - 80px);
-            border-right: 1px solid #ddd;
-        }
-
-        .sidebar input[type="search"] {
-            flex: 1;
-            padding: 8px;
-            border: none;
-            border-radius: 5px;
-            width: 100%;
-            background-color: #fff;
-            color: #333;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .sidebar button {
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-
-        .sidebar-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .sidebar-list li {
-            margin-top: 10px;
-            margin-left: 20px;
-            transition: background-color 0.3s, color 0.3s, cursor 0.3s;
-        }
-
-        .sidebar-list li a {
-            text-decoration: none;
-            font-size: 16px;
-        }
-
-        .sidebar-list li a:hover {
-            color: #000;
-            background-color: #f0f0f0;
-            cursor: pointer;
-        }
-        .sidebar {
-            position: fixed;
-            width: 255px;
-            background-color: #f5f5f5;
-            color: #333;
-            padding: 20px;
-            height: calc(100vh - 80px);
-            border-right: 1px solid #ddd;
-        }
-
-        .sidebar input[type="search"] {
-            flex: 1;
-            padding: 8px;
-            border: none;
-            border-radius: 5px;
-            width: 100%;
-            background-color: #fff;
-            color: #333;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .sidebar button {
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-
-        .sidebar-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            font-size: 30px;
-        }
-
-        .sidebar-list li {
-            margin-top: 10px;
-            margin-left: 20px;
-            transition: background-color 0.3s, color 0.3s, cursor 0.3s;
-        }
-
-        .sidebar-list li a {
-            text-decoration: none;
-            font-size: 12px;
-            color: #555;
-            transition: color 0.3s;
-        }
-
-        .sidebar-list li a:hover {
-            color: #000;
-            background-color: #f0f0f0;
-            cursor: pointer;
-        }
-
-        .sidebar-list li:hover {
-            background-color: #ddd;
-            cursor: pointer;
-        }
-
-        .sidebar-list li:hover a {
-            color: #333;
-        }
-        .container {
-            position: relative;
-            max-height: calc(100vh - 80px);
-            overflow-y: auto;
-            margin-left: 296px; /* 사이드바의 너비만큼 여백을 추가 */
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                display: none; /* 작은 화면에서 사이드바 숨김 */
-            }
-
-            .container {
-                margin-left: 0; /* 작은 화면에서 컨테이너를 가로로 꽉 차게 설정 */
-            }
-        }
-
     </style>
 </head>
 <body>
+<!-- 헤더 -->
 <div class="header" style="background-color: #333; color: white; padding: 20px 0;">
     <h2 style="margin: 0 0 0 15px; font-size: 32px; display: flex; align-items: center;">
         중앙정보처리학원
-        <small style="margin-left: auto; font-size: 16px; margin-right: 30px;" th:text="${loggedInMember.nameKor} + ' 님 '"></small><a href="/Member_logout" style="color: whitesmoke; font-size: 10px; margin-right: 10px;"> 로그아웃</a>
+        <small style="margin-left: auto; font-size: 16px; margin-right: 30px;" th:text="${loggedInMember.nameKor} + ' 님 '"></small>
+        <a href="/Member_logout" style="color: whitesmoke; font-size: 10px; margin-right: 10px;">로그아웃</a>
     </h2>
 </div>
+
+<!-- 메뉴 목록 -->
 <div class="sidebar">
     <div style="margin-bottom: 20px; display: flex; align-items: center;">
         <input type="search" id="searchInput" placeholder="검색어를 입력하세요">
@@ -494,173 +33,1148 @@
     <div>
         <h4 style="font-size: 25px; font-weight: bold; margin-bottom: 10px;">메뉴</h4>
         <ul class="sidebar-list">
-            <li><a href="#">온라인 강의 관리</a></li>
-            <li><a href="#">강의 컨텐트 관리</a></li>
-            <li><a href="#">회원 관리</a></li>
-            <!-- 필요한 경우 더 많은 항목을 추가하세요 -->
+            <li class="menu-link" data-target="online-course"><a href="#">온라인 강의 관리</a></li>
+            <li class="menu-link" data-target="content-management"><a href="#">강의 컨텐트 관리</a></li>
+            <li class="menu-link" data-target="member-management"><a href="#">회원 관리</a></li>
         </ul>
     </div>
 </div>
+
+<!-- 해당 메뉴 내용 컨테이너 -->
 <div class="container" style="position: relative;">
+
+    <!-- 메뉴 박스 div -->
     <div style="display: flex;">
-        <div style="border: 1px solid #ccc; width: auto; font-size: 23px; text-align: center; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 15px; padding: 10px; position: relative;">
-            온라인강의관리 <button style="background: none; border: none; color: #e74c3c; font-size: 18px; cursor: pointer;">x</button>
+        <!-- 온라인강의 박스 -->
+        <div id="online-course-box" class="content-box" data-target="online-course">
+            온라인강의관리
+            <button class="close-button" data-target="online-course">x</button>
         </div>
-        <div style="border: 1px solid #ccc; width: auto; font-size: 23px; text-align: center; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 15px; padding: 10px; position: relative; margin-left: 7px;">
-            선수학습강의관리<button style="background: none; border: none; color: #e74c3c; font-size: 18px; cursor: pointer;">x</button>
+        <!-- 강의 컨텐트 관리 박스 -->
+        <div id="content-management-box" class="content-box" data-target="content-management">
+            강의컨탠트관리
+            <button class="close-button" data-target="content-management">x</button>
         </div>
-    </div>
-    <a href="/Course_delete" class="new-course-link" style="margin-left: 10px">삭제</a>
-    <a href="/Course" class="new-course-link" style="margin-left: 10px">저장</a>
-    <a href="/Course" class="new-course-link" style="margin-left: 10px">신규</a>
-    <a href="/Course_find" class="new-course-link" style="margin-left: 10px">조회</a><br><br>
-    <div class="search-bar">
-        <div class="search-bar-row">
-            <label for="courseName">온라인강좌구분</label>
-            <select name="courseName" id="courseName" style="margin-right: 20px;">
-                <option value="국어">국어</option>
-                <option value="영어">영어</option>
-                <option value="수학">수학</option>
-            </select>
-        </div>
-        <div class="search-bar-row">
-            <label for="courseSearch">온라인강좌명</label>
-            <input type="text" id="courseSearch" placeholder="강좌번호 또는 강좌명을 검색해주세요...">
-        </div>
-        <div class="search-bar-row">
-            <label for="courseStatus" style="margin-right: 105px;">강좌진행상태</label>
-            <select name="courseStatus" id="courseStatus">
-                <option value="전체">전체</option>
-                <option value="준비중">준비중</option>
-                <option value="운영중">운영중</option>
-                <option value="종료">종료</option>
-            </select>
+        <!-- 회원관리 박스 -->
+        <div id="member-management-box" class="content-box" data-target="member-management">
+            회원관리
+            <button class="close-button" data-target="member-management">x</button>
         </div>
     </div>
 
-    <!-- Your content here -->
+    <!-- 온라인 강의 -->
+    <div id="online-course" style="display: none;">
+        <button type="button" class="new-course-link delete-course-link" style="margin-left: 10px" onclick="deleteSelectedChapters1()">삭제</button>
 
-    <div class="course-list">
-        <h4>온라인강좌 <small>검색결과: ??건</small>
-            <select style="margin-left: 2px;">
-                <option>5</option>
-                <option>10</option>
-                <option>50</option>
-                <option>100</option>
-                <option>500</option>
-            </select>
-        </h4>
-            <div class="table-container">
-            <table>
-                <tr>
-                    <th><input type="checkbox"></th>
-                    <th>강좌번호</th>
-                    <th>강좌명</th>
-                    <th>강좌소개</th>
-                    <th>강좌 시작일</th>
-                    <th>강좌 종료일</th>
-                    <th>강좌 진행상태</th>
-                </tr>
-                <tr th:each="course : ${courses}">
-                    <td><input type="checkbox"></td>
-                    <td th:text="${course.courseSeq}">001</td>
-                    <td><a href="#" th:text="${course.courseName}">강좌명</a></td>
-                    <td th:text="${course.courseBrief}">HTML과 CSS로 페이지 스타일링하기</td>
-                    <td th:text="${course.startDateTime}">2023-08-15</td>
-                    <td th:text="${course.endDateTime}">2023-09-15</td>
-                    <td th:text="${course.statusCode.name}">진행중</td>
-                </tr>
-            </table>
-                <div class="pagination">
-            <p style="text-align: center"> 1 / 2 / 3</p>
+        <a href="/Course" class="new-course-link" style="margin-left: 10px">수정</a>
+
+        <!-- 강의 신규등록 모달창 버튼 -->
+        <button id="openCourseModel" class="new-course-link" style="margin-left: 10px">강의 신규등록</button>
+        <!-- 강의 신규등록 모달 오버레이 -->
+        <div id="courseModelOverlay" class="modal-overlay">
+            <div class="modal-content">
+                <span class="close-button1" id="closeCourseModel">&times;</span>
+                <h2>강의 신규등록</h2>
+                <form action="/Course_save" method="post" id="courseSaveForm">
+                    강좌명 <select name="courseName">
+                    <option value="국어">국어</option>
+                    <option value="영어">영어</option>
+                    <option value="수학">수학</option>
+                </select>
+                    강좌소개 <input type="text" name="courseBrief"><br>
+                    강좌시작일 <input type="datetime-local" name="startDateTime" required><br>
+                    강좌종료일 <input type="datetime-local" name="endDateTime" required>
+                    <input type="hidden" name="statusCodeDTO.code" value="C001">
+                    <input type="submit" value="등록">
+                </form>
+            </div>
+        </div>
+
+        <!-- 조회 -->
+        <form action="/Course_find" method="post" id="searchForm">
+            <button type="button" class="new-course-link" style="margin-left: 10px" id="searchButton1">조회</button>
+            <br><br>
+            <div class="search-bar">
+                <div class="search-bar-row">
+                    <label for="courseName">온라인강좌구분</label>
+                    <select name="searchcoursename" id="courseName" style="margin-right: 20px;">
+                        <option value="전체">전체</option>
+                        <option value="국어">국어</option>
+                        <option value="영어">영어</option>
+                        <option value="수학">수학</option>
+                    </select>
+                </div>
+                <div class="search-bar-row">
+                    <label for="courseSearch">온라인강좌명</label>
+                    <input type="text" name="searchcoursename1" id="courseSearch" placeholder="강좌번호 또는 강좌명을 검색해주세요...">
+                </div>
+                <div class="search-bar-row">
+                    <label for="courseStatus" style="margin-right: 105px;">강좌진행상태</label>
+                    <select name="searchcourseStatus" id="courseStatus">
+                        <option value="전체">전체</option>
+                        <option value="C001">대기</option>
+                        <option value="C002">진행</option>
+                        <option value="C003">종료</option>
+                    </select>
                 </div>
             </div>
+        </form>
+
+        <!-- 온라인 강좌 div -->
+        <div class="course-list">
+            <h4>온라인강좌 <small>검색결과: ??건</small>
+                <select style="margin-left: 2px;">
+                    <option>5</option>
+                    <option>10</option>
+                    <option>50</option>
+                    <option>100</option>
+                    <option>500</option>
+                </select>
+            </h4>
+            <div class="table-container">
+                <table id="courseTable">
+                    <thead>
+                    <tr>
+                        <th><input type="checkbox" id="cboxAll" name="cboxAll" onclick="checkAll()"></th>
+                        <th>강좌번호</th>
+                        <th>강좌명</th>
+                        <th>강좌소개</th>
+                        <th>강좌 시작일</th>
+                        <th>강좌 종료일</th>
+                        <th>강좌 진행상태</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="course : ${courses}" class="clickable-row">
+                        <td><input type="checkbox" name="cbox"></td>
+                        <td th:text="${course.courseSeq}">001</td>
+                        <td><a href="#" class="course-link" th:data-course-seq="${course.courseSeq}" th:text="${course.courseName}">강좌명</a></td>
+                        <td th:text="${course.courseBrief}">HTML과 CSS로 페이지 스타일링하기</td>
+                        <td th:text="${course.startDateTime}">2023-08-15</td>
+                        <td th:text="${course.endDateTime}">2023-09-15</td>
+                        <td th:text="${course.statusCode.name}">진행중</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="pagination">
+                    <p style="text-align: center"> 1 / 2 / 3</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-top: 10px; position: relative;">
+            <div style="width: 59%;">
+                <!-- 강좌 차시정보 버튼 -->
+                <div id="courseSessionsSection" style="border: 1px solid #ccc; margin-top: 15px; width: 140px; text-align: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; border-bottom-color: transparent;">
+                    <h3>강좌차시정보</h3>
+                </div>
+                <!-- 수강대상자 버튼 -->
+                <div id="enrolleesSection" style="border: 1px solid #ccc; width: 140px; text-align: center; position: absolute; top: 15px; left: 150px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; border-bottom-color: transparent;">
+                    <h3>수강대상자</h3>
+                </div>
+                <!-- 강좌 차시정보 div -->
+                <div id="courseSessionsContent" style="border: 1px solid #ccc; height: 520px; width: 98%; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; padding: 0px 10px 0px;">
+                    <h3>강좌차시정보
+                        <small>검색결과: ??건</small>
+                        <select>
+                            <option>5</option>
+                            <option>30</option>
+                            <option>50</option>
+                            <option>100</option>
+                            <option>500</option>
+                        </select>
+                    </h3>
+                    <table>
+                        <tr>
+                            <th><input type="checkbox" id="cboxAll1" name="cboxAll1" onclick="checkAll1()"></th>
+                            <th>차시순서</th>
+                            <th>차시명</th>
+                            <th>차시학습시간</th>
+                        </tr>
+                        <tbody id="courseChaptersTableBody">
+
+                        </tbody>
+                        <!-- Add more rows as needed -->
+                    </table>
+                </div>
+                <!-- 수강대상자 div-->
+                <div id="enrolleesContent" style="border: 1px solid #ccc; height: 520px; width: 98%; display: none; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; padding: 0px 10px 0px;">
+                    <h3>수강대상자
+                        <small>검색결과: ??건</small>
+                        <select>
+                            <option>5</option>
+                            <option>30</option>
+                            <option>50</option>
+                            <option>100</option>
+                            <option>500</option>
+                        </select>
+                    </h3>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" id="cboxAll2" name="cboxAll2" onclick="checkAll2()"></th>
+                            <th>회원구분</th>
+                            <th>성명</th>
+                            <th>성별</th>
+                            <th>접속시간</th>
+                            <th>접속종료시간</th>
+                            <th>진도율</th>
+                        </tr>
+                        </thead>
+                        <tbody id="courseStudentTableBody">
+                        </tbody>
+                        <!-- Add more rows as needed -->
+                    </table>
+                </div>
+            </div>
+            <div style="max-width: 40%; width: 40%; margin-top: 79.5px; position: absolute; right: 5px;">
+                <div style="border: 1px solid #ccc; height: 520px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; padding: 3px 10px 0px;" id="courseInfoBox">
+                    <a href="#" class="new-course-link" style="position: relative; right: 5px; top: 5px;" onclick="deleteSelectedChapters()">
+                        삭제
+                    </a>
+                    <a href="/CourseChapter_save" class="new-course-link" style="position: relative; right: 10px; top: 5px;">수정</a>
+                    <!-- 차시 신규등록 모달 -->
+                    <button href="/CourseChapter_save" class="new-course-link" id="openContentRegistration"
+                            style="position: relative; right: 15px; top: 5px;">
+                        차시 신규등록
+                    </button>
+                    <!-- 차시 신규등록 모달 오버레이 -->
+                    <div id="modalOverlay" class="modal-overlay">
+                        <div class="modal-content">
+                            <span class="close-button1" id="closeModal">&times;</span>
+                            <h2>강의 차시 등록</h2>
+                            <form action="/CourseChapter_save" method="post" id="saveform">
+                                강좌목록: <select name="courseDTO.courseSeq" style="width: auto;">
+                                <option></option>
+                            </select><br>
+                                차시순서: <input type="number" name="chapterOrder" th:value="${i}"><br>
+                                쳅터제목: <input type="text" name="chapterName"><br>
+                                <!--컨텐츠번호: <input type="text" name="content">
+                                보조자료: <input type="file" name="supplementaryFile">-->
+                                챕터설명: <input type="text" name="chapterBrief"><br>
+                                <input type="submit" value="등록">
+                            </form>
+                        </div>
+                    </div>
+                    <!-- 차시 디테일 테이블 -->
+                    <table style="margin-top: 64px;">
+                        <tr>
+                            <td style="width: 30%;">차시 번호</td>
+                            <td id="chapterDetailSeq"></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 30%;">강좌</td>
+                            <td id="chapterDetailCourseName"></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 30%;">차시순서</td>
+                            <td colspan="3" id="chapterDetailOrder"></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 30%;">차시 제목</td>
+                            <td colspan="3" id="chapterDetailName"></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 30%;">차시 학습시간</td>
+                            <td colspan="3">??</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 30%;">썸네일파일</td>
+                            <td colspan="3">??</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 30%;">차시강의 콘탠츠 번호</td>
+                            <td colspan="3" id="chapterDetailContentVideoId"></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 30%;">보조자료 파일</td>
+                            <td colspan="3">??</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 30%;">차시내용 요약</td>
+                            <td colspan="3" height="100px;" id="chapterDetailBrief"></td>
+                        </tr>
+                        <!-- Add more rows as needed -->
+                    </table>
+                </div>
+            </div>
+            <div style="max-width: 40%; width: 40%; margin-top: 79.5px; position: absolute; right: 5px;">
+                <div style="border: 1px solid #ccc; height: 520px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; padding: 3px 10px 0px; display: none;"
+                     id="userInfoBox">
+                    <a href="#" class="new-course-link"
+                       style="position: relative; right: 5px; top: 5px;" onclick="deleteSelectedStudents()">삭제</a>
+                    <a href="/CourseStudent_save" class="new-course-link"
+                       style="position: relative; right: 10px; top: 5px;">수정</a>
+                    <!-- 수강생 신규등록 모달 -->
+                    <button id="openStudentRegistrationModal" class="new-course-link"
+                            style="position: relative; right: 15px; top: 5px;">
+                        수강생 신규등록
+                    </button>
+                    <!-- 수강생 신규등록 모달-->
+                    <div id="studentRegistrationModalOverlay" class="modal-overlay">
+                        <div class="modal-content">
+                            <span class="close-button1" id="closeStudentRegistrationModal">&times;</span>
+                            <h2>수강대상자등록</h2>
+                            <a href="#" onclick="fetchAndShowStudentData()">조회</a>
+                            <form action="/CourseStudent_save" method="post" id="courseStudentForm">
+                                <input type="hidden" name="CourseStudentcourseSeq">
+                                <table>
+                                    <tr>
+                                        <th><input type="checkbox" id="cboxAll3" name="cboxAll3" onclick="checkAll3()">
+                                        </th>
+                                        <th>회원구분</th>
+                                        <th>성명</th>
+                                        <th>이메일</th>
+                                        <th>접속시간</th>
+                                        <th>접속종료시간</th>
+                                        <th>진도율</th>
+                                    </tr>
+                                    <tbody id="studentTableBody">
+                                    <tr th:each="member, status : ${members}">
+                                        <td>
+                                            <input type="checkbox" name="cbox3" th:data-index="${status.index}"
+                                                   th:value="${member.memberSeq}" onclick="toggleCheckbox(this)">
+                                        </td>
+                                        <td th:text="${member.memberDivision.code}"></td>
+                                        <td th:text="${member.nameKor}"></td>
+                                        <td th:text="${member.email}"></td>
+                                        <td>1</td>
+                                        <td>2</td>
+                                        <td>3</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <input type="submit" id="submitRegistrationButton" value="등록">
+                            </form>
+                        </div>
+                    </div>
+
+                    <table style="margin-top: 64px; width: 100%;">
+                        <tr>
+                            <td>회원번호</td>
+                            <td colspan="2" id="memberDetailSeq">1</td>
+                            <td rowspan="4" colspan="3"><img src="" alt="프로필사진"></td>
+                        </tr>
+                        <tr>
+                            <td>회원구분</td>
+                            <td colspan="2" id="memberDetailDivisionName"></td>
+                        </tr>
+                        <tr>
+                            <td>성명</td>
+                            <td colspan="2" id="memberDetailName"></td>
+                        </tr>
+                        <tr>
+                            <td>성별</td>
+                            <td colspan="2" id="memberDetailGenderName"></td>
+                        </tr>
+                        <tr>
+                            <td>이메일</td>
+                            <td id="memberDetailEmail"></td>
+                            <td>생년월일</td>
+                            <td id="memberDetailbirthDate"></td>
+                        </tr>
+                        <tr>
+                            <td>접속시간</td>
+                            <td colspan="3">2023-08-07 11:50</td>
+                        </tr>
+                        <tr>
+                            <td>접속종료시간</td>
+                            <td colspan="3">2023-08-07 11:50</td>
+                        </tr>
+                        <tr>
+                            <td>진도율</td>
+                            <td colspan="3">50%</td>
+                        </tr>
+                        <tr>
+                            <td>특이사항</td>
+                            <td colspan="3" style="height: 100px;">어쩌구 저쩌구</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br><br><br><br><br><br><br><br><br>
     </div>
 
-    <div style="display: flex; justify-content: space-between; margin-top: 10px; position: relative;">
-        <a href="/CourseChapter_delete" class="new-course-link" style="position: absolute; right: 5px; top: 30px;">삭제</a>
-        <a href="/CourseChapter_save" class="new-course-link" style="position: absolute; right: 85px; top: 30px;">저장</a>
-        <a href="/CourseChapter_save" class="new-course-link" style="position: absolute; right: 165px; top: 30px;">신규</a>
-        <div style="width: 59%;">
-            <div id="courseSessionsSection" style="border: 1px solid #ccc; margin-top: 15px; width: 140px; text-align: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; border-bottom-color: transparent;">
-                <h3>강좌차시정보</h3>
-            </div>
-            <div id="enrolleesSection" style="border: 1px solid #ccc; width: 140px; text-align: center; position: absolute; top: 15px; left: 150px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; border-bottom-color: transparent;">
-                <h3>수강대상자</h3>
-            </div>
-            <div id="courseSessionsContent" style="border: 1px solid #ccc; height: 400px; width: 98%; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; padding: 0px 10px 0px;" >
-                <h3>강좌차시정보
-                    <small>검색결과: ??건</small>
-                    <select>
-                        <option>5</option>
-                        <option>30</option>
-                        <option>50</option>
-                        <option>100</option>
-                        <option>500</option>
-                    </select>
-                </h3>
-                <table>
-                    <tr>
-                        <th><input type="checkbox"></th>
-                        <th>차시순서</th>
-                        <th>차시명</th>
-                        <th>차시학습시간</th>
-                    </tr>
-                    <tr th:each="courseChapter : ${courseChapters}">
-                        <td><input type="checkbox"></td>
-                        <td th:text="${courseChapter.CourseChapterCompositeKey.chapterSeq}">001</td>
-                        <td><a href="#" th:text="${courseChapter.chapterName}">예쁘게 꾸며보기</a></td>
-                        <td th:text="${courseChapter.chapterBrief}">HTML과 CSS로 페이지 스타일링하기</td>
-                    </tr>
-                    <!-- Add more rows as needed -->
-                </table>
-            </div>
-            <div id="enrolleesContent" style="border: 1px solid #ccc; height: 400px; width: 98%; display: none; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; padding: 0px 10px 0px;">
-                <h3>수강대상자
-                    <small>검색결과: ??건</small>
-                    <select>
-                        <option>5</option>
-                        <option>30</option>
-                        <option>50</option>
-                        <option>100</option>
-                        <option>500</option>
-                    </select>
-                </h3>
-                <table>
-                    <tr>
-                        <th><input type="checkbox"></th>
-                        <th>과정구분</th>
-                        <th>학번</th>
-                        <th>성명</th>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td>ㅋㅋ</td>
-                        <td>예ㅋㅋ쁘게 꾸며보기</td>
-                        <td>HTㅋㅋML과 CSS로 페이지 스타일링하기</td>
-                    </tr>
-                    <!-- Add more rows as needed -->
-                </table>
-            </div>
-        </div>
-        <div style="max-width: 40%; width: 40%; margin-top: 79.5px;">
-            <div style="border: 1px solid #ccc; height: 400px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; padding: 3px 10px 0px;">
-                <table>
-                    <tr>
-                        <td>차시관리번호</td>
-                        <td>001</td>
-                    </tr>
-                    <tr>
-                        <td>온라인강좌구분</td>
-                        <td>001</td>
-                    </tr>
-                    <!-- Add more rows as needed -->
-                </table>
-            </div>
-        </div>
+    <!-- 강의 컨탠트 관리 -->
+    <div id="content-management" style="display: none;">
+        <br><br>
+        <button>강의컨텐트관리</button>
+    </div>
+
+    <!-- 회원 관리 박스 -->
+    <div id="member-management" style="display: none;">
+        <br><br>
+        <a href="#">회원 관리 박스</a>
     </div>
 </div>
-</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!-- 네이베게이션 스크립트 -->
+<script>
+    const menuLinks = document.querySelectorAll(".menu-link");
+    const contentBoxes = document.querySelectorAll(".content-box");
+    const closeButton = document.querySelectorAll(".close-button");
+
+    menuLinks.forEach(link => {
+        link.addEventListener("click", function (event) {
+            event.preventDefault();
+            const target = link.getAttribute("data-target");
+            contentBoxes.forEach(box => {
+                if (box.id === target + "-box") {
+                    box.parentElement.appendChild(box);
+                    box.classList.add("show");
+                    box.classList.add("show1");
+                } else {
+                    box.classList.remove("show");
+                }
+            });
+            if (target === "online-course") {
+                document.getElementById("online-course").style.display = "block";
+            } else {
+                document.getElementById("online-course").style.display = "none";
+            }
+            if (target === "content-management") {
+                document.getElementById("content-management").style.display = "block";
+            } else {
+                document.getElementById("content-management").style.display = "none";
+            }
+            if (target === "member-management") {
+                document.getElementById("member-management").style.display = "block";
+            } else {
+                document.getElementById("member-management").style.display = "none";
+            }
+        });
+    });
+
+    contentBoxes.forEach(box => {
+        box.addEventListener("click", function () {
+            const target = box.getAttribute("data-target");
+            contentBoxes.forEach(otherBox => {
+                if (otherBox === box) {
+                    box.classList.add("show");
+                    box.classList.add("show1");
+                } else {
+                    otherBox.classList.remove("show");
+                }
+            });
+            if (target === "online-course") {
+                document.getElementById("online-course").style.display = "block";
+            } else {
+                document.getElementById("online-course").style.display = "none";
+            }
+            if (target === "content-management") {
+                document.getElementById("content-management").style.display = "block";
+            } else {
+                document.getElementById("content-management").style.display = "none";
+            }
+            if (target === "member-management") {
+                document.getElementById("member-management").style.display = "block";
+            } else {
+                document.getElementById("member-management").style.display = "none";
+            }
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const closeButton = document.querySelectorAll(".close-button");
+        closeButton.forEach(button => {
+            button.addEventListener("click", function (event) {
+                const target = button.getAttribute("data-target");
+                event.stopPropagation(); // 이벤트 버블링 방지
+                const parentBox = button.closest(".content-box");
+                parentBox.classList.remove("show");
+                parentBox.classList.remove("show1");
+                if (target === "online-course") {
+                    document.getElementById("online-course").style.display = "none";
+                }
+                if (target === "content-management") {
+                    document.getElementById("content-management").style.display = "none";
+                }
+                if (target === "member-management") {
+                    document.getElementById("member-management").style.display = "none";
+                }
+            });
+        });
+    });
+</script>
+<!-- 조회 script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    $(document).ready(function () {
+        $("#searchButton1").click(function () {
+            $.ajax({
+                type: "POST",
+                url: $("#searchForm").attr("action"),
+                data: $("#searchForm").serialize(),
+                dataType: "json",
+                success: function (data) {
+                    updateCourseTable(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        });
+
+        function updateCourseTable(data) {
+            var table = $("#courseTable");
+            table.find("tbody").empty();
+
+            $.each(data, function (index, course) {
+                var row = "<tr class='clickable-row'><td><input type='checkbox' name='cbox'></td>"
+                    + "<td>" + course.courseSeq + "</td>"
+                    + "<td><a href='#' class='course-link' data-course-seq="+course.courseSeq+">" + course.courseName + "</a></td>"
+                    + "<td>" + course.courseBrief + "</td>"
+                    + "<td>" + course.startDateTime + "</td>"
+                    + "<td>" + course.endDateTime + "</td>"
+                    + "<td>" + course.statusCode.name + "</td></tr>";
+                table.append(row);
+            });
+            $(".clickable-row").click(function () {
+                $(".clickable-row input[type='checkbox']").click(function (e) {
+                    e.stopPropagation(); // 이벤트 버블링 중단
+                });
+                $(this).toggleClass("active");
+                $(".clickable-row").not(this).removeClass("active");
+            });
+        }
+    });
+    });
+</script>
+<!-- 선택한 강좌 차시 리스트, 수강생 리스트 보여주는 스크립트-->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        $(document).ready(function() {
+            $(document).on("click", ".clickable-row", function(e) {
+                e.preventDefault();
+
+                var courseSeq = $(this).find(".course-link").data("course-seq");
+
+                $.ajax({
+                    type: "POST",  // POST 방식으로 변경
+                    url: "/CourseChapter_find?courseSeq=" + courseSeq,
+                    success: function(data) {
+                        var chapters = data.chapters;
+                        var students = data.students;
+                        updateCourseChapters1(chapters);
+                        updateCourseSelect(courseSeq);
+                        updateCourseStudent(students);
+                        chapterOrderValue=1;
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error:", error);
+                    }
+                });
+            });
+        });
+
+        function updateCourseSelect(courseSeq) {
+            var CourseStudentcourseSeq = $("input[name='CourseStudentcourseSeq']");
+            CourseStudentcourseSeq.val(courseSeq);
+
+            var courseSelect = $("select[name='courseDTO.courseSeq']");
+            courseSelect.empty(); // 기존 옵션 제거
+            // 선택한 강좌를 옵션으로 추가
+            var selectedCourseName = $(".course-link[data-course-seq='" + courseSeq + "']").text();
+            courseSelect.append("<option value='" + courseSeq + "' selected>" + selectedCourseName + "</option>");
+        }
+
+        function updateCourseChapters1(chapters) {
+            var tableBody = $("#courseChaptersTableBody");
+            tableBody.empty(); // 기존 테이블 내용 삭제
+            if (chapters.length == 0) {
+                var chapterOrderInput = $("input[name='chapterOrder']");
+                let newChapterOrderValue = chapters.length + 1;
+                chapterOrderInput.val(newChapterOrderValue);
+            }
+            // 업데이트된 데이터를 기반으로 테이블 내용 다시 생성
+            for (const courseChapter of chapters) {
+                var chapterOrderInput = $("input[name='chapterOrder']");
+                let newChapterOrderValue = courseChapter.chapterOrder + 1;
+                chapterOrderInput.val(newChapterOrderValue);
+
+                var newRow = `
+            <tr class="clickable-row1">
+                <td><input type="checkbox" name="cbox1"></td>
+                <td data-chapter-order="${courseChapter.chapterOrder}" data-course-seq="${courseChapter.course.courseSeq}">
+                    ${courseChapter.chapterOrder}
+                </td>
+                <td><a href="#">${courseChapter.chapterName}</a></td>
+                <td>${courseChapter.chapterBrief}</td>
+            </tr>`;
+                tableBody.append(newRow);
+            }
+
+            $(document).on("click", ".clickable-row1", function () {
+                var clickedRow = $(this);
+
+                // 클릭한 체크박스의 이벤트 버블링 중단
+                if ($(event.target).is("input[type='checkbox']")) {
+                    event.stopPropagation();
+                    return;
+                }
+
+                clickedRow.toggleClass("active");
+                $(".clickable-row1").not(clickedRow).removeClass("active");
+            });
+        }
+        function updateCourseStudent(students){
+
+            var tableBody = $("#courseStudentTableBody");
+            tableBody.empty();
+
+            for (const student of students) {
+                var newRow = `
+            <tr>
+                <td><input type="checkbox" name="cbox2"></td>
+                <td data-student-seq="${student.student.memberSeq}" data-course-seq="${student.course.courseSeq}">${student.student.memberDivision.name}</td>
+                <td>${student.student.nameKor}</td>
+                <td>${student.student.genderCode.name}</td>
+                <td>??</td>
+                <td>??</td>
+                <td>??</td>
+            </tr>`;
+                tableBody.append(newRow);
+            }
+        }
+    });
+    function checkAll() {
+        if ($("#cboxAll").is(':checked')) {
+            $("input[name=cbox]").prop("checked", true);
+        } else {
+            $("input[name=cbox]").prop("checked", false);
+        }
+    }
+</script>
+<!-- 강의 삭제 스크립트-->
+<script>
+    function deleteSelectedChapters1() {
+        const selectedCourseSeqs = [];
+        $("input[name=cbox]:checked").each(function () {
+            const courseSeq = $(this).closest("tr").find("[data-course-seq]").data("course-seq");
+            selectedCourseSeqs.push(courseSeq);
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "/Course_delete", // 실제 컨트롤러 URL로 변경
+            data: JSON.stringify({courseSeqs: selectedCourseSeqs}),
+            contentType: "application/json",
+            success: function (data) {
+                if (data.success) {
+                    removeDeletedChapters(selectedCourseSeqs);
+                } else {
+                    showAlert();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    }
+
+    function removeDeletedChapters(deletedCourseSeqs) {
+        // 삭제한 행을 찾아서 삭제
+        for (const courseSeq of deletedCourseSeqs) {
+            $(`[data-course-seq="${courseSeq}"]`).closest("tr").remove();
+        }
+    }
+
+    function showAlert() {
+        alert("선택한 강의의 차시 강의를 먼저 삭제해주세요!");
+    }
+</script>
+<!-- 강의 차시등록 모달 스크립트 -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    // 모달을 위한 JavaScript
+    const openContentRegistration = document.getElementById("openContentRegistration");
+    const modalOverlay = document.getElementById("modalOverlay");
+    const closeModal = document.getElementById("closeModal");
+
+    // 전역 범위에서 chapterOrderValue 변수 선언
+    let chapterOrderValue = 0;
+
+    //모달이 열릴때
+    openContentRegistration.addEventListener("click", () => {
+        console.log("버튼 클릭됨");
+        modalOverlay.style.display = "block";
+        const chapterNameInput = document.querySelector("input[name='chapterName']");
+        const chapterBriefInput = document.querySelector("input[name='chapterBrief']");
+        chapterNameInput.value = "";
+        chapterBriefInput.value = "";
+    });
+
+    //모달이 닫힐때
+    closeModal.addEventListener("click", () => {
+        modalOverlay.style.display = "none";
+        const chapterNameInput = document.querySelector("input[name='chapterName']");
+        const chapterBriefInput = document.querySelector("input[name='chapterBrief']");
+        chapterNameInput.value = "";
+        chapterBriefInput.value = "";
+    });
+
+    // 모달 콘텐츠 바깥을 클릭하면 모달 닫기
+    window.addEventListener("click", (event) => {
+        if (event.target === modalOverlay) {
+            modalOverlay.style.display = "none";
+            const chapterNameInput = document.querySelector("input[name='chapterName']");
+            const chapterBriefInput = document.querySelector("input[name='chapterBrief']");
+            chapterNameInput.value = "";
+            chapterBriefInput.value = "";
+        }
+    });
+
+    const form = document.querySelector("#saveform");
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault(); // 폼 제출 기본 동작 중지
+
+        const formData = new FormData(form);
+        const response = await fetch("/CourseChapter_save", {
+            method: "POST",
+            body: formData,
+        });
+        if (response.ok) {
+            modalOverlay.style.display = "none"; // 모달 닫기
+            // 응답 데이터를 JSON 형태로 파싱
+            const responseData = await response.json();
+            const newRow = document.createElement("tr");
+            newRow.classList.add("clickable-row1");
+            newRow.innerHTML = `
+                                            <td><input type="checkbox" name="cbox1"></td>
+                        <td data-chapter-order="${responseData.chapterOrder}" data-course-seq="${responseData.course.courseSeq}">${responseData.chapterOrder}</td>
+                                            <td><a href="#">${responseData.chapterName}</a></td>
+                                            <td>${responseData.chapterBrief}</td>
+                                        `;
+            chapterOrderValue = responseData.chapterOrder + 1; // chapterOrderValue 업데이트
+            const chapterOrderInput = document.querySelector("input[name='chapterOrder']");
+            chapterOrderInput.value = chapterOrderValue;
+
+            courseChaptersTableBody.appendChild(newRow);
+        } else {
+        }
+        $(".clickable-row1").click(function () {
+            // 클릭한 행에서 'active' 클래스 추가하고 다른 행에서 제거
+            $(this).addClass("active");
+            $(".clickable-row1").not(this).removeClass("active");
+
+            // 클릭한 체크박스의 이벤트 버블링 중단
+            $(this).find("input[type='checkbox']").click(function (e) {
+                e.stopPropagation();
+            });
+        });
+    });
+    });
+</script>
+<!-- 강의 신규등록 모달 스크립트 -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const form = document.querySelector("#courseSaveForm");
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault(); // 폼 제출 기본 동작 중지
+
+        const formData = new FormData(form);
+        const response = await fetch("/Course_save", {
+            method: "POST",
+            body: formData,
+        });
+        if (response.ok) {
+            courseModelOverlay1.style.display = "none"; // 모달 닫기
+            const responseData = await response.json();
+            const newRow = document.createElement("tr");
+            newRow.classList.add("clickable-row");
+            newRow.innerHTML = `
+                <td><input type="checkbox" name="cbox"></td>
+                <td>${responseData.courseSeq}</td>
+                <td><a href="#" class="course-link" data-course-seq="${responseData.courseSeq}">${responseData.courseName}</a></td>
+                <td>${responseData.courseBrief}</td>
+                <td>${responseData.startDateTime}</td>
+                <td>${responseData.endDateTime}</td>
+                <td>${responseData.statusCode.name}</td>
+            `;
+            // 새로운 행을 목록에 추가
+            const tableBody = document.querySelector("#courseTable tbody");
+            tableBody.appendChild(newRow);
+        } else {
+            // 에러 처리
+        }
+        $(".clickable-row").click(function () {
+            // 클릭한 행에서 'active' 클래스 추가하고 다른 행에서 제거
+            $(this).addClass("active");
+            $(".clickable-row").not(this).removeClass("active");
+
+            // 클릭한 체크박스의 이벤트 버블링 중단
+            $(this).find("input[type='checkbox']").click(function (e) {
+                e.stopPropagation();
+            });
+        });
+    });
+
+        // 모달을 위한 JavaScript
+        const openCourseModel1 = document.getElementById("openCourseModel");
+        const courseModelOverlay1 = document.getElementById("courseModelOverlay");
+        const closeCourseModel1 = document.getElementById("closeCourseModel");
+
+    //모달이 열릴때
+    openCourseModel1.addEventListener("click", () => {
+        courseModelOverlay1.style.display = "block";
+        form.reset();
+    });
+
+    //모달이 닫힐때
+    closeCourseModel1.addEventListener("click", () => {
+        courseModelOverlay1.style.display = "none";
+        form.reset();
+    });
+
+    // 모달 콘텐츠 바깥을 클릭하면 모달 닫기
+    window.addEventListener("click", (event) => {
+        if (event.target === courseModelOverlay1) {
+            courseModelOverlay1.style.display = "none";
+            form.reset();
+        }
+     });
+    });
+</script>
+<!-- 차시 전체선택 스크립트-->
+<script>
+    function checkAll1() {
+        if ($("#cboxAll1").is(':checked')) {
+            $("input[name=cbox1]").prop("checked", true);
+        } else {
+            $("input[name=cbox1]").prop("checked", false);
+        }
+    }
+</script>
+<!-- 강좌 차시 삭제 스크립트 -->
+<script>
+    function deleteSelectedChapters() {
+        console.log("Delete button clicked!");
+        const selectedChapters = [];
+        const selectedCourseSeqs = [];
+        $("input[name=cbox1]:checked").each(function () {
+            const chapterOrder = $(this).closest("tr").find("[data-chapter-order]").data("chapter-order");
+            console.log(chapterOrder);
+            selectedChapters.push(chapterOrder);
+
+            const courseSeq = $(this).closest("tr").find("[data-course-seq]").data("course-seq");
+            console.log(courseSeq);
+            selectedCourseSeqs.push(courseSeq);
+        });
+        console.log("Delete button clicked2!");
+        console.log(selectedChapters);
+        console.log(selectedCourseSeqs);
+
+        $.ajax({
+            type: "POST",
+            url: "/CourseChapter_delete", // 실제 컨트롤러 URL로 변경
+            data: JSON.stringify({chapters: selectedChapters, courseSeqs: selectedCourseSeqs}),
+            contentType: "application/json",
+            success: function (data) {
+                if (data.success) {
+                    console.log("Delete button clicked3!");
+                    var retrievedData = data.retrievedData;
+                    updateCourseChapters(retrievedData);
+                } else {
+                    console.error("An error occurred during deletion.");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    }
+
+    function updateCourseChapters(retrievedData) {
+        const tableBody = $("#courseChaptersTableBody");
+        tableBody.empty(); // 기존 테이블 내용 삭제
+
+        // 업데이트된 데이터를 기반으로 테이블 내용 다시 생성
+        for (const courseChapter of retrievedData) {
+            const newRow = `
+                                        <tr class="clickable-row1">
+                                            <td><input type="checkbox" name="cbox1"></td>
+                                            <td data-chapter-order="${courseChapter.chapterOrder}" data-course-seq="${courseChapter.course.courseSeq}">${courseChapter.chapterOrder}</td>
+                                            <td><a href="#">${courseChapter.chapterName}</a></td>
+                                            <td>${courseChapter.chapterBrief}</td>
+                                        </tr>
+                                    `;
+            tableBody.append(newRow);
+        }
+        $(".clickable-row1").click(function () {
+            $(".clickable-row1 input[type='checkbox']").click(function (e) {
+                e.stopPropagation(); // 이벤트 버블링 중단
+            });
+
+            $(this).toggleClass("active");
+            $(".clickable-row1").not(this).removeClass("active");
+        });
+    }
+</script>
+<!-- 선택한 차시 목록을 보여주는 스크립트-->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        $(document).ready(function() {
+            $(document).on("click", ".clickable-row1", function(e) {
+                e.preventDefault();
+
+                const chapterOrder = $(this).find("[data-chapter-order]").data("chapter-order");
+                const courseSeq = $(this).find("[data-course-seq]").data("course-seq");
+
+                $.ajax({
+                    type: "POST",  // POST 방식으로 변경
+                    url: "/CourseChapter_detail",
+                    data: {
+                        chapterOrder: chapterOrder,
+                        courseSeq: courseSeq
+                    },
+                    success: function(data) {
+                        const chapterSeq = data.courseChapterCompositeKey.chapterSeq;
+                        $("#chapterDetailSeq").text(chapterSeq);
+                        $("#chapterDetailCourseName").text(data.course.courseName);
+                        $("#chapterDetailOrder").text(data.chapterOrder);
+                        $("#chapterDetailName").text(data.chapterName);
+                        /*$("#chapterDetailContentVideoId").text(data.content.videoId);*/
+                        $("#chapterDetailBrief").text(data.chapterBrief);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error:", error);
+                    }
+                });
+            });
+        });
+    });
+</script>
+<!-- 수강대상자 전체선택 스크립트-->
+<script>
+    function checkAll2() {
+        if ($("#cboxAll2").is(':checked')) {
+            $("input[name=cbox2]").prop("checked", true);
+        } else {
+            $("input[name=cbox2]").prop("checked", false);
+        }
+    }
+</script>
+<!-- 수강생 신규 등록 모달 스크립트 -->
+<script>
+    function checkAll3() {
+        if ($("#cboxAll3").is(':checked')) {
+            $("input[name=cbox3]").prop("checked", true);
+        } else {
+            $("input[name=cbox3]").prop("checked", false);
+        }
+    }
+
+    function toggleCheckbox(checkbox) {
+        var hiddenInput = $(checkbox).siblings('.memberSeq');
+        if (checkbox.checked) {
+            hiddenInput.prop('disabled', false);
+        } else {
+            hiddenInput.prop('disabled', true);
+        }
+    }
+    const openStudentRegistrationModal = document.getElementById("openStudentRegistrationModal");
+    const studentRegistrationModalOverlay = document.getElementById("studentRegistrationModalOverlay");
+    const closeStudentRegistrationModal = document.getElementById("closeStudentRegistrationModal");
+
+    function clearStudentTable() {
+        const tableBody = document.querySelector("#studentTableBody");
+        while (tableBody.firstChild) {
+            tableBody.removeChild(tableBody.firstChild);
+        }
+    }
+
+    function fetchAndShowStudentData() {
+        const tableBody = document.querySelector("#studentTableBody");
+        // 이전 데이터 삭제
+        while (tableBody.firstChild) {
+            tableBody.removeChild(tableBody.firstChild);
+        }
+        fetch("/Member_findAll") // 컨트롤러 URL로 수정
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(member => {
+                    const newRow = document.createElement("tr");
+                    newRow.innerHTML = `
+                        <td>
+                            <input type="checkbox" name="cbox3" value="${member.memberSeq}" onclick="toggleCheckbox(this)">
+                        </td>
+                        <td>${member.memberDivision.code}</td>
+                        <td>${member.nameKor}</td>
+                        <td>${member.email}</td>
+                        <td>1</td>
+                        <td>2</td>
+                        <td>3</td>
+                    `;
+                    tableBody.appendChild(newRow);
+                });
+            })
+            .catch(error => console.error("An error occurred:", error));
+    }
+
+    openStudentRegistrationModal.addEventListener("click", () => {
+        studentRegistrationModalOverlay.style.display = "block";
+        clearStudentTable();
+    });
+
+    closeStudentRegistrationModal.addEventListener("click", () => {
+        studentRegistrationModalOverlay.style.display = "none";
+        clearStudentTable();
+        form.reset();
+    });
+
+    window.addEventListener("click", (event) => {
+        if (event.target === studentRegistrationModalOverlay) {
+            studentRegistrationModalOverlay.style.display = "none";
+            clearStudentTable();
+            form.reset();
+        }
+    });
+
+    document.getElementById("submitRegistrationButton").addEventListener("click", (event) => {
+        event.preventDefault();
+        submitForm();
+    });
+
+    function submitForm() {
+        const form = document.getElementById("courseStudentForm");
+        const formData = new FormData(form);
+
+        fetch("/CourseStudent_save", {
+            method: "POST",
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data) {
+                    closeStudentRegistrationModal.click();
+                    console.log(data);
+                    updatePageData(data);
+                } else {
+                    console.error("An error occurred during data processing.");
+                }
+            })
+            .catch(error => console.error("An error occurred:", error));
+    }
+
+    function updatePageData(data) {
+        var tableBody = document.getElementById("courseStudentTableBody");
+
+        for (const newStudent of data) {
+            var newRow = document.createElement("tr");
+            newRow.classList.add("clickable-row2");
+            newRow.innerHTML = `
+            <td><input type="checkbox" name="cbox2"></td>
+            <td data-student-seq="${newStudent.student.memberSeq}" data-course-seq="${newStudent.course.courseSeq}">${newStudent.student.memberDivision.name}</td>
+            <td>${newStudent.student.nameKor}</td>
+            <td>${newStudent.student.genderCode.name}</td>
+            <td>??</td>
+            <td>??</td>
+            <td>??</td>
+        `;
+
+            tableBody.appendChild(newRow);
+        }
+
+    }
+
+</script>
+<!-- 선택한 수강생 정보를 보여주는 스크립트-->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        $(document).ready(function() {
+            $(document).on("click", ".clickable-row2", function(e) {
+                e.preventDefault();
+
+                const studentSeq = $(this).find("[data-student-seq]").data("student-seq");
+                const courseSeq = $(this).find("[data-course-seq]").data("course-seq");
+
+                $.ajax({
+                    type: "POST",  // POST 방식으로 변경
+                    url: "/CourseStudent_detail",
+                    data: {
+                        studentSeq: studentSeq,
+                        courseSeq: courseSeq
+                    },
+                    success: function(data) {
+                        console.log("데이터전달성공");
+                        $("#memberDetailSeq").text(data.student.memberSeq);
+                        $("#memberDetailDivisionName").text(data.student.memberDivision.name);
+                        $("#memberDetailName").text(data.student.nameKor);
+                        $("#memberDetailGenderName").text(data.student.genderCode.name);
+                        $("#memberDetailEmail").text(data.student.email);
+                        $("#memberDetailbirthDate").text(data.student.birthDate);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error:", error);
+                    }
+                });
+            });
+        });
+    });
+</script>
+<!-- 수강대상자 목록 삭제 스크립트 -->
+<script>
+    function deleteSelectedStudents() {
+        console.log("Delete button clicked!");
+        const selectedStudents = [];
+        const selectedCourseSeqs1 = [];
+        $("input[name=cbox2]:checked").each(function () {
+            const studentSeq = $(this).closest("tr").find("[data-student-seq]").data("student-seq");
+            console.log(studentSeq);
+            selectedStudents.push(studentSeq);
+
+            const courseSeq = $(this).closest("tr").find("[data-course-seq]").data("course-seq");
+            console.log(courseSeq);
+            selectedCourseSeqs1.push(courseSeq);
+        });
+        console.log("Delete button clicked2!");
+
+        $.ajax({
+            type: "POST",
+            url: "/CourseStudent_delete",
+            data: JSON.stringify({students: selectedStudents, courseSeqs1: selectedCourseSeqs1}),
+            contentType: "application/json",
+            success: function (data) {
+                if (data.success) {
+                    console.log("Delete button clicked3!");
+                    removeDeletedStudents(selectedStudents);
+                } else {
+                    console.error("An error occurred during deletion.");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+        $(".clickable-row2").click(function () {
+            $(".clickable-row2 input[type='checkbox']").click(function (e) {
+                e.stopPropagation(); // 이벤트 버블링 중단
+            });
+
+            $(this).toggleClass("active");
+            $(".clickable-row2").not(this).removeClass("active");
+        });
+    }
+    function removeDeletedStudents(selectedStudents) {
+        for (const studentSeq of selectedStudents) {
+            $(`[data-student-seq="${studentSeq}"]`).closest("tr").remove();
+        }
+    }
+</script>
+<!-- 이벤트 버블링 막는 스크립트 -->
+<script>
+    $(document).ready(function () {
+        $(".clickable-row input[type='checkbox']").click(function (e) {
+            e.stopPropagation(); // 이벤트 버블링 중단
+        });
+        $(".clickable-row").click(function () {
+            $(this).toggleClass("active");
+            $(".clickable-row").not(this).removeClass("active");
+        });
+    });
+</script>
 <script>
     const courseSessionsSection = document.getElementById("courseSessionsSection");
     const enrolleesSection = document.getElementById("enrolleesSection");
@@ -670,11 +1184,18 @@
     courseSessionsSection.addEventListener("click", () => {
         enrolleesContent.style.display = "none";
         courseSessionsContent.style.display = "block";
+        document.getElementById("courseInfoBox").style.display = "block";
+        document.getElementById("userInfoBox").style.display = "none";
     });
 
     enrolleesSection.addEventListener("click", () => {
         courseSessionsContent.style.display = "none";
         enrolleesContent.style.display = "block";
+        document.getElementById("courseInfoBox").style.display = "none";
+        document.getElementById("userInfoBox").style.display = "block";
     });
 </script>
+<h2>ㅎㅎㅎㅎㅎ</h2>
+</body>
+
 </html>

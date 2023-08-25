@@ -15,4 +15,5 @@ public interface CourseChapterRepository extends JpaRepository<CourseChapter, Co
     List<CourseChapter> findBySupplementaryFile(File supplementaryFile);
     List<CourseChapter> findByCourseChapterCompositeKey_CourseSeq(Long courseSeq);
     CourseChapter findByCourseAndCourseChapterCompositeKey_ChapterSeq(Course course, Long chapterSeq);
+    CourseChapter findByCourse_CourseSeqAndChapterOrder(Long course_courseSeq, Long chapterOrder);
 }

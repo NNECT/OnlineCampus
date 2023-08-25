@@ -35,4 +35,22 @@ values ('2','강의2 내용','강의2','2023-08-14','2023-08-28', 'C002');
 insert ignore into course (course_seq, course_brief, course_name, end_date_time, start_date_time, status_code)
 values ('3','강의3 내용','강의3','2023-08-18','2023-08-30', 'C002');
 insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+
+
+values ('국어', '국어수업', now(), now(), 'C001');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('국어', '국어수업', now(), now(), 'C001');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('국어', '국어수업', now(), now(), 'C002');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('국어', '국어수업', now(), now(), 'C002');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('국어', '국어수업', now(), now(), 'C003');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('국어', '국어수업', now(), now(), 'C003');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('영어', '영어수업', now(), now(), 'C002');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('수학', '수학수업', now(), now(), 'C003');
+
 values ('테스트', '테스트', now(), now(), 'C001');
