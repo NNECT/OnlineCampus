@@ -18,6 +18,7 @@ public class CourseChapterStudentProgressDTO implements DTOMarker<CourseChapterS
     private CourseStudentDTO studentDTO;
     private Integer finalPosition;
     private Integer maxPosition;
+    private Boolean completed;
 
     @Override
     public CourseChapterStudentProgress toEntity() {

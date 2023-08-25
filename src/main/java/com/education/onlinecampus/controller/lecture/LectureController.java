@@ -24,12 +24,17 @@ public class LectureController {
     private final YouTubeService youTubeService;
 
     @GetMapping("/lecture")
-    public String course(){
-        return "lecture/courseList";
+    public String course(@AuthenticationPrincipal UserDetails userDetails, Model model){
+        MemberDTO authMember = memberService.findByUserName(userDetails.getUsername());
+        List<CourseDTO> courseList = courseService.courseFindAllByMember(authMember);
+        List<List<CourseChapterDTO>> courseChapterList = courseService.courseChapterFindAllByCourseList(courseList);
+        model.addAttribute("courses", courseList);
+        model.addAttribute("courseChapters", courseChapterList);
+        return "lecture/CourseMain";
     }
 
-    @GetMapping("/lecture/course")
-    public String courseDetail(@AuthenticationPrincipal UserDetails userDetails, Model model) throws IOException {
+    @GetMapping("/lecture/test")
+    public String courseTest(@AuthenticationPrincipal UserDetails userDetails) throws IOException {
         try {
             MemberDTO authMember = memberService.findByUserName(userDetails.getUsername());
 
@@ -57,14 +62,9 @@ public class LectureController {
                         .build();
                 courseService.CourseChapterSave(courseChapterDTO);
             }
-
-            List<CourseDTO> courseList = courseService.courseFindAllByMember(authMember);
-            List<List<CourseChapterDTO>> courseChapterList = courseService.courseChapterFindAllByCourseList(courseList);
-            model.addAttribute("courses", courseList);
-            model.addAttribute("courseChapters", courseChapterList);
         } catch (NoSuchElementException e) {
             return "redirect:Member_logout";
         }
-        return "lecture/CourseTemp";
+        return "redirect:/lecture";
     }
 }
