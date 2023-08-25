@@ -20,7 +20,8 @@ public interface CourseChapterStudentProgressMapper {
                 CourseChapterMapper.INSTANCE.toEntity(courseChapterStudentProgressDTO.getChapterDTO()),
                 CourseStudentMapper.INSTANCE.toEntity(courseChapterStudentProgressDTO.getStudentDTO()),
                 courseChapterStudentProgressDTO.getFinalPosition(),
-                courseChapterStudentProgressDTO.getMaxPosition()
+                courseChapterStudentProgressDTO.getMaxPosition(),
+                courseChapterStudentProgressDTO.getCompleted()
         );
     };
 
@@ -30,7 +31,8 @@ public interface CourseChapterStudentProgressMapper {
                 CourseChapterMapper.INSTANCE.toDTO(courseChapterStudentProgress.getChapter()),
                 CourseStudentMapper.INSTANCE.toDTO(courseChapterStudentProgress.getStudent()),
                 courseChapterStudentProgress.getFinalPosition(),
-                courseChapterStudentProgress.getMaxPosition()
+                courseChapterStudentProgress.getMaxPosition(),
+                courseChapterStudentProgress.getCompleted()
         );
     };
 }

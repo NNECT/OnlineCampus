@@ -118,11 +118,11 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseStudentDTO courseStudentFindByCourseAndMember(CourseDTO courseDTO, MemberDTO memberDTO) {
-        CourseStudent courseStudentDTO = repositoryService.getCourseStudentRepository()
+        CourseStudent courseStudent = repositoryService.getCourseStudentRepository()
                 .findByCourseAndStudent(courseDTO.toEntity(), memberDTO.toEntity())
                 .orElse(null);
-        if (courseStudentDTO == null) return null;
-        return courseStudentDTO.toDTO();
+        if (courseStudent == null) return null;
+        return courseStudent.toDTO();
     }
 
     @Override
@@ -132,12 +132,26 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseStudentDTO courseStudentFindByCourseAndStudent(CourseDTO courseDTO, MemberDTO memberDTO) {
-        return repositoryService.getCourseStudentRepository().findByCourseAndStudent(courseDTO.toEntity(), memberDTO.toEntity()).toDTO();
+        return repositoryService.getCourseStudentRepository().findByCourseAndStudent(courseDTO.toEntity(), memberDTO.toEntity()).orElseThrow().toDTO();
     }
 
     @Override
     public List<CourseStudent> courseStudentFindByCourseSeq(Long courseSeq) {
         return repositoryService.getCourseStudentRepository().findByCourseStudentCompositeKey_CourseSeq(courseSeq);
+    }
+
+    @Override
+    public CourseChapterStudentProgressDTO courseChapterStudentProgressFindByChapterAndStudentOrCreateNewInstance(CourseChapterDTO courseChapterDTO, CourseStudentDTO courseStudentDTO) {
+        CourseChapterStudentProgressDTO courseChapterStudentProgress = courseChapterStudentProgressFindByChapterAndStudent(courseChapterDTO, courseStudentDTO);
+        if (courseChapterStudentProgress == null) {
+            courseChapterStudentProgress = CourseChapterStudentProgressDTO.builder()
+                    .courseDTO(courseChapterDTO.getCourseDTO())
+                    .chapterDTO(courseChapterDTO)
+                    .studentDTO(courseStudentDTO)
+                    .build();
+            courseChapterStudentProgress = repositoryService.getCourseChapterStudentProgressRepository().save(courseChapterStudentProgress.toEntity()).toDTO();
+        }
+        return courseChapterStudentProgress;
     }
 
     @Override
