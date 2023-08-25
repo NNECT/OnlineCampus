@@ -18,10 +18,11 @@ public interface CourseService {
     void CourseDelete(Course course);
 
     // CourseChapter
-    CourseChapter findByCourseAndChapterOrder(Long courseSeq, Integer chapterorder);
+    CourseChapter findByCourseAndChapterOrder(Long courseSeq, Long chapterorder);
     List<CourseChapter> CourseChapterFindAll();
     List<CourseChapter> findByCourseChapterCompositeKeyCourseSeq(Long courseSeq);
     CourseChapterDTO courseChapterFindByCourseAndSeq(CourseDTO courseDTO, Long courseChapterSeq);
+    List<CourseChapter> findCourseChapter(Long CourseSeq);
     List<List<CourseChapterDTO>> courseChapterFindAllByCourseList(List<CourseDTO> courseDTOList);
     CourseChapterDTO CourseChapterSave(CourseChapterDTO courseChapterDTO);
     void CourseChapterDelete(CourseChapter courseChapter);
@@ -32,5 +33,7 @@ public interface CourseService {
 
     // CourseStudent
     CourseStudentDTO courseStudentSave(CourseStudentDTO courseStudentDTO);
+    CourseStudentDTO courseStudentFindByCourseAndStudent(CourseDTO courseDTO, MemberDTO memberDTO);
+    List<CourseStudent> courseStudentFindByCourseSeq(Long courseSeq);
     List<CourseStudent> CourseStudentAllSave(Long[] memberseqs, Long courseSeq, CourseStudentDTO courseStudentDTO);
 }

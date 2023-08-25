@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public interface MemberService {
+    MemberDTO findBySeq(Long seq) throws NoSuchElementException;
     MemberDTO findByUserName(String username) throws NoSuchElementException;
     List<Member> MemberfindAll();
     void MemberSave(MemberDTO memberDTO);

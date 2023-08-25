@@ -12,5 +12,6 @@ public interface CourseStudentRepository extends JpaRepository<CourseStudent, Co
     List<CourseStudent> findByCourse(Course course);
     List<CourseStudent> findByStudent(Member student);
     List<CourseStudent> findByCourseStudentCompositeKey_CourseSeq(Long courseSeq);
-    CourseStudent findByCourseStudentCompositeKey_CourseSeqAndCourseStudentCompositeKey_StudentSeq(Long courseSeq,Long studentSeq);
+    CourseStudent findByCourseAndStudent(Course course, Member student);
+    List<CourseStudent> findByStudentAndCourse_StatusCode(Member entity, CommonCode code);
 }

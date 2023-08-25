@@ -29,17 +29,18 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public RepositoryService repositoryService(){
-        return repositoryService;
-    }
-
-    @Override
     public void CourseDelete(Course course){ repositoryService.getCourseRepository().delete(course);}
 
     @Override
     public CourseChapterDTO courseChapterFindByCourseAndSeq(CourseDTO courseDTO, Long courseChapterSeq) {
         Course course = courseDTO.toEntity();
         return repositoryService.getCourseChapterRepository().findByCourseAndCourseChapterCompositeKey_ChapterSeq(course, courseChapterSeq).toDTO();
+    }
+
+    @Override
+    public List<CourseChapter> findCourseChapter(Long CourseSeq) {
+        Course course = repositoryService.getCourseRepository().findByCourseSeq(CourseSeq);
+        return repositoryService.getCourseChapterRepository().findByCourse(course);
     }
 
     @Override
@@ -100,8 +101,8 @@ public class CourseServiceImpl implements CourseService {
     }
   
     @Override
-    public CourseChapter findByCourseAndChapterOrder(Long courseSeq, Integer chapterorder){
-        return repositoryService.getCourseChapterRepository().findByCourse_CourseSeqAndChapterOrder(courseSeq,chapterorder);
+    public CourseChapter findByCourseAndChapterOrder(Long courseSeq, Long chapterorder){
+        return repositoryService.getCourseChapterRepository().findByCourse_CourseSeqAndChapterOrder(courseSeq, chapterorder);
     }
 
     @Override
@@ -122,5 +123,15 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public CourseStudentDTO courseStudentSave(CourseStudentDTO courseStudentDTO) {
         return repositoryService.getCourseStudentRepository().save(courseStudentDTO.toEntity()).toDTO();
+    }
+
+    @Override
+    public CourseStudentDTO courseStudentFindByCourseAndStudent(CourseDTO courseDTO, MemberDTO memberDTO) {
+        return repositoryService.getCourseStudentRepository().findByCourseAndStudent(courseDTO.toEntity(), memberDTO.toEntity()).toDTO();
+    }
+
+    @Override
+    public List<CourseStudent> courseStudentFindByCourseSeq(Long courseSeq) {
+        return repositoryService.getCourseStudentRepository().findByCourseStudentCompositeKey_CourseSeq(courseSeq);
     }
 }

@@ -5,7 +5,9 @@ import com.education.onlinecampus.data.entity.CommonCode;
 import com.education.onlinecampus.data.entity.Course;
 import com.education.onlinecampus.data.entity.CourseChapter;
 import com.education.onlinecampus.data.entity.CourseStudent;
+import com.education.onlinecampus.service.business.lecture.MemberService;
 import com.education.onlinecampus.service.business.manager.CourseService;
+import com.education.onlinecampus.service.common.CommonCodeService;
 import com.education.onlinecampus.service.common.YouTubeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +26,8 @@ import java.util.stream.Collectors;
 @Controller
 @RequiredArgsConstructor
 public class CourseController {
-
+    private final CommonCodeService commonCodeService;
+    private final MemberService memberService;
     private final CourseService courseService;
     private final YouTubeService youTubeService;
     private final ObjectMapper objectMapper;
@@ -35,8 +38,8 @@ public class CourseController {
     @PostMapping("/Course_save")
     @ResponseBody
     public ResponseEntity<String> CourseSave(@ModelAttribute CourseDTO courseDTO,Model model) {
-        CommonCode byId = courseService.repositoryService().getCommonCodeRepository().findById(courseDTO.getStatusCodeDTO().getCode()).orElseThrow();
-        courseDTO.setStatusCodeDTO(byId.toDTO());
+        CommonCodeDTO byId = commonCodeService.findByCode(courseDTO.getStatusCodeDTO().getCode());
+        courseDTO.setStatusCodeDTO(byId);
         Course course = courseService.CourseSave(courseDTO);
         try {
             String jsonResponse = objectMapper.writeValueAsString(course);
@@ -62,7 +65,7 @@ public class CourseController {
             if (allEmpty) {
                 // 모든 강의에 대해 courseChapter가 비어있는 경우
                 for (String s : selectedCourseSeqs) {
-                    courseService.repositoryService().getCourseRepository().deleteById(Long.valueOf(s));
+                    courseService.CourseDelete(courseService.CourseFind(Long.valueOf(s)).toEntity());
                 }
                 response.put("success", true);
             } else {
@@ -116,7 +119,7 @@ public class CourseController {
     @PostMapping("/CourseChapter_save")
     @ResponseBody
     public ResponseEntity<String> courseChapterSave(@ModelAttribute CourseChapterDTO courseChapter,Model model) {
-        CourseChapter courseChapter1 = courseService.CourseChapterSave(courseChapter);
+        CourseChapter courseChapter1 = courseService.CourseChapterSave(courseChapter).toEntity();
         try {
             String jsonResponse = objectMapper.writeValueAsString(courseChapter1);
             return ResponseEntity.ok(jsonResponse);
@@ -134,7 +137,7 @@ public class CourseController {
 
         try {
             for (int i=0;i<selectedChapters.size();i++) {
-                CourseChapter byCourseAndChapterOrder = courseService.findByCourseAndChapterOrder(Long.valueOf(selectedCourseSeqs.get(i)), Integer.valueOf(selectedChapters.get(i)));
+                CourseChapter byCourseAndChapterOrder = courseService.findByCourseAndChapterOrder(Long.valueOf(selectedCourseSeqs.get(i)), Long.valueOf(selectedChapters.get(i)));
                 courseService.CourseChapterDelete(byCourseAndChapterOrder);
             }
             List<CourseChapter> retrievedData = courseService.findByCourseChapterCompositeKeyCourseSeq(Long.valueOf(selectedCourseSeqs.get(0)));
@@ -210,7 +213,7 @@ public class CourseController {
             Map<String, Object> response = new HashMap<>();
 
             List<CourseChapter> byCourseChapterCompositeKeyCourseSeq = courseService.findByCourseChapterCompositeKeyCourseSeq(courseSeq);
-            List<CourseStudent> byCourseStudentCompositeKeyCourseSeq = courseService.repositoryService().getCourseStudentRepository().findByCourseStudentCompositeKey_CourseSeq(courseSeq);
+            List<CourseStudent> byCourseStudentCompositeKeyCourseSeq = courseService.courseStudentFindByCourseSeq(courseSeq);
 
             response.put("chapters", byCourseChapterCompositeKeyCourseSeq);
             response.put("students", byCourseStudentCompositeKeyCourseSeq);
@@ -223,11 +226,11 @@ public class CourseController {
 
     @PostMapping("/CourseChapter_detail")
     @ResponseBody
-    public ResponseEntity<CourseChapter> CourseChapterDetail(@RequestParam("chapterOrder") Integer chapterOrder, @RequestParam("courseSeq") Long courseSeq) {
+    public ResponseEntity<CourseChapter> CourseChapterDetail(@RequestParam("chapterOrder") Long chapterOrder, @RequestParam("courseSeq") Long courseSeq) {
         try {
             System.out.println(chapterOrder);
             System.out.println(courseSeq);
-            CourseChapter byCourseCourseSeqAndChapterOrder = courseService.repositoryService().getCourseChapterRepository().findByCourse_CourseSeqAndChapterOrder(courseSeq, chapterOrder);
+            CourseChapter byCourseCourseSeqAndChapterOrder = courseService.findByCourseAndChapterOrder(courseSeq, chapterOrder);
             return ResponseEntity.ok(byCourseCourseSeqAndChapterOrder);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
@@ -240,12 +243,11 @@ public class CourseController {
         try {
             System.out.println(studentSeq);
             System.out.println(courseSeq);
-            CourseStudent byCourseStudentCompositeKeyCourseSeqAndCourseStudentCompositeKeyStudentSeq =
-                    courseService.repositoryService().getCourseStudentRepository().findByCourseStudentCompositeKey_CourseSeqAndCourseStudentCompositeKey_StudentSeq(courseSeq, studentSeq);
-            return ResponseEntity.ok(byCourseStudentCompositeKeyCourseSeqAndCourseStudentCompositeKeyStudentSeq);
+            CourseStudentDTO byCourseStudentCompositeKeyCourseSeqAndCourseStudentCompositeKeyStudentSeq =
+                    courseService.courseStudentFindByCourseAndStudent(courseService.CourseFind(courseSeq), memberService.findBySeq(studentSeq));
+            return ResponseEntity.ok(byCourseStudentCompositeKeyCourseSeqAndCourseStudentCompositeKeyStudentSeq.toEntity());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-
 }
