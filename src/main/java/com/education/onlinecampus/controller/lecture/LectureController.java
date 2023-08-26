@@ -13,8 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,9 +27,21 @@ public class LectureController {
         MemberDTO authMember = memberService.findByUserName(userDetails.getUsername());
         List<CourseDTO> courseList = courseService.courseFindAllByMember(authMember);
         List<List<CourseChapterDTO>> courseChapterList = courseService.courseChapterFindAllByCourseList(courseList);
+        List<List<CourseChapterStudentProgressDTO>> courseChapterStudentProgressList = courseService.courseChapterStudentProgressFindAllByEachCourse(authMember, courseList, courseChapterList);
+        Map<Long, Double> courseProgressMap = new HashMap<>();
+        courseList.forEach(course -> courseProgressMap.put(course.getCourseSeq(), courseService.getCourseProgress(authMember, course)));
+        Map<Long, Map<Long, Double>> chapterProgressMap = new HashMap<>();
+        for (int i = 0; i < courseList.size(); i++) {
+            Map<Long, Double> chapterProgress = new HashMap<>();
+            chapterProgressMap.put(courseList.get(i).getCourseSeq(), chapterProgress);
+            courseChapterList.get(i).forEach(chapter -> chapterProgress.put(chapter.getChapterSeq(), courseService.getChapterProgress(authMember, chapter)));
+        }
         model.addAttribute("courses", courseList);
         model.addAttribute("courseChapters", courseChapterList);
-        return "lecture/CourseMain";
+        model.addAttribute("progressValue", courseService.getMemeberProgress(courseChapterStudentProgressList));
+        model.addAttribute("courseProgressMap", courseProgressMap);
+        model.addAttribute("chapterProgressMap", chapterProgressMap);
+        return "lecture/MemberMain";
     }
 
     @GetMapping("/lecture/test")

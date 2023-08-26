@@ -72,7 +72,8 @@ public class AsyncVideoController {
 
             return ResponseEntity.ok(Map.of(
                     "result", "true",
-                    "videoMaxTime", progress.getMaxPosition().toString()
+                    "videoMaxTime", progress.getMaxPosition().toString(),
+                    "chapterProgress", String.valueOf(courseService.getChapterProgress(member, chapter))
             ));
         } catch (Exception e) {
             e.printStackTrace();
@@ -114,7 +115,10 @@ public class AsyncVideoController {
 
         return ResponseEntity.ok(Map.of(
                 "result", "true",
-                "videoMaxTime", progress.getMaxPosition().toString()
+                "videoMaxTime", progress.getMaxPosition().toString(),
+                "progressValue", String.valueOf(courseService.getMemeberProgress(member)),
+                "courseProgress", String.valueOf(courseService.getCourseProgress(member, course)),
+                "chapterProgress", String.valueOf(courseService.getChapterProgress(member, chapter))
         ));
     }
 }

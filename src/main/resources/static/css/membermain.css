@@ -1,3 +1,7 @@
 section h1{margin-top:80px;}
 .dropdown-menu>li>a.dropmenu_wrap_a{padding:10px 35px;}
 .dropdown-menu>li>a.dropmenu_wrap_b{padding:10px 50px;}
+.video-thumbnail {
+    width: 70px;
+    height: 39px;
+}

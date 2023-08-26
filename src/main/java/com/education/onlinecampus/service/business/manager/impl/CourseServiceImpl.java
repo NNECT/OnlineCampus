@@ -74,6 +74,12 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public List<CourseChapterDTO> courseChapterFindByCourse(CourseDTO courseDTO) {
+        Course course = courseDTO.toEntity();
+        return repositoryService.getCourseChapterRepository().findByCourse(course).stream().map(CourseChapter::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
     public List<List<CourseChapterDTO>> courseChapterFindAllByCourseList(List<CourseDTO> courseDTOList) {
         List<List<CourseChapterDTO>> resultList = new ArrayList<>();
         for (CourseDTO courseDTO : courseDTOList) {
@@ -168,5 +174,92 @@ public class CourseServiceImpl implements CourseService {
         return repositoryService.getCourseChapterStudentProgressRepository()
                 .save(courseChapterStudentProgressDTO.toEntity())
                 .toDTO();
+    }
+
+    @Override
+    public List<List<CourseChapterStudentProgressDTO>> courseChapterStudentProgressFindAllByEachCourse(MemberDTO student, List<CourseDTO> courseList) {
+        return courseChapterStudentProgressFindAllByEachCourse(student, courseList, courseChapterFindAllByCourseList(courseList));
+    }
+
+    @Override
+    public List<List<CourseChapterStudentProgressDTO>> courseChapterStudentProgressFindAllByEachCourse(MemberDTO student, List<CourseDTO> courseList, List<List<CourseChapterDTO>> chapterList) {
+        List<List<CourseChapterStudentProgressDTO>> resultList = new ArrayList<>();
+        for (int i = 0; i < courseList.size(); i++) {
+            List<CourseChapterStudentProgressDTO> courseChapterStudentProgressDTOList = new ArrayList<>();
+            CourseStudentDTO courseStudentDTO = courseStudentFindByCourseAndStudent(courseList.get(i), student);
+            for (int j = 0; j < chapterList.get(i).size(); j++) {
+                CourseChapterDTO courseChapterDTO = chapterList.get(i).get(j);
+                courseChapterStudentProgressDTOList.add(
+                        courseChapterStudentProgressFindByChapterAndStudentOrCreateNewInstance(
+                                courseChapterDTO, courseStudentDTO
+                        )
+                );
+            }
+            resultList.add(courseChapterStudentProgressDTOList);
+        }
+        return resultList;
+    }
+
+    @Override
+    public double getMemeberProgress(MemberDTO student) {
+        return getMemeberProgress(courseChapterStudentProgressFindAllByEachCourse(student, courseFindAllByMember(student)));
+    }
+
+    @Override
+    public double getMemeberProgress(List<List<CourseChapterStudentProgressDTO>> courseChapterStudentProgressList) {
+        if (courseChapterStudentProgressList.isEmpty()) return 0.0;
+        double progress = 0.0;
+        for (List<CourseChapterStudentProgressDTO> courseChapterStudentProgressDTOS : courseChapterStudentProgressList) {
+            if (courseChapterStudentProgressDTOS.isEmpty()) continue;
+            // 각 코스 진도율 퍼센트
+            double sum = 0.0;
+            for (CourseChapterStudentProgressDTO courseChapterStudentProgressDTO : courseChapterStudentProgressDTOS) {
+                if (courseChapterStudentProgressDTO.getCompleted()) sum++;
+            }
+            progress += sum / courseChapterStudentProgressDTOS.size();
+        }
+        progress = progress * 100 / courseChapterStudentProgressList.size();
+        progress = Math.round(progress * 100) / 100.0;
+        return Math.min(progress, 100.0);
+    }
+
+    @Override
+    public double getCourseProgress(MemberDTO studentDTO, CourseDTO courseDTO) {
+        List<CourseChapterDTO> courseChapterDTOList = courseChapterFindByCourse(courseDTO);
+
+        if (courseChapterDTOList.isEmpty()) return 0.0;
+
+        List<CourseChapterStudentProgressDTO> courseChapterStudentProgressDTOList = new ArrayList<>();
+        for (CourseChapterDTO courseChapterDTO : courseChapterDTOList) {
+            courseChapterStudentProgressDTOList.add(
+                    courseChapterStudentProgressFindByChapterAndStudentOrCreateNewInstance(
+                            courseChapterDTO, courseStudentFindByCourseAndStudent(courseDTO, studentDTO)
+                    )
+            );
+        }
+
+        double result = 0.0;
+        for (CourseChapterStudentProgressDTO courseChapterStudentProgressDTO : courseChapterStudentProgressDTOList) {
+            if (courseChapterStudentProgressDTO.getCompleted()) result++;
+        }
+        result = result * 100 / courseChapterStudentProgressDTOList.size();
+        result = Math.round(result * 100) / 100.0;
+        return Math.min(result, 100.0);
+    }
+
+    @Override
+    public double getChapterProgress(MemberDTO studentDTO, CourseChapterDTO courseChapterDTO) {
+        if (courseChapterDTO.getContentDTO() == null) return 0.0;
+        if (courseChapterDTO.getContentDTO().getRunningTime() == 0) return 0.0;
+
+        CourseChapterStudentProgressDTO courseChapterStudentProgressDTO = courseChapterStudentProgressFindByChapterAndStudentOrCreateNewInstance(
+                courseChapterDTO, courseStudentFindByCourseAndStudent(courseChapterDTO.getCourseDTO(), studentDTO)
+        );
+        if (courseChapterStudentProgressDTO.getCompleted()) return 100.0;
+
+        double result = (double) (courseChapterStudentProgressDTO.getMaxPosition() * 100) / courseChapterDTO.getContentDTO().getRunningTime();
+        result = Math.round(result * 100) / 100.0;
+
+        return Math.min(result, 100.0);
     }
 }

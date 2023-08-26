@@ -23,6 +23,7 @@ public interface CourseService {
     List<CourseChapter> findByCourseChapterCompositeKeyCourseSeq(Long courseSeq);
     CourseChapterDTO courseChapterFindByCourseAndSeq(CourseDTO courseDTO, Long courseChapterSeq);
     List<CourseChapter> findCourseChapter(Long CourseSeq);
+    List<CourseChapterDTO> courseChapterFindByCourse(CourseDTO courseDTO);
     List<List<CourseChapterDTO>> courseChapterFindAllByCourseList(List<CourseDTO> courseDTOList);
     CourseChapterDTO CourseChapterSave(CourseChapterDTO courseChapterDTO);
     void CourseChapterDelete(CourseChapter courseChapter);
@@ -42,4 +43,12 @@ public interface CourseService {
     CourseChapterStudentProgressDTO courseChapterStudentProgressFindByChapterAndStudentOrCreateNewInstance(CourseChapterDTO courseChapterDTO, CourseStudentDTO courseStudentDTO);
     CourseChapterStudentProgressDTO courseChapterStudentProgressFindByChapterAndStudent(CourseChapterDTO courseChapterDTO, CourseStudentDTO courseStudentDTO);
     CourseChapterStudentProgressDTO courseChapterStudentProgressSave(CourseChapterStudentProgressDTO courseChapterStudentProgressDTO);
+
+    List<List<CourseChapterStudentProgressDTO>> courseChapterStudentProgressFindAllByEachCourse(MemberDTO student, List<CourseDTO> courseList);
+    List<List<CourseChapterStudentProgressDTO>> courseChapterStudentProgressFindAllByEachCourse(MemberDTO student, List<CourseDTO> courseList, List<List<CourseChapterDTO>> chapterList);
+
+    double getMemeberProgress(MemberDTO student);
+    double getMemeberProgress(List<List<CourseChapterStudentProgressDTO>> courseChapterStudentProgressList);
+    double getCourseProgress(MemberDTO studentDTO, CourseDTO courseDTO);
+    double getChapterProgress(MemberDTO studentDTO, CourseChapterDTO courseChapterDTO);
 }
