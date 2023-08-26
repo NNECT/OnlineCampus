@@ -5,6 +5,8 @@ import com.education.onlinecampus.data.entity.*;
 import com.education.onlinecampus.service.business.manager.CourseService;
 import com.education.onlinecampus.service.common.RepositoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -261,5 +263,16 @@ public class CourseServiceImpl implements CourseService {
         result = Math.round(result * 100) / 100.0;
 
         return Math.min(result, 100.0);
+    }
+
+    @Override
+    public List<CourseChapterContent> courseChapterContentFindAll(){
+        List<CourseChapterContent> all = repositoryService.getCourseChapterContentRepository().findAll();
+        return all;
+    }
+
+    @Override
+    public Page<Course> courseFindAllPage(Pageable pageable){
+        return repositoryService.getCourseRepository().findAll(pageable);
     }
 }

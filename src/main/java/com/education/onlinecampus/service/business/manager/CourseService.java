@@ -3,8 +3,11 @@ package com.education.onlinecampus.service.business.manager;
 import com.education.onlinecampus.data.dto.*;
 import com.education.onlinecampus.data.entity.Course;
 import com.education.onlinecampus.data.entity.CourseChapter;
+import com.education.onlinecampus.data.entity.CourseChapterContent;
 import com.education.onlinecampus.data.entity.CourseStudent;
 import com.education.onlinecampus.service.common.RepositoryService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -51,4 +54,8 @@ public interface CourseService {
     double getMemeberProgress(List<List<CourseChapterStudentProgressDTO>> courseChapterStudentProgressList);
     double getCourseProgress(MemberDTO studentDTO, CourseDTO courseDTO);
     double getChapterProgress(MemberDTO studentDTO, CourseChapterDTO courseChapterDTO);
+
+    List<CourseChapterContent> courseChapterContentFindAll();
+
+    Page<Course> courseFindAllPage(Pageable pageable);
 }

@@ -37,8 +37,6 @@ values ('3','강의3 내용','강의3','2023-08-18','2023-08-30', 'C002');
 
 
 insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
-
-
 values ('국어', '국어수업', now(), now(), 'C001');
 insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
 values ('수학', '수학수업', now(), now(), 'C001');
@@ -53,7 +51,71 @@ values ('도덕', '도덕수업', now(), now(), 'C003');
 insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
 values ('체육', '체육수업', now(), now(), 'C002');
 insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
-values ('수학', '수학수업', now(), now(), 'C003');
+values ('미술', '미술수업', now(), now(), 'C003');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('사회', '사회수업', now(), now(), 'C003');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('도덕', '도덕수업', now(), now(), 'C003');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('체육', '체육수업', now(), now(), 'C002');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('미술', '미술수업', now(), now(), 'C003');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('사회', '사회수업', now(), now(), 'C003');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('도덕', '도덕수업', now(), now(), 'C003');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('체육', '체육수업', now(), now(), 'C002');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('미술', '미술수업', now(), now(), 'C003');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('사회', '사회수업', now(), now(), 'C003');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('도덕', '도덕수업', now(), now(), 'C003');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('체육', '체육수업', now(), now(), 'C002');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('미술', '미술수업', now(), now(), 'C003');
+       insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('국어', '국어수업', now(), now(), 'C001');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('수학', '수학수업', now(), now(), 'C001');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('영어', '영어수업', now(), now(), 'C002');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('과학', '과학수업', now(), now(), 'C002');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('사회', '사회수업', now(), now(), 'C003');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('도덕', '도덕수업', now(), now(), 'C003');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('체육', '체육수업', now(), now(), 'C002');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('미술', '미술수업', now(), now(), 'C003');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('사회', '사회수업', now(), now(), 'C003');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('도덕', '도덕수업', now(), now(), 'C003');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('체육', '체육수업', now(), now(), 'C002');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('미술', '미술수업', now(), now(), 'C003');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('사회', '사회수업', now(), now(), 'C003');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('도덕', '도덕수업', now(), now(), 'C003');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('체육', '체육수업', now(), now(), 'C002');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('미술', '미술수업', now(), now(), 'C003');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('사회', '사회수업', now(), now(), 'C003');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('도덕', '도덕수업', now(), now(), 'C003');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('체육', '체육수업', now(), now(), 'C002');
+insert ignore into course (course_name, course_brief, start_date_time, end_date_time, status_code)
+values ('미술', '미술수업', now(), now(), 'C003');
 
 insert ignore into member (member_division_code, name_kor, email, username, password, password_change_date, password_change_required, password_error_count, last_login_date, register_date)
 values (
