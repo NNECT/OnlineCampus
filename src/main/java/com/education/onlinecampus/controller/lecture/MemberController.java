@@ -4,6 +4,7 @@ import com.education.onlinecampus.config.SecurityConfig;
 import com.education.onlinecampus.data.dto.FileDTO;
 import com.education.onlinecampus.data.dto.MemberDTO;
 import com.education.onlinecampus.data.entity.Course;
+import com.education.onlinecampus.data.entity.CourseChapterContent;
 import com.education.onlinecampus.data.entity.Member;
 import com.education.onlinecampus.service.business.lecture.MemberService;
 import com.education.onlinecampus.service.business.manager.CourseService;
@@ -11,6 +12,9 @@ import com.education.onlinecampus.service.common.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -73,9 +78,18 @@ public class MemberController {
             MemberDTO loggedInMember = memberService.findByUserName(username);
             switch (loggedInMember.getMemberDivisionDTO().getCode()) {
                 case "M001": {
+
+                    //페이징 처리
+                    int pageNumber = 0;
+                    int pageSize = 5;
+                    Pageable pageable = PageRequest.of(pageNumber, pageSize);
+                    Page<Course> courses1 = courseService.courseFindAllPage(pageable);
+                    model.addAttribute("courses",courses1);
+
+                    List<CourseChapterContent> courseChapterContents = courseService.courseChapterContentFindAll();
+                    model.addAttribute("courseChapterContents",courseChapterContents);
+
                     model.addAttribute("loggedInMember", loggedInMember);
-                    List<Course> courses = courseService.CourseFindAll();
-                    model.addAttribute("courses",courses);
                     return "/manager/manager_main";
                 }
                 case "M002":
@@ -92,4 +106,15 @@ public class MemberController {
 
     @GetMapping("/Member_update")
     public String updateForm() { return "lecture/MemberUpdate"; }
+
+    @PostMapping("/loadPage")
+    @ResponseBody
+    public Page<Course> loadPage(@RequestParam("page") int pageNumber, Model model) {
+
+        int pageSize = 5;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<Course> courses = courseService.courseFindAllPage(pageable);
+
+        return courses;
+    }
 }

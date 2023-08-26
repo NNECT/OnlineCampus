@@ -12,6 +12,10 @@ import com.education.onlinecampus.service.common.ImageService;
 import com.education.onlinecampus.service.common.YouTubeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -81,11 +85,14 @@ public class CourseController {
         return response;
     }
     @PostMapping("/Course_find")
-  
     @ResponseBody
-    public List<Course> CourseFind(@RequestParam("searchcoursename") String searchcoursename,
+    public Page<Course> CourseFind(@RequestParam("searchcoursename") String searchcoursename,
                                    @RequestParam("searchcoursename1") String searchcoursename1,
                                    @RequestParam("searchcourseStatus") String searchcourseStatus) {
+        int pageNumber = 0;
+        int pageSize = 5;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
         if (searchcoursename1.equals("")) {
             searchcoursename1 = "#";
         }
@@ -109,9 +116,13 @@ public class CourseController {
                 }
             }
         }
-        return matchingCourses;
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), matchingCourses.size());
+        Page<Course> page = new PageImpl<>(matchingCourses.subList(start, end), pageable, matchingCourses.size());
+
+        return page;
     }
-  
+
     @GetMapping("/CourseChapter_save")
     public String GetCourseChapter_save(Model model){
         List<Course> courses = courseService.CourseFindAll();
@@ -189,13 +200,17 @@ public class CourseController {
     public String CourseChapterContentSave(@ModelAttribute CourseChapterContentDTO courseChapterContentDTO, @RequestParam("viedo") MultipartFile multipartFile,
                                            @RequestParam("thumbnailFile") MultipartFile thumbnailFile) throws IOException {
         if(thumbnailFile.isEmpty() || thumbnailFile.equals(null)){
-
         }else {
             FileDTO fileDTO = imageService.saveContentImage(thumbnailFile);
             FileDTO fileSave = imageService.filesave(fileDTO);
             courseChapterContentDTO.setThumbnailFileDTO(fileSave);
         }
-        youTubeService.uploadVideo(courseChapterContentDTO, multipartFile);
+        if(multipartFile.isEmpty() || multipartFile.equals(null)){
+            courseChapterContentDTO.setVideoId("테스트아이디");
+            courseService.courseChapterContentSave(courseChapterContentDTO);
+        }else {
+            youTubeService.uploadVideo(courseChapterContentDTO, multipartFile);
+        }
         return "redirect:/";
     }
     @GetMapping("/CourseStudent")
@@ -219,6 +234,10 @@ public class CourseController {
     @PostMapping("/CourseChapter_find")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> CourseChapterFind(@RequestParam("courseSeq") Long courseSeq) {
+        int pageNumber = 0;
+        int pageSize = 10;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
         try {
             Map<String, Object> response = new HashMap<>();
 
