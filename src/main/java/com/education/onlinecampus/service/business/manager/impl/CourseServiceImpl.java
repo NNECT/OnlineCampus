@@ -113,7 +113,16 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseChapterContentDTO courseChapterContentSave(CourseChapterContentDTO courseChapterContentDTO) {
+        if (courseChapterContentDTO.getVideoId() != null){
+            String videoId = courseChapterContentDTO.getVideoId();
+            courseChapterContentDTO.setVideoId(videoId+1);
+        }
         return repositoryService.getCourseChapterContentRepository().save(courseChapterContentDTO.toEntity()).toDTO();
+    }
+
+    @Override
+    public void courseChapterContentDelete(CourseChapterContent courseChapterContent) {
+        repositoryService.getCourseChapterContentRepository().delete(courseChapterContent);
     }
 
     @Override
@@ -168,5 +177,10 @@ public class CourseServiceImpl implements CourseService {
         return repositoryService.getCourseChapterStudentProgressRepository()
                 .save(courseChapterStudentProgressDTO.toEntity())
                 .toDTO();
+    }
+
+    @Override
+    public List<CourseChapterContent> courseChapterContentFindAll(){
+        return repositoryService.getCourseChapterContentRepository().findAll();
     }
 }

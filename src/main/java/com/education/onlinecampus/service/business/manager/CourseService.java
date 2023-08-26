@@ -3,6 +3,7 @@ package com.education.onlinecampus.service.business.manager;
 import com.education.onlinecampus.data.dto.*;
 import com.education.onlinecampus.data.entity.Course;
 import com.education.onlinecampus.data.entity.CourseChapter;
+import com.education.onlinecampus.data.entity.CourseChapterContent;
 import com.education.onlinecampus.data.entity.CourseStudent;
 import com.education.onlinecampus.service.common.RepositoryService;
 
@@ -30,6 +31,7 @@ public interface CourseService {
     // CourseChapterContent
     CourseChapterContentDTO courseChapterContentFindByVideoId(String videoId);
     CourseChapterContentDTO courseChapterContentSave(CourseChapterContentDTO courseChapterContentDTO);
+    void courseChapterContentDelete(CourseChapterContent courseChapterContent);
 
     // CourseStudent
     CourseStudentDTO courseStudentFindByCourseAndMember(CourseDTO courseDTO, MemberDTO memberDTO);
@@ -42,4 +44,6 @@ public interface CourseService {
     CourseChapterStudentProgressDTO courseChapterStudentProgressFindByChapterAndStudentOrCreateNewInstance(CourseChapterDTO courseChapterDTO, CourseStudentDTO courseStudentDTO);
     CourseChapterStudentProgressDTO courseChapterStudentProgressFindByChapterAndStudent(CourseChapterDTO courseChapterDTO, CourseStudentDTO courseStudentDTO);
     CourseChapterStudentProgressDTO courseChapterStudentProgressSave(CourseChapterStudentProgressDTO courseChapterStudentProgressDTO);
+
+    List<CourseChapterContent> courseChapterContentFindAll();
 }

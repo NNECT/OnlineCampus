@@ -186,18 +186,70 @@ public class CourseController {
         return "manager/CourseChapterContent";
     }
     @PostMapping("/CourseChapterContent_save")
-    public String CourseChapterContentSave(@ModelAttribute CourseChapterContentDTO courseChapterContentDTO, @RequestParam("viedo") MultipartFile multipartFile,
-                                           @RequestParam("thumbnailFile") MultipartFile thumbnailFile) throws IOException {
-        if(thumbnailFile.isEmpty() || thumbnailFile.equals(null)){
-
-        }else {
-            FileDTO fileDTO = imageService.saveContentImage(thumbnailFile);
-            FileDTO fileSave = imageService.filesave(fileDTO);
-            courseChapterContentDTO.setThumbnailFileDTO(fileSave);
+    @ResponseBody
+    public ResponseEntity<CourseChapterContentDTO> CourseSave(@ModelAttribute CourseChapterContentDTO courseChapterContentDTO, @RequestParam("viedo") MultipartFile multipartFile,
+                                             @RequestParam("thumbnailFile") MultipartFile thumbnailFile) throws IOException {
+        try {
+            if(thumbnailFile.isEmpty() || thumbnailFile.equals(null)){
+            }else {
+                FileDTO fileDTO = imageService.saveContentImage(thumbnailFile);
+                FileDTO fileSave = imageService.filesave(fileDTO);
+                courseChapterContentDTO.setThumbnailFileDTO(fileSave);
+            }
+            if(multipartFile.isEmpty() || multipartFile.equals(null)){
+                courseChapterContentDTO.setVideoId("테스트아이디");
+                CourseChapterContentDTO courseChapterContentDTO1 = courseService.courseChapterContentSave(courseChapterContentDTO);
+                return ResponseEntity.ok(courseChapterContentDTO1);
+            }else {
+                CourseChapterContentDTO courseChapterContentDTO1 = youTubeService.uploadVideo(courseChapterContentDTO, multipartFile);
+                return ResponseEntity.ok(courseChapterContentDTO1);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        youTubeService.uploadVideo(courseChapterContentDTO, multipartFile);
-        return "redirect:/";
     }
+
+    @PostMapping("CourseChapterContent_detail")
+    @ResponseBody
+    public ResponseEntity<CourseChapterContentDTO> courseChapterContentDetail(@RequestParam("videoId") String videoId){
+        try {
+            CourseChapterContentDTO courseChapterContentDTO = courseService.courseChapterContentFindByVideoId(videoId);
+            return ResponseEntity.ok(courseChapterContentDTO);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @PostMapping("/CourseContent_delete")
+    @ResponseBody
+    public Map<String, Object> deleteSelectedCourseContent(@RequestBody Map<String, List<String>> map) {
+        Map<String, Object> response = new HashMap<>();
+        List<String> selectedCourseSeqs = map.get("courseSeqs");
+        try {
+            boolean allEmpty = true;
+            for (String s : selectedCourseSeqs) {
+                List<CourseChapter> courseChapter = courseService.findCourseChapter(Long.valueOf(s));
+                if (!courseChapter.isEmpty()) {
+                    allEmpty = false;
+                    break; // 하나라도 비어있지 않은 경우 루프를 종료
+                }
+            }
+            if (allEmpty) {
+                // 모든 강의에 대해 courseChapter가 비어있는 경우
+                for (String s : selectedCourseSeqs) {
+                    courseService.CourseDelete(courseService.CourseFind(Long.valueOf(s)).toEntity());
+                }
+                response.put("success", true);
+            } else {
+                response.put("success", false);
+            }
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "An error occurred during deletion.");
+        }
+        return response;
+    }
+
     @GetMapping("/CourseStudent")
     public String CourseStudent(){
         return "manager/CourseStudent";
@@ -241,6 +293,7 @@ public class CourseController {
             System.out.println(chapterOrder);
             System.out.println(courseSeq);
             CourseChapter byCourseCourseSeqAndChapterOrder = courseService.findByCourseAndChapterOrder(courseSeq, chapterOrder);
+
             return ResponseEntity.ok(byCourseCourseSeqAndChapterOrder);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);

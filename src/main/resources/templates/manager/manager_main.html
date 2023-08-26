@@ -418,7 +418,7 @@
 
     <!-- 강의 컨탠트 관리 -->
     <div id="content-management" style="display: none; height: 900px;">
-        <button href="/Course_delete" class="new-course-link" style="margin-left: 10px">삭제</button>
+        <button class="new-course-link" style="margin-left: 10px" onclick="deleteSelectedContent()">삭제</button>
         <button href="/CourseChapterContent_save" class="new-course-link" style="margin-left: 10px">수정</button>
         <button type="button" class="new-course-link" style="margin-left: 10px" id="newContentButton">신규</button>
         <form action="/" method="post" id="contentSearchForm">
@@ -441,7 +441,7 @@
                     <table id="contentTable">
                         <thead>
                         <tr>
-                            <th><input type="checkbox" id="cboxAll4" name="cboxAll4"  onclick="checkAll4()"></th>
+                            <th><input type="checkbox" id="cboxAll4" name="cboxAll4" onclick="checkAll4()"></th>
                             <th>콘텐츠명</th>
                             <th>Youtube연동번호</th>
                             <th>교과목</th>
@@ -449,11 +449,11 @@
                         </tr>
                         </thead>
                         <tbody id="contentTableBody">
-                        <tr class="clickable-row1" th:each="courseChapterContentList : ${courseChapterContentList}">
+                        <tr class="clickable-row3" th:each="courseChapterContentList : ${courseChapterContentList}">
                             <td><input type="checkbox" name="cbox4"></td>
                             <td th:text="${courseChapterContentList.contentName}"></td>
-                            <td th:text="${courseChapterContentList.videoId}"></td>
-                            <td th:text="${courseChapterContentList.videoId}"></td>
+                            <td class="contentVideoId" th:id="${courseChapterContentList.videoId}" th:text="${courseChapterContentList.videoId}"></td>
+                            <td></td>
                             <td th:text="${courseChapterContentList.runningTime}"></td>
                         </tr>
                         </tbody>
@@ -470,26 +470,10 @@
                         <tbody>
                         <tr>
                             <td>
-                                <label for="contentNum">콘텐츠관리번호</label>
-                            </td>
-                            <td>
-                                <input type="text" id="contentNum" disabled style="width: 90%">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="preContentNum">선행콘텐츠관리번호</label>
-                            </td>
-                            <td>
-                                <input type="text" id="preContentNum" style="width: 90%">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
                                 <label for="contentName">콘텐츠명</label>
                             </td>
                             <td>
-                                <input type="text" id="contentName" style="width: 90%">
+                                <input type="text" id="contentName" name="contentName" style="width: 90%">
                             </td>
                         </tr>
                         <tr>
@@ -497,15 +481,15 @@
                                 <label for="contentDescription">콘텐츠설명</label>
                             </td>
                             <td>
-                                <textarea id="contentDescription" rows="2" style="width: 90%; resize: none; padding:5px; border: 1px solid lightgray; border-radius: 5px;"></textarea>
+                                <textarea id="contentDescription" name="contentBrief" rows="2" style="width: 90%; resize: none; padding:5px; border: 1px solid lightgray; border-radius: 5px;"></textarea>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <label for="youtubeNum">Youtube연동번호</label>
+                                <label for="videoId">Youtube연동번호</label>
                             </td>
                             <td>
-                                <input type="text" id="youtubeNum" disabled style="width: 70%; float: left;">
+                                <input type="text" name="videoId" id="videoId" disabled style="width: 70%; float: left;">
                                 <button type="button" style="margin-top: 7px;">연동확인</button>
                             </td>
                         </tr>
@@ -521,11 +505,19 @@
                         </tr>
                         <tr>
                             <td>
-                                <label for="contentNum">차시학습시간[초]</label>
+                                <label for="runningTime">차시학습시간[초]</label>
                             </td>
                             <td>
-                                <input type="text" id="contentNum9" disabled style="width: 75%; float: left;">
+                                <input type="text" id="runningTime" name="runningTime" disabled style="width: 75%; float: left;">
                                 <button type="button" style="margin-top: 7px;">갱신</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="thumbnailFile">썸네일 파일</label>
+                            </td>
+                            <td>
+                                <input type="file" name="thumbnailFile" id="thumbnailFile" disabled style="width: 90%">
                             </td>
                         </tr>
                         </tbody>
@@ -571,144 +563,21 @@
         <div id="newContentModal" style="width: 100%; background: lightgray; display: none;" class="modal-overlay">
             <div class="modal-content" style="width: 40%;">
                 <span class="close-button1" id="closeNewContentModal">&times;</span>
-                <br><br>
-                <h2>강의컨탠트등록</h2><br>
-                <form action="/CourseChapterContent_save" method="post" enctype="multipart/form-data">
+                <h2>강의컨탠트등록</h2>
+                <form action="" method="post" enctype="multipart/form-data" id="contentInsert">
                     컨탠트 이름: <input name="contentName"><br>
-                    컨탠트 설명: <input name="contentBrief"><br>
-                    썬네일 파일: <input name="thumbnailFile"><br><br>
+                    컨탠트 설명: <input name="contentBrief"><br><br>
+                    썸네일 파일: <input type="file" accept="image/*" name="thumbnailFile" id="logo-upload"
+                                   onchange='previewPicture(event)'/><br><br>
+                    <div id="logo-preview">
+                    </div>
                     컨탠드 비디오: <input type="file" accept="video/*" name="viedo"><br><br>
                     <input type="submit" value="등록">
                 </form>
             </div>
         </div>
-
     </div>
-
-    <script>
-        //전체 체크
-        $(document).ready(function (){
-            function checkAll4() {
-                if ($("#cboxAll4").is(':checked')) {
-                    $("input[name=cbox4]").prop("checked", true);
-                } else {
-                    $("input[name=cbox4]").prop("checked", false);
-                }
-            }
-        })
-
-/*        //그리드
-        $("#contentTable").Grid({
-            //search: true,
-            pagination: {
-                enabled: false,
-                limit : 7
-            },
-            multiselect : true,
-            multiboxonly : false,
-            language: {
-                'search' : {
-                    placeholder : '검색',
-                    //noResults: '검색결과가 없습니다.'
-                },
-                'pagination' : {
-                    'previous': '이전',
-                    'next': '다음'
-                }
-            }
-        });*/
-
-        document.addEventListener("DOMContentLoaded", function() {
-            $(".clickable-row1").click(function () {
-                // 클릭한 행에서 'active' 클래스 추가하고 다른 행에서 제거
-                $(this).addClass("active");
-                $(".clickable-row1").not(this).removeClass("active");
-
-                // 클릭한 체크박스의 이벤트 버블링 중단
-                $(this).find("input[type='checkbox']").click(function (e) {
-                    e.stopPropagation();
-                });
-            });
-
-            //교과목명 찾기 모달창
-            const findContentNameModal = document.getElementById("findContentNameModal");
-            const courseNameModal = document.getElementById("courseNameModal");
-            const closeContentModal = document.getElementById("closeContentModal");
-
-            courseNameModal.addEventListener("click", function() {
-                if (findContentNameModal) {
-                    findContentNameModal.style.display = "block";
-                }
-            });
-
-            closeContentModal.addEventListener("click", function() {
-                if (findContentNameModal) {
-                    findContentNameModal.style.display = "none";
-                }
-            });
-
-            //신규등록 모달창
-            const newContentButton = document.getElementById("newContentButton");
-            const newContentModal = document.getElementById("newContentModal");
-            const closeNewContentModal = document.getElementById("closeNewContentModal");
-
-            newContentButton.addEventListener("click",function (){
-                if (newContentModal){
-                    newContentModal.style.display = "block";
-                }
-            });
-
-            closeNewContentModal.addEventListener("click",function (){
-               if (newContentModal){
-                   newContentModal.style.display = "none";
-               }
-            });
-
-        });
-
-    </script>
-
-    <!-- 선택한 컨텐츠 정보를 보여주는 스크립트-->
-    <script>
-        $(document).ready(function () {
-            // 메뉴 항목을 클릭할 때
-            $(".menu-link").click(function (e) {
-                e.preventDefault();
-
-                var target = $(this).data("target");
-
-                $.ajax({
-                    url: "/CourseChapterContent_save",
-                    type: "GET",
-                    dataType: "json",
-                    success: function (data) {
-                        updateContentTable(data);
-                    },
-                    error: function () {
-                        alert("콘텐츠 목록을 불러오는 중 오류가 발생했습니다.");
-                    }
-                });
-            });
-
-            function updateContentTable(data) {
-                var contentTableBody = $("#contentTableBody");
-                contentTableBody.empty();
-
-                $.each(data.courseChapterContentList, function (index, item) {
-                    var row = $("<tr></tr>").addClass("clickable-row1");
-                    row.append("<td><input type='checkbox' name='cbox4'></td>");
-                    row.append("<td>" + item.contentName + "</td>");
-                    row.append("<td>" + item.videoId + "</td>");
-                    row.append("<td>" + item.videoId + "</td>");
-                    row.append("<td>" + item.runningTime + "</td>");
-                    contentTableBody.append(row);
-                });
-            }
-        });
-
-
-    </script>
-
+</div>
 
 
 
@@ -720,6 +589,7 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!-- 온라인강의 스크립트 ------------------------------------------------------------------------------------------------------------ -->
 <!-- 네이베게이션 스크립트 -->
 <script>
     const menuLinks = document.querySelectorAll(".menu-link");
@@ -1125,6 +995,7 @@
         const selectedCourseSeqs = [];
         $("input[name=cbox1]:checked").each(function () {
             const chapterOrder = $(this).closest("tr").find("[data-chapter-order]").data("chapter-order");
+
             console.log(chapterOrder);
             selectedChapters.push(chapterOrder);
 
@@ -1498,6 +1369,215 @@
         });
     });
 </script>
+<!-- ------------------------------------------------------------------------------------------------------------ -->
+
+<!-- 콘텐츠 스크립트 ------------------------------------------------------------------------------------------------------------ -->
+<script>
+    function previewPicture(event) {
+        const pictureInput = event.target;
+        const picturePreview = document.getElementById('logo-preview');
+
+        if (pictureInput.files && pictureInput.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const imgElement = document.createElement('img');
+                imgElement.src = e.target.result;
+                imgElement.style.maxWidth = '100%';
+                imgElement.style.height = "auto";
+                picturePreview.innerHTML = '';
+                picturePreview.appendChild(imgElement);
+            };
+
+            reader.readAsDataURL(pictureInput.files[0]);
+        }
+    }
+</script>
+<!-- 콘텐츠 전체선택 -->
+<script>
+    function checkAll4() {
+        if ($("#cboxAll4").is(':checked')) {
+            $("input[name=cbox4]").prop("checked", true);
+        } else {
+            $("input[name=cbox4]").prop("checked", false);
+        }
+    }
+</script>
+<!-- 그리드 적용 (*보류*) -->
+<script>
+    /*        //그리드
+            $("#contentTable").Grid({
+                //search: true,
+                pagination: {
+                    enabled: false,
+                    limit : 7
+                },
+                multiselect : true,
+                multiboxonly : false,
+                language: {
+                    'search' : {
+                        placeholder : '검색',
+                        //noResults: '검색결과가 없습니다.'
+                    },
+                    'pagination' : {
+                        'previous': '이전',
+                        'next': '다음'
+                    }
+                }
+            });*/
+</script>
+<!-- 콘텐츠 신규등록 스크립트 -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const form = document.querySelector("#contentInsert");
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault(); // 폼 제출 기본 동작 중지
+            console.log("1");
+            const formData = new FormData(form);
+            const response = await fetch("/CourseChapterContent_save", {
+                method: "POST",
+                body: formData,
+            });
+            if (response.ok) {
+                console.log("2");
+                newContentModal.style.display = "none"; // 모달 닫기
+                const responseData = await response.json(); // JSON을 변수에 저장
+                console.log(responseData);
+
+                const newRow = document.createElement("tr");
+                newRow.classList.add("clickable-row3");
+                newRow.innerHTML = `
+                    <td><input type="checkbox" name="cbox4"></td>
+                    <td>${responseData.contentName}</td>
+                    <td class="contentVideoId" id="${responseData.videoId}">${responseData.videoId}</td>
+                    <td></td>
+                    <td>${responseData.runningTime}</td>
+                `;
+                const tableBody = document.querySelector("#contentTableBody");
+                tableBody.appendChild(newRow);
+            } else {
+                // 에러 처리
+            }
+        });
+
+        // 모달을 위한 JavaScript
+        const newContentButton = document.getElementById("newContentButton");
+        const newContentModal = document.getElementById("newContentModal");
+        const closeNewContentModal = document.getElementById("closeNewContentModal");
+
+        //모달이 열릴때
+        newContentButton.addEventListener("click", () => {
+            newContentModal.style.display = "block";
+            form.reset();
+        });
+
+        //모달이 닫힐때
+        closeNewContentModal.addEventListener("click", () => {
+            newContentModal.style.display = "none";
+            form.reset();
+        });
+
+        // 모달 콘텐츠 바깥을 클릭하면 모달 닫기
+        window.addEventListener("click", (event) => {
+            if (event.target === newContentModal) {
+                newContentModal.style.display = "none";
+                form.reset();
+            }
+        });
+    });
+</script>
+<!-- 선택한 콘텐츠 정보 보여주는 스크립트 -->
+<script>
+        $(document).ready(function() {
+            $(document).on("click", ".clickable-row3", function(e) {
+                const videoId = $(this).find(".contentVideoId").attr("id");
+                $.ajax({
+                    type: "POST",
+                    url: "/CourseChapterContent_detail",
+                    data: {
+                        videoId: videoId
+                    },
+                    success: function(data) {
+                        $("#contentName").val(data.contentName);
+                        $("#contentBrief").val(data.contentBrief);
+                        $("#videoId").val(data.videoId);
+                        //$("#courseName2").val(data.courseName);
+                        $("#runningTime").val(data.runningTime);
+                        $("#thumbnailFile").val(data.thumbnailFile);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error:", error);
+                    }
+                });
+            });
+        })
+</script>
+<!-- 콘텐츠 목록 클릭 활성화 스크립트-->
+<script>
+    $(document).on("click", ".clickable-row3", function () {
+        $(this).addClass("active");
+        $(".clickable-row3").not(this).removeClass("active");
+
+        $(this).find("input[type='checkbox']").click(function (e) {
+            e.stopPropagation();
+        });
+    });
+</script>
+<!-- 콘텐츠 삭제 스크립트-->
+<script>
+    function deleteSelectedContent() {
+        const selectedCourseContentVideoIds = [];
+        $("input[name=cbox]:checked").each(function () {
+            const videoId = $(this).find(".contentVideoId").data("content-videoId");
+            selectedCourseContentVideoIds.push(videoId);
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "/CourseContent_delete", // 실제 컨트롤러 URL로 변경
+            data: JSON.stringify({contentVideoIds: selectedCourseContentVideoIds}),
+            contentType: "application/json",
+            success: function (data) {
+                if (data.success) {
+                    removeDeletedChapters(selectedCourseContentVideoIds);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    }
+
+    function removeDeletedChapters(deletedCourseContentVideoIds) {
+        // 삭제한 행을 찾아서 삭제
+        for (const courseSeq of deletedCourseContentVideoIds) {
+            $(`[data-course-seq="${courseSeq}"]`).closest("tr").remove();
+        }
+    }
+</script>
+<!-- 교과목명 찾기 모달창 스크립트 -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const findContentNameModal = document.getElementById("findContentNameModal");
+        const courseNameModal = document.getElementById("courseNameModal");
+        const closeContentModal = document.getElementById("closeContentModal");
+
+        courseNameModal.addEventListener("click", function() {
+            if (findContentNameModal) {
+                findContentNameModal.style.display = "block";
+            }
+        });
+
+        closeContentModal.addEventListener("click", function() {
+            if (findContentNameModal) {
+                findContentNameModal.style.display = "none";
+            }
+        });
+    });
+</script>
+
+
+
 <!-- 모달 스크립트 -->
 <script>
     const courseSessionsSection = document.getElementById("courseSessionsSection");
