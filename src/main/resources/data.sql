@@ -65,3 +65,17 @@ values (
         now(),
         now()
        );
+
+insert ignore into member (member_division_code, name_kor, email, username, password, password_change_date, password_change_required, password_error_count, last_login_date, register_date)
+values (
+           'M001',
+           '관리자',
+           'admin@email.com',
+           'admin',
+           '$2a$10$9rkBzIxbQHWziANogd9Q..h5Oayqcf/aYM4qQrJ8gEJm5v/.5TUdS',
+           now(),
+           0,
+           0,
+           now(),
+           now()
+       );
