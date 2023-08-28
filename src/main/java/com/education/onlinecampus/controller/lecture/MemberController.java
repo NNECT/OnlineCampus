@@ -6,6 +6,7 @@ import com.education.onlinecampus.data.entity.Course;
 import com.education.onlinecampus.data.entity.Member;
 import com.education.onlinecampus.service.business.lecture.MemberService;
 import com.education.onlinecampus.service.business.manager.CourseService;
+import com.education.onlinecampus.service.common.CommonCodeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -27,6 +28,7 @@ public class MemberController {
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
     private final CourseService courseService;
+    private final CommonCodeService commonCodeService;
 
     @Autowired
     @Lazy
@@ -48,6 +50,7 @@ public class MemberController {
     }
     @PostMapping("/Member_signup")
     public String PostMemberSignup(@ModelAttribute MemberDTO member, @RequestParam("profileImage") MultipartFile profileImage){
+        member.setMemberDivisionDTO(commonCodeService.findByDivisionAndCode('M', 3));
         member.setPassword(passwordEncoder.encode(member.getPassword()));
         memberService.MemberSave(member);
         return "lecture/MemberLogin";
@@ -79,5 +82,14 @@ public class MemberController {
     }
 
     @GetMapping("/Member_update")
-    public String updateForm() { return "lecture/MemberUpdate"; }
+    public String updateForm(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            String username = authentication.getName();
+            MemberDTO loggedInMember = memberService.findByUserName(username);
+            model.addAttribute("loggedInMember", loggedInMember);
+            return "lecture/MemberUpdate";
+        }
+        return "redirect:Member_logout";
+    }
 }
