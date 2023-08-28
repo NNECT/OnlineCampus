@@ -237,6 +237,10 @@ public class CourseController {
     @PostMapping("/CourseChapter_find")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> CourseChapterFind(@RequestParam("courseSeq") Long courseSeq) {
+        int pageNumber = 0;
+        int pageSize = 10;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
         try {
             Pageable pageable = PageRequest.of(0, 10);
 
