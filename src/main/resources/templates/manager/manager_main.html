@@ -120,7 +120,7 @@
 
         <!-- 온라인 강의 div -->
         <div class="course-list">
-            <h4>온라인강좌 <small id="searchResult" th:text="'검색결과: ' +${courses.totalElements} + '건'">검색결과: ??건</small>
+            <h4>온라인강좌 <small id="searchResult" th:text="'검색결과: ' + ${courses.totalElements} + '건'">검색결과: ??건</small></h4>
             </h4>
             <div class="table-container">
                 <!-- 강의 목록 테이블 -->
@@ -408,11 +408,11 @@
                         </tr>
                         <tr>
                             <td>진도율</td>
-                            <td colspan="3" id=""></td>
+                            <td colspan="3"></td>
                         </tr>
                         <tr>
                             <td>특이사항</td>
-                            <td colspan="3" style="height: 100px;" id=""></td>
+                            <td colspan="3" style="height: 100px;"></td>
                         </tr>
                     </table>
                 </div>
@@ -875,12 +875,13 @@
 </script>
 <!-- 강의 차시 목록 테이블 페이지네이션 스크립트-->
 <script>
-    function loadPage1(pageNumber) {
+    function loadPage1(pageNumber,selectedValue) {
         $.ajax({
             url: '/loadPage1',
             type: 'POST',
             data: {
-                page: pageNumber
+                page: pageNumber,
+                selectedValue: selectedValue
             },
             dataType: 'json',
             success: function (response) {
@@ -1042,6 +1043,7 @@
         const form = document.querySelector("#saveform");
         form.addEventListener("submit", async (event) => {
             event.preventDefault(); // 폼 제출 기본 동작 중지
+            var selectedValue = $("select[name='courseDTO.courseSeq']").val();;
 
             const formData = new FormData(form);
             const response = await fetch("/CourseChapter_save", {
@@ -1065,15 +1067,18 @@
                 chapterOrderInput.value = chapterOrderValue;
                 const tableBody = document.querySelector("#courseChaptersTableBody");
                 tableBody.appendChild(newRow);
-                scrollToLastPage1();
+                scrollToLastPage1(selectedValue);
             } else {
             }
         });
-        function scrollToLastPage1() {
+        function scrollToLastPage1(selectedValue) {
             $.ajax({
                 url: '/chapterLastPage',
                 type: 'POST',
                 dataType: 'json',
+                data:{
+                    selectedValue: selectedValue
+                },
                 success: function (response) {
                     var totalPages = response.totalPages;
                     var chaptersTotal = response.totalElements;
@@ -1081,7 +1086,7 @@
                     if (lastPageButton) {
                         lastPageButton.click(); // 마지막 페이지로 이동하는 버튼 클릭
                     }
-                    loadPage1(totalPages - 1);
+                    loadPage1(totalPages - 1,selectedValue);
                     $("#searchResult1").text("검색결과: " + chaptersTotal + "건");
                 },
                 error: function (xhr, status, errorThrown) {
@@ -1283,12 +1288,13 @@
 </script>
 <!-- 수강대상자 목록 테이블 페이지네이션 스크립트-->
 <script>
-    function loadPage2(pageNumber) {
+    function loadPage2(pageNumber,selectedValue) {
         $.ajax({
             url: '/loadPage2',
             type: 'POST',
             data: {
-                page: pageNumber
+                page: pageNumber,
+                selectedValue: selectedValue
             },
             dataType: 'json',
             success: function (response) {
@@ -1402,6 +1408,7 @@
 
     function fetchAndShowStudentData() {
         const tableBody = document.querySelector("#studentTableBody");
+        var selectedValue1 = $("select[name='courseDTO.courseSeq']").val();;
         // 이전 데이터 삭제
         while (tableBody.firstChild) {
             tableBody.removeChild(tableBody.firstChild);
@@ -1423,17 +1430,20 @@
                         <td>3</td>
                     `;
                     tableBody.appendChild(newRow);
-                    scrollToLastPage2()
+                    scrollToLastPage2(selectedValue1);
                 });
             })
             .catch(error => console.error("An error occurred:", error));
     }
 
-    function scrollToLastPage2() {
+    function scrollToLastPage2(selectedValue1) {
         $.ajax({
             url: '/studentLastPage',
             type: 'POST',
             dataType: 'json',
+            data:{
+                selectedValue: selectedValue1
+            },
             success: function (response) {
                 var totalPages = response.totalPages;
                 var studentToTal = response.totalElements;
@@ -1441,7 +1451,7 @@
                 if (lastPageButton) {
                     lastPageButton.click(); // 마지막 페이지로 이동하는 버튼 클릭
                 }
-                loadPage2(totalPages - 1);
+                loadPage2(totalPages - 1,selectedValue1);
                 $("#searchResult2").text("검색결과: " + studentToTal + "건");
             },
             error: function (xhr, status, errorThrown) {
@@ -1486,7 +1496,6 @@
             .then(data => {
                 if (data) {
                     closeStudentRegistrationModal.click();
-                    console.log(data);
                     updatePageData(data);
                 } else {
                     console.error("An error occurred during data processing.");
@@ -1496,7 +1505,9 @@
     }
 
     function updatePageData(data) {
-        var tableBody = document.getElementById("courseStudentTableBody");
+        var tableBody = document.getElementById("courseStudentTableBody")
+
+        console.log("모냐고"+data.length);
 
         for (const newStudent of data) {
             var newRow = document.createElement("tr");

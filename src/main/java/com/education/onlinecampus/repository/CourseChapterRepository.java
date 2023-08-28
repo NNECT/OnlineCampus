@@ -13,6 +13,7 @@ import java.util.List;
 
 public interface CourseChapterRepository extends JpaRepository<CourseChapter, CourseChapter.CourseChapterCompositeKey> {
     List<CourseChapter> findByCourse(Course course);
+    Page<CourseChapter> findByCourse(Course course,Pageable pageable);
     CourseChapter findByContent(CourseChapterContent content);
     List<CourseChapter> findBySupplementaryFile(File supplementaryFile);
     Page<CourseChapter> findByCourseChapterCompositeKey_CourseSeq(Long courseSeq, Pageable pageable);

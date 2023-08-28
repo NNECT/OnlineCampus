@@ -133,8 +133,9 @@ public class CourseController {
     @ResponseBody
     public ResponseEntity<String> courseChapterSave(@ModelAttribute CourseChapterDTO courseChapter,Model model) {
         CourseChapter courseChapter1 = courseService.CourseChapterSave(courseChapter).toEntity();
+        List<CourseChapter> courseChapter2 = courseService.findCourseChapter(courseChapter1.getCourse().getCourseSeq());
         try {
-            String jsonResponse = objectMapper.writeValueAsString(courseChapter1);
+            String jsonResponse = objectMapper.writeValueAsString(courseChapter2.get(courseChapter2.size()-1));
             return ResponseEntity.ok(jsonResponse);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -147,7 +148,6 @@ public class CourseController {
         Map<String, Object> response = new HashMap<>();
         List<String> selectedChapters = requestData.get("chapters");
         List<String> selectedCourseSeqs = requestData.get("courseSeqs");
-
         try {
             for (int i=0;i<selectedChapters.size();i++) {
                 CourseChapter byCourseAndChapterOrder = courseService.findByCourseAndChapterOrder(Long.valueOf(selectedCourseSeqs.get(i)), Long.valueOf(selectedChapters.get(i)));
@@ -173,9 +173,7 @@ public class CourseController {
 
         try {
             for (int i = 0; i < selectedstudents.size(); i++) {
-                Long courseSeq = Long.valueOf(selectedCourseSeqs1.get(i));
-                Long studentSeq = Long.valueOf(selectedstudents.get(i));
-
+                courseService.deleteByCourse_courseSeqAndStudent_memberSeq(Long.valueOf(selectedCourseSeqs1.get(i)),Long.valueOf(selectedstudents.get(i)));
             }
             response.put("success", true);
         } catch (Exception e) {
@@ -224,7 +222,12 @@ public class CourseController {
                                                                  @RequestParam("cbox3") Long[] selectedMemberSeqs,
                                                                  CourseStudentDTO courseStudentDTO) {
         try {
+            System.out.println("이거머냐"+courseSeq);
             List<CourseStudent> courseStudents = courseService.CourseStudentAllSave(selectedMemberSeqs, courseSeq, courseStudentDTO);
+            for(CourseStudent courseStudent : courseStudents){
+                System.out.println(courseStudent.getStudent().getMemberSeq());
+            }
+            System.out.println("몇개냐"+courseStudents.size());
             return ResponseEntity.ok(courseStudents);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
