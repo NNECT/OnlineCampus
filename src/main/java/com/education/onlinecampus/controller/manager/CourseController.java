@@ -234,18 +234,29 @@ public class CourseController {
     @PostMapping("/CourseChapter_find")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> CourseChapterFind(@RequestParam("courseSeq") Long courseSeq) {
-        int pageNumber = 0;
-        int pageSize = 10;
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-
         try {
+            Pageable pageable = PageRequest.of(0, 10);
+
+            Page<CourseChapter> byCourseChapterCompositeKeyCourseSeqPage = courseService.findByCourseChapterCompositeKeyCourseSeq(courseSeq, pageable);
+            Page<CourseStudent> byCourseStudentCompositeKeyCourseSeq = courseService.courseStudentFindByCourseSeq(courseSeq, pageable);
+
             Map<String, Object> response = new HashMap<>();
 
-            List<CourseChapter> byCourseChapterCompositeKeyCourseSeq = courseService.findByCourseChapterCompositeKeyCourseSeq(courseSeq);
-            List<CourseStudent> byCourseStudentCompositeKeyCourseSeq = courseService.courseStudentFindByCourseSeq(courseSeq);
+            // 강의 데이터와 페이지 정보를 따로 담아서 전달
+            Map<String, Object> chapterResponse = new HashMap<>();
+            chapterResponse.put("content", byCourseChapterCompositeKeyCourseSeqPage.getContent());
+            chapterResponse.put("totalPages", byCourseChapterCompositeKeyCourseSeqPage.getTotalPages());
+            chapterResponse.put("number", byCourseChapterCompositeKeyCourseSeqPage.getNumber());
+            chapterResponse.put("totalElements", byCourseChapterCompositeKeyCourseSeqPage.getTotalElements());
+            response.put("chapters", chapterResponse);
 
-            response.put("chapters", byCourseChapterCompositeKeyCourseSeq);
-            response.put("students", byCourseStudentCompositeKeyCourseSeq);
+            // 학생 데이터와 페이지 정보를 따로 담아서 전달
+            Map<String, Object> studentResponse = new HashMap<>();
+            studentResponse.put("content", byCourseStudentCompositeKeyCourseSeq.getContent());
+            studentResponse.put("totalPages", byCourseStudentCompositeKeyCourseSeq.getTotalPages());
+            studentResponse.put("number", byCourseStudentCompositeKeyCourseSeq.getNumber());
+            studentResponse.put("totalElements",byCourseStudentCompositeKeyCourseSeq.getTotalElements());
+            response.put("students", studentResponse);
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -257,8 +268,6 @@ public class CourseController {
     @ResponseBody
     public ResponseEntity<CourseChapter> CourseChapterDetail(@RequestParam("chapterOrder") Long chapterOrder, @RequestParam("courseSeq") Long courseSeq) {
         try {
-            System.out.println(chapterOrder);
-            System.out.println(courseSeq);
             CourseChapter byCourseCourseSeqAndChapterOrder = courseService.findByCourseAndChapterOrder(courseSeq, chapterOrder);
             return ResponseEntity.ok(byCourseCourseSeqAndChapterOrder);
         } catch (Exception e) {
@@ -270,8 +279,6 @@ public class CourseController {
     @ResponseBody
     public ResponseEntity<CourseStudent> CourseStudentDetail(@RequestParam("studentSeq") Long studentSeq, @RequestParam("courseSeq") Long courseSeq) {
         try {
-            System.out.println(studentSeq);
-            System.out.println(courseSeq);
             CourseStudentDTO byCourseStudentCompositeKeyCourseSeqAndCourseStudentCompositeKeyStudentSeq =
                     courseService.courseStudentFindByCourseAndStudent(courseService.CourseFind(courseSeq), memberService.findBySeq(studentSeq));
             return ResponseEntity.ok(byCourseStudentCompositeKeyCourseSeqAndCourseStudentCompositeKeyStudentSeq.toEntity());

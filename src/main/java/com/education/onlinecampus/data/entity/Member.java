@@ -89,6 +89,9 @@ public class Member implements EntityMarker<MemberDTO> {
     )
     private File pictureFile;
 
+    @Column
+    private String description;
+
     /**
      * 새 데이터 저장 전 디폴트값 설정
      */

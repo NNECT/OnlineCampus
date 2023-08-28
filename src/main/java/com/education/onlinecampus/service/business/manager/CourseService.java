@@ -23,7 +23,7 @@ public interface CourseService {
     // CourseChapter
     CourseChapter findByCourseAndChapterOrder(Long courseSeq, Long chapterorder);
     List<CourseChapter> CourseChapterFindAll();
-    List<CourseChapter> findByCourseChapterCompositeKeyCourseSeq(Long courseSeq);
+    Page<CourseChapter> findByCourseChapterCompositeKeyCourseSeq(Long courseSeq,Pageable pageable);
     CourseChapterDTO courseChapterFindByCourseAndSeq(CourseDTO courseDTO, Long courseChapterSeq);
     List<CourseChapter> findCourseChapter(Long CourseSeq);
     List<CourseChapterDTO> courseChapterFindByCourse(CourseDTO courseDTO);
@@ -33,6 +33,9 @@ public interface CourseService {
 
     // CourseChapterContent
     CourseChapterContentDTO courseChapterContentFindByVideoId(String videoId);
+
+    List<CourseChapter> findByCourseChapterCompositeKeyCourseSeq(Long courseSeq);
+
     CourseChapterContentDTO courseChapterContentSave(CourseChapterContentDTO courseChapterContentDTO);
 
     // CourseStudent
@@ -40,6 +43,8 @@ public interface CourseService {
     CourseStudentDTO courseStudentSave(CourseStudentDTO courseStudentDTO);
     CourseStudentDTO courseStudentFindByCourseAndStudent(CourseDTO courseDTO, MemberDTO memberDTO);
     List<CourseStudent> courseStudentFindByCourseSeq(Long courseSeq);
+
+    Page<CourseStudent> courseStudentFindByCourseSeq(Long courseSeq,Pageable pageable);
     List<CourseStudent> CourseStudentAllSave(Long[] memberseqs, Long courseSeq, CourseStudentDTO courseStudentDTO);
 
     // CourseChapterStudentProgress
@@ -58,4 +63,7 @@ public interface CourseService {
     List<CourseChapterContent> courseChapterContentFindAll();
 
     Page<Course> courseFindAllPage(Pageable pageable);
+
+    Page<CourseChapter> courseChapterFindAllpage(Pageable pageable);
+    Page<CourseStudent> courseStudentFindAllpage(Pageable pageable);
 }

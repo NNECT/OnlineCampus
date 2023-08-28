@@ -3,9 +3,7 @@ package com.education.onlinecampus.controller.lecture;
 import com.education.onlinecampus.config.SecurityConfig;
 import com.education.onlinecampus.data.dto.FileDTO;
 import com.education.onlinecampus.data.dto.MemberDTO;
-import com.education.onlinecampus.data.entity.Course;
-import com.education.onlinecampus.data.entity.CourseChapterContent;
-import com.education.onlinecampus.data.entity.Member;
+import com.education.onlinecampus.data.entity.*;
 import com.education.onlinecampus.service.business.lecture.MemberService;
 import com.education.onlinecampus.service.business.manager.CourseService;
 import com.education.onlinecampus.service.common.ImageService;
@@ -29,7 +27,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -132,5 +132,72 @@ public class MemberController {
         Page<Course> courses = courseService.courseFindAllPage(pageable);
 
         return courses;
+    }
+
+    @PostMapping("/loadPage1")
+    @ResponseBody
+    public Page<CourseChapter> loadPage1(@RequestParam("page") int pageNumber, Model model) {
+
+        int pageSize = 10;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<CourseChapter> courseChapters = courseService.courseChapterFindAllpage(pageable);
+
+        return courseChapters;
+    }
+
+    @PostMapping("/loadPage2")
+    @ResponseBody
+    public Page<CourseStudent> loadPage2(@RequestParam("page") int pageNumber, Model model) {
+
+        int pageSize = 10;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<CourseStudent> courseStudents = courseService.courseStudentFindAllpage(pageable);
+
+        return courseStudents;
+    }
+
+    @PostMapping("/courseLastPage")
+    @ResponseBody
+    public Map<String, Object> courseLastPage() {
+        int pageNumber = 0;
+        int pageSize = 5;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<Course> courses = courseService.courseFindAllPage(pageable);
+        // 전체 페이지 수 계산
+        int totalPages = courses.getTotalPages();
+        Map<String, Object> response = new HashMap<>();
+        response.put("totalPages", totalPages); // 전체 페이지 수
+        response.put("totalElements",courses.getTotalElements());
+        return response;
+    }
+
+    @PostMapping("/chapterLastPage")
+    @ResponseBody
+    public Map<String, Object> chapterLastPage() {
+        int pageNumber = 0;
+        int pageSize = 10;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<CourseChapter> courseChapters = courseService.courseChapterFindAllpage(pageable);
+        // 전체 페이지 수 계산
+        int totalPages = courseChapters.getTotalPages();
+        Map<String, Object> response = new HashMap<>();
+        response.put("totalPages", totalPages); // 전체 페이지 수
+        response.put("totalElements",courseChapters.getTotalElements());
+        return response;
+    }
+
+    @PostMapping("/studentLastPage")
+    @ResponseBody
+    public Map<String, Object> studentLastPage() {
+        int pageNumber = 0;
+        int pageSize = 10;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<CourseStudent> courseStudents = courseService.courseStudentFindAllpage(pageable);
+        // 전체 페이지 수 계산
+        int totalPages = courseStudents.getTotalPages();
+        Map<String, Object> response = new HashMap<>();
+        response.put("totalPages", totalPages); // 전체 페이지 수
+        response.put("totalElements",courseStudents.getTotalElements());
+        return response;
     }
 }

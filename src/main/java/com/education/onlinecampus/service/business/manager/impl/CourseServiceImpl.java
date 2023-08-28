@@ -115,6 +115,11 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public Page<CourseChapter> findByCourseChapterCompositeKeyCourseSeq(Long courseSeq,Pageable pageable){
+        return repositoryService.getCourseChapterRepository().findByCourseChapterCompositeKey_CourseSeq(courseSeq,pageable);
+    }
+
+    @Override
     public List<CourseChapter> findByCourseChapterCompositeKeyCourseSeq(Long courseSeq){
         return repositoryService.getCourseChapterRepository().findByCourseChapterCompositeKey_CourseSeq(courseSeq);
     }
@@ -146,6 +151,11 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<CourseStudent> courseStudentFindByCourseSeq(Long courseSeq) {
         return repositoryService.getCourseStudentRepository().findByCourseStudentCompositeKey_CourseSeq(courseSeq);
+    }
+
+    @Override
+    public Page<CourseStudent> courseStudentFindByCourseSeq(Long courseSeq,Pageable pageable) {
+        return repositoryService.getCourseStudentRepository().findByCourseStudentCompositeKey_CourseSeq(courseSeq,pageable);
     }
 
     @Override
@@ -274,5 +284,15 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Page<Course> courseFindAllPage(Pageable pageable){
         return repositoryService.getCourseRepository().findAll(pageable);
+    }
+
+    @Override
+    public Page<CourseChapter> courseChapterFindAllpage(Pageable pageable) {
+        return repositoryService.getCourseChapterRepository().findAll(pageable);
+    }
+
+    @Override
+    public Page<CourseStudent> courseStudentFindAllpage(Pageable pageable) {
+        return repositoryService.getCourseStudentRepository().findAll(pageable);
     }
 }
