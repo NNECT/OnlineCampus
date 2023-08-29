@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>강의 관리 페이지</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="../../css/manager_main.css">
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css">
+    <link rel="stylesheet" type="text/css" href="../../css/manager_main.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://unpkg.com/jquery/dist/jquery.min.js"></script>
@@ -1724,7 +1724,6 @@
     document.addEventListener("DOMContentLoaded", function() {
         $(document).ready(function() {
             $(document).on("click", ".clickable-row2", function(e) {
-                console.log("일로오나?");
                 const studentSeq = $(this).find("[data-student-seq]").data("student-seq");
                 const courseSeq = $(this).find("[data-course-seq]").data("course-seq");
 
