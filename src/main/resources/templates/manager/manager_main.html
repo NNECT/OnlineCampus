@@ -17,6 +17,40 @@
             border: 2px solid #3498db;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
+        h2[style*="font-size: 24px"] {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        select,
+        input[type="text"],
+        input[type="datetime-local"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -83,20 +117,27 @@
         <!-- 강의 신규등록 모달 오버레이 -->
         <div id="courseModelOverlay" class="modal-overlay">
             <div class="modal-content">
-                <span class="close-button1" id="closeCourseModel">&times;</span>
-                <h2>강의 신규등록</h2>
-                <form action="/Course_save" method="post" id="courseSaveForm">
-                    강좌명 <select name="courseName">
-                    <option value="국어">국어</option>
-                    <option value="영어">영어</option>
-                    <option value="수학">수학</option>
-                </select>
-                    강좌소개 <input type="text" name="courseBrief"><br>
-                    강좌시작일 <input type="datetime-local" name="startDateTime" required><br>
-                    강좌종료일 <input type="datetime-local" name="endDateTime" required>
-                    <input type="hidden" name="statusCodeDTO.code" value="C001">
-                    <input type="submit" value="등록">
-                </form>
+                    <span class="close-button1" id="closeCourseModel" style="position: absolute; top: 10px; right: 10px; font-size: 24px; cursor: pointer;">&times;</span>
+                    <h2 style="font-size: 24px; margin-bottom: 10px;">강의 신규등록</h2>
+                    <form action="/Course_save" method="post" id="courseSaveForm">
+                        <label style="display: block; font-size: 14px; margin-bottom: 5px;">강좌명</label>
+                        <select name="courseName" style="width: 40%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+                            <option value="국어">국어</option>
+                            <option value="영어">영어</option>
+                            <option value="수학">수학</option>
+                        </select>
+                        <label style="display: block; font-size: 14px; margin-bottom: 5px;">강좌소개</label>
+                        <input type="text" name="courseBrief" style="width: 40%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+
+                        <label style="display: block; font-size: 14px; margin-bottom: 5px;">강좌시작일</label>
+                        <input type="datetime-local" name="startDateTime" required style="width: 40%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+
+                        <label style="display: block; font-size: 14px; margin-bottom: 5px;">강좌종료일</label>
+                        <input type="datetime-local" name="endDateTime" required style="width: 40%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+
+                        <input type="hidden" name="statusCodeDTO.code" value="C001"><br>
+                        <input type="submit" value="등록" style="background-color: #007bff; color: white; border: none; border-radius: 4px; padding: 10px 15px; cursor: pointer; font-size: 14px;">
+                    </form>
             </div>
         </div>
 
@@ -271,21 +312,25 @@
                     <!-- 차시 신규등록 모달 오버레이 -->
                     <div id="modalOverlay" class="modal-overlay">
                         <div class="modal-content">
-                            <span class="close-button1" id="closeModal">&times;</span>
-                            <h2>강의 차시 등록</h2>
+                            <span class="close-button1" id="closeModal" style="position: absolute; top: 10px; right: 10px; font-size: 24px; cursor: pointer;">&times;</span>
+                            <h2 style="font-size: 24px; margin-bottom: 10px;">강의 차시 등록</h2>
                             <form action="/CourseChapter_save" method="post" id="saveform">
-                                강좌목록: <select name="courseDTO.courseSeq" style="width: auto;">
-                                <option></option>
-                            </select><br>
-                                차시순서: <input type="number" name="chapterOrder" th:value="${i}"><br>
-                                쳅터제목: <input type="text" name="chapterName"><br>
-                                컨텐츠이름: <select type="text" name="content">
-                                            <option th:each="courseChapterContent : ${courseChapterContents}"
-                                                    th:value="${courseChapterContent.videoId}" th:text="${courseChapterContent.contentName}"></option>
-                                        </select><br>
+                                <label>강좌목록</label><br>
+                                <select name="courseDTO.courseSeq" style="width: 40%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; margin-bottom: 10px;">
+                                    <option></option>
+                                </select><br>
+                                <label>차시순서</label><br>
+                                <input type="number" name="chapterOrder" style="width: 40%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; margin-bottom: 10px;"><br>
+                                <label>쳅터제목</label><br>
+                                <input type="text" name="chapterName" style="width: 40%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; margin-bottom: 10px;"><br>
+                                <label>컨텐츠이름</label><br>
+                                <select type="text" name="contentDTO.videoId" style="width: 40%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; margin-bottom: 10px;">
+                                    <option th:each="courseChapterContent : ${courseChapterContents}" th:value="${courseChapterContent.videoId}" th:text="${courseChapterContent.contentName}"></option>
+                                </select><br>
                                 <!--보조자료: <input type="file" name="supplementaryFile">&ndash;&gt;-->
-                                챕터설명: <input type="text" name="chapterBrief"><br>
-                                <input type="submit" value="등록">
+                                <label>챕터설명</label><br>
+                                <input type="text" name="chapterBrief" style="width: 40%; height: 150px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; margin-bottom: 15px;"><br>
+                                <input type="submit" value="등록" style="background-color: #007bff; color: white; border: none; border-radius: 4px; padding: 10px 15px; cursor: pointer; font-size: 14px;">
                             </form>
                         </div>
                     </div>
