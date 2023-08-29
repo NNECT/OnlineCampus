@@ -6,6 +6,12 @@
     <title>강의 관리 페이지</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="../../css/manager_main.css">
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/jquery/dist/jquery.min.js"></script>
+    <script src="https://unpkg.com/gridjs-jquery/dist/gridjs.production.min.js"></script>
+    <script src="https://unpkg.com/gridjs/dist/locale/ko.js"></script>
     <style>
         .active {
             border: 2px solid #3498db;
@@ -64,12 +70,16 @@
 
     <!-- 온라인 강의 -->
     <div id="online-course" style="display: none;">
+
+        <!-- 강의 삭제 버튼 -->
         <button type="button" class="new-course-link delete-course-link" style="margin-left: 10px" onclick="deleteSelectedChapters1()">삭제</button>
 
-        <a href="/Course" class="new-course-link" style="margin-left: 10px">수정</a>
+        <!-- 강의 수정 버튼 -->
+        <a href="/Course" class="new-course-link" id="courseUpdate" style="margin-left: 10px">수정</a>
 
         <!-- 강의 신규등록 모달창 버튼 -->
         <button id="openCourseModel" class="new-course-link" style="margin-left: 10px">강의 신규등록</button>
+
         <!-- 강의 신규등록 모달 오버레이 -->
         <div id="courseModelOverlay" class="modal-overlay">
             <div class="modal-content">
@@ -120,18 +130,12 @@
             </div>
         </form>
 
-        <!-- 온라인 강좌 div -->
+        <!-- 온라인 강의 div -->
         <div class="course-list">
-            <h4>온라인강좌 <small>검색결과: ??건</small>
-                <select style="margin-left: 2px;">
-                    <option>5</option>
-                    <option>10</option>
-                    <option>50</option>
-                    <option>100</option>
-                    <option>500</option>
-                </select>
+            <h4>온라인강좌 <small id="searchResult" th:text="'검색결과: ' + ${courses.totalElements} + '건'">검색결과: ??건</small></h4>
             </h4>
             <div class="table-container">
+                <!-- 강의 목록 테이블 -->
                 <table id="courseTable">
                     <thead>
                     <tr>
@@ -156,8 +160,34 @@
                     </tr>
                     </tbody>
                 </table>
-                <div class="pagination">
-                    <p style="text-align: center"> 1 / 2 / 3</p>
+                <!-- 강의 목록 테이블 페이지 번호 -->
+                <div th:if="${courses.totalPages > 1}">
+                    <ul class="pagination">
+                        <li th:class="${courses.first} ? 'disabled' : ''">
+                            <a href="javascript:void(0);" th:if="${!courses.first}" th:attr="onclick='loadPage(0)'">처음</a>
+                            <span th:if="${courses.first}">처음</span>
+                        </li>
+                        <li th:class="${courses.hasPrevious} ? '' : 'disabled'">
+                            <a href="javascript:void(0);" th:if="${courses.hasPrevious}" th:attr="onclick='loadPage(' + (${courses.number - 1}) + ')'" >이전</a>
+                            <span th:if="${!courses.hasPrevious}">이전</span>
+                        </li>
+                        <!-- 페이지 번호 -->
+                        <li th:each="page : ${#numbers.sequence(0, courses.totalPages - 1)}"
+                            th:class="${page == courses.number} ? 'active' : ''"
+                            th:if="${courses.totalPages <= 5 or (page >= courses.number - 2 and page <= courses.number + 2)}">
+                            <a href="javascript:void(0);" th:attr="onclick='loadPage(' + ${page} + ')'" th:text="${page + 1}"></a>
+                        </li>
+                        <!-- 다음 버튼 -->
+                        <li th:class="${courses.hasNext} ? '' : 'disabled'">
+                            <a href="javascript:void(0);" th:if="${courses.hasNext}" th:attr="onclick='loadPage(' + (${courses.number + 1}) + ')'" >다음</a>
+                            <span th:if="${!courses.hasNext}">다음</span>
+                        </li>
+                        <!-- 마지막 버튼 -->
+                        <li th:class="${courses.last} ? 'disabled' : ''">
+                            <a href="javascript:void(0);" th:if="${!courses.last}" th:attr="onclick='loadPage(' + (${courses.totalPages - 1}) + ')'" >마지막</a>
+                            <span th:if="${courses.last}">마지막</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -172,43 +202,40 @@
                 <div id="enrolleesSection" style="border: 1px solid #ccc; width: 140px; text-align: center; position: absolute; top: 15px; left: 150px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; border-bottom-color: transparent;">
                     <h3>수강대상자</h3>
                 </div>
+
                 <!-- 강좌 차시정보 div -->
-                <div id="courseSessionsContent" style="border: 1px solid #ccc; height: 520px; width: 98%; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; padding: 0px 10px 0px;">
+                <div id="courseSessionsContent" style="border: 1px solid #ccc; height: 540px; width: 98%; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; padding: 0px 10px 0px;">
                     <h3>강좌차시정보
-                        <small>검색결과: ??건</small>
-                        <select>
-                            <option>5</option>
-                            <option>30</option>
-                            <option>50</option>
-                            <option>100</option>
-                            <option>500</option>
-                        </select>
+                        <small id="searchResult1"></small>
                     </h3>
+
+                    <!-- 차시 목록 테이블 -->
                     <table>
-                        <tr>
-                            <th><input type="checkbox" id="cboxAll1" name="cboxAll1" onclick="checkAll1()"></th>
-                            <th>차시순서</th>
-                            <th>차시명</th>
-                            <th>차시학습시간</th>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="cboxAll1" name="cboxAll1" onclick="checkAll1()"></th>
+                                <th>차시순서</th>
+                                <th>차시명</th>
+                                <th>차시학습시간</th>
+                            </tr>
+                        </thead>
                         <tbody id="courseChaptersTableBody">
 
                         </tbody>
-                        <!-- Add more rows as needed -->
                     </table>
+                    <!-- 차시 목록 테이블 페이지 번호 -->
+                    <div>
+                        <ul class="pagination1">
+                        </ul>
+                    </div>
                 </div>
+
                 <!-- 수강대상자 div-->
-                <div id="enrolleesContent" style="border: 1px solid #ccc; height: 520px; width: 98%; display: none; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; padding: 0px 10px 0px;">
+                <div id="enrolleesContent" style="border: 1px solid #ccc; height: 540px; width: 98%; display: none; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; padding: 0px 10px 0px;">
                     <h3>수강대상자
-                        <small>검색결과: ??건</small>
-                        <select>
-                            <option>5</option>
-                            <option>30</option>
-                            <option>50</option>
-                            <option>100</option>
-                            <option>500</option>
-                        </select>
+                        <small id="searchResult2"></small>
                     </h3>
+                    <!-- 수강대상자 목록 테이블 -->
                     <table>
                         <thead>
                         <tr>
@@ -225,19 +252,22 @@
                         </tbody>
                         <!-- Add more rows as needed -->
                     </table>
+                    <!-- 수강자 목록 테이블 페이지 번호 -->
+                    <div>
+                        <ul class="pagination2">
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div style="max-width: 40%; width: 40%; margin-top: 79.5px; position: absolute; right: 5px;">
                 <div style="border: 1px solid #ccc; height: 520px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; padding: 3px 10px 0px;" id="courseInfoBox">
-                    <a href="#" class="new-course-link" style="position: relative; right: 5px; top: 5px;" onclick="deleteSelectedChapters()">
-                        삭제
-                    </a>
+                    <!-- 차시 목록 삭제 버튼-->
+                    <a href="#" class="new-course-link" style="position: relative; right: 5px; top: 5px;" onclick="deleteSelectedChapters()">삭제</a>
+                    <!-- 차시 수정 버튼-->
                     <a href="/CourseChapter_save" class="new-course-link" style="position: relative; right: 10px; top: 5px;">수정</a>
-                    <!-- 차시 신규등록 모달 -->
-                    <button href="/CourseChapter_save" class="new-course-link" id="openContentRegistration"
-                            style="position: relative; right: 15px; top: 5px;">
-                        차시 신규등록
-                    </button>
+                    <!-- 차시 신규등록 버튼 -->
+                    <button href="/CourseChapter_save" class="new-course-link" id="openContentRegistration" style="position: relative; right: 15px; top: 5px;">차시 신규등록</button>
+
                     <!-- 차시 신규등록 모달 오버레이 -->
                     <div id="modalOverlay" class="modal-overlay">
                         <div class="modal-content">
@@ -249,13 +279,17 @@
                             </select><br>
                                 차시순서: <input type="number" name="chapterOrder" th:value="${i}"><br>
                                 쳅터제목: <input type="text" name="chapterName"><br>
-                                <!--컨텐츠번호: <input type="text" name="content">
-                                보조자료: <input type="file" name="supplementaryFile">-->
+                                컨텐츠이름: <select type="text" name="content">
+                                            <option th:each="courseChapterContent : ${courseChapterContents}"
+                                                    th:value="${courseChapterContent.videoId}" th:text="${courseChapterContent.contentName}"></option>
+                                        </select><br>
+                                <!--보조자료: <input type="file" name="supplementaryFile">&ndash;&gt;-->
                                 챕터설명: <input type="text" name="chapterBrief"><br>
                                 <input type="submit" value="등록">
                             </form>
                         </div>
                     </div>
+
                     <!-- 차시 디테일 테이블 -->
                     <table style="margin-top: 64px;">
                         <tr>
@@ -276,11 +310,11 @@
                         </tr>
                         <tr>
                             <td style="width: 30%;">차시 학습시간</td>
-                            <td colspan="3">??</td>
+                            <td colspan="3" id="chapterDetailRunningTime"></td>
                         </tr>
                         <tr>
                             <td style="width: 30%;">썸네일파일</td>
-                            <td colspan="3">??</td>
+                            <td colspan="3" id="chapterDetailThumbnail"></td>
                         </tr>
                         <tr>
                             <td style="width: 30%;">차시강의 콘탠츠 번호</td>
@@ -288,7 +322,7 @@
                         </tr>
                         <tr>
                             <td style="width: 30%;">보조자료 파일</td>
-                            <td colspan="3">??</td>
+                            <td colspan="3" id="chapterDetailSupplementaryFile"></td>
                         </tr>
                         <tr>
                             <td style="width: 30%;">차시내용 요약</td>
@@ -299,17 +333,19 @@
                 </div>
             </div>
             <div style="max-width: 40%; width: 40%; margin-top: 79.5px; position: absolute; right: 5px;">
-                <div style="border: 1px solid #ccc; height: 520px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; padding: 3px 10px 0px; display: none;"
-                     id="userInfoBox">
-                    <a href="#" class="new-course-link"
-                       style="position: relative; right: 5px; top: 5px;" onclick="deleteSelectedStudents()">삭제</a>
-                    <a href="/CourseStudent_save" class="new-course-link"
-                       style="position: relative; right: 10px; top: 5px;">수정</a>
+                <div style="border: 1px solid #ccc; height: 520px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; padding: 3px 10px 0px; display: none;" id="userInfoBox">
+                    <!-- 수강생 삭제 버튼 -->
+                    <a href="#" class="new-course-link" style="position: relative; right: 5px; top: 5px;" onclick="deleteSelectedStudents()">삭제</a>
+
+                    <!-- 수강생 수정 버튼 -->
+                    <a href="/CourseStudent_save" class="new-course-link" style="position: relative; right: 10px; top: 5px;">수정</a>
+
                     <!-- 수강생 신규등록 모달 -->
                     <button id="openStudentRegistrationModal" class="new-course-link"
                             style="position: relative; right: 15px; top: 5px;">
                         수강생 신규등록
                     </button>
+
                     <!-- 수강생 신규등록 모달-->
                     <div id="studentRegistrationModalOverlay" class="modal-overlay">
                         <div class="modal-content">
@@ -349,11 +385,12 @@
                         </div>
                     </div>
 
+                    <!-- 수강대상자 회원 디테일 테이블 -->
                     <table style="margin-top: 64px; width: 100%;">
                         <tr>
                             <td>회원번호</td>
-                            <td colspan="2" id="memberDetailSeq">1</td>
-                            <td rowspan="4" colspan="3"><img src="" alt="프로필사진"></td>
+                            <td colspan="2" id="memberDetailSeq"></td>
+                            <td rowspan="4" colspan="3" style="width: 100px; height: 120px; margin: 0; padding: 0;"><img src="" alt="프로필사진" id="memberDetailImage" style="width: 100%; height: 150px;"></td>
                         </tr>
                         <tr>
                             <td>회원구분</td>
@@ -371,23 +408,23 @@
                             <td>이메일</td>
                             <td id="memberDetailEmail"></td>
                             <td>생년월일</td>
-                            <td id="memberDetailbirthDate"></td>
+                            <td id="memberDetailBirthDate"></td>
                         </tr>
                         <tr>
-                            <td>접속시간</td>
-                            <td colspan="3">2023-08-07 11:50</td>
+                            <td>가입날짜</td>
+                            <td colspan="3" id="memberDetailRegisterDate"></td>
                         </tr>
                         <tr>
                             <td>접속종료시간</td>
-                            <td colspan="3">2023-08-07 11:50</td>
+                            <td colspan="3" id="memberDetailLastLoginDate"></td>
                         </tr>
                         <tr>
                             <td>진도율</td>
-                            <td colspan="3">50%</td>
+                            <td colspan="3"></td>
                         </tr>
                         <tr>
                             <td>특이사항</td>
-                            <td colspan="3" style="height: 100px;">어쩌구 저쩌구</td>
+                            <td colspan="3" style="height: 100px;"></td>
                         </tr>
                     </table>
                 </div>
@@ -397,10 +434,182 @@
     </div>
 
     <!-- 강의 컨탠트 관리 -->
-    <div id="content-management" style="display: none;">
-        <br><br>
-        <button>강의컨텐트관리</button>
+    <div id="content-management" style="display: none; height: 900px;">
+        <button class="new-course-link" style="margin-left: 10px" onclick="deleteSelectedContent()">삭제</button>
+        <button href="/CourseChapterContent_save" class="new-course-link" style="margin-left: 10px">수정</button>
+        <button type="button" class="new-course-link" style="margin-left: 10px" id="newContentButton">신규</button>
+        <form action="/" method="post" id="contentSearchForm">
+            <button type="button" class="new-course-link" style="margin-left: 10px" id="searchButton2">조회</button>
+            <br><br>
+            <div class="search-bar">
+                <div class="search-bar-row" style="width: 100%;">
+                    <label for="courseContentSearch" style="width: 15%; text-align: center;">콘텐츠명</label>
+                    <input type="text" name="courseContentSearch" id="courseContentSearch" style="width: 35%">
+                    <label for="courseNameSearch" style="width: 15%; text-align: center;">교과목명</label>
+                    <input type="text" name="courseNameSearch" id="courseNameSearch" style="width: 35%">
+                </div>
+            </div>
+        </form>
+        <br>
+        <div style="display: flex; justify-content: space-between; margin-top: 10px; position: relative; height: 800px;">
+            <div style="width: 59%;">
+                <h4>온라인콘텐츠</h4>
+                <div class="table-container" >
+                    <table id="contentTable">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" id="cboxAll4" name="cboxAll4" onclick="checkAll4()"></th>
+                            <th>콘텐츠명</th>
+                            <th>Youtube연동번호</th>
+                            <th>학습시간</th>
+                        </tr>
+                        </thead>
+                        <tbody id="contentTableBody">
+                        <tr class="clickable-row3" th:each="courseChapterContentList : ${courseChapterContentList}">
+                            <td><input type="checkbox" name="cbox4"></td>
+                            <td class="contentVideoId" th:id="${courseChapterContentList.videoId}" th:text="${courseChapterContentList.videoId}"></td>
+                            <td></td>
+                            <td th:text="${courseChapterContentList.runningTime}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div style="max-width: 40%; width: 40%; margin-top: 63px; position: absolute; right: 5px;">
+                <div style="border: 1px solid #ccc; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 5px; padding: 8px;">
+                    <table style="width: 100%;">
+                        <colgroup>
+                            <col width="30%">
+                            <col width="70%">
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <label for="contentName">콘텐츠명</label>
+                            </td>
+                            <td>
+                                <input type="text" id="contentName" name="contentName" style="width: 90%">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="contentDescription">콘텐츠설명</label>
+                            </td>
+                            <td>
+                                <textarea id="contentDescription" name="contentBrief" rows="2" style="width: 90%; resize: none; padding:5px; border: 1px solid lightgray; border-radius: 5px;"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="videoId">Youtube연동번호</label>
+                            </td>
+                            <td>
+                                <input type="text" name="videoId" id="videoId" disabled style="width: 70%; float: left;">
+                                <button type="button" style="margin-top: 7px;" id="openModalButton">연동확인</button>
+                            </td>
+                        </tr>
+<!--                        <tr>
+                            <td>
+                                <label for="courseName2">교과목명</label>
+                            </td>
+                            <td>
+                                <input type="text" disabled style="width: 20%; float: left;">
+                                <input type="text" id="courseName2" style="width: 58%; float: left;">
+                                <a style="width: 10%; float: right; padding-top: 10px;" href="#" id="courseNameModal">
+                                    <img th:src="@{/img/search.png}" alt="searchIcon" width="15" height="15">
+                                </a>
+                            </td>
+                        </tr>-->
+                        <tr>
+                            <td>
+                                <label for="runningTime">차시학습시간[초]</label>
+                            </td>
+                            <td>
+                                <input type="text" id="runningTime" name="runningTime" disabled style="width: 75%; float: left;">
+                                <!--<button type="button" style="margin-top: 7px;">갱신</button>-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="thumbnailFile">썸네일 파일</label>
+                            </td>
+                            <td>
+                                <input type="file" name="thumbnailFile" id="thumbnailFile" style="width: 90%">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 콘텐츠 신규등록 모달 -->
+        <div id="newContentModal" style="width: 100%; background: lightgray; display: none;" class="modal-overlay">
+            <div class="modal-content" style="width: 40%;">
+                <span class="close-button1" id="closeNewContentModal">&times;</span>
+                <h2>강의컨탠트등록</h2>
+                <form action="" method="post" enctype="multipart/form-data" id="contentInsert">
+                    컨탠트 이름: <input name="contentName"><br>
+                    컨탠트 설명: <input name="contentBrief"><br><br>
+                    썸네일 파일: <input type="file" accept="image/*" name="thumbnailFile" id="logo-upload"
+                                   onchange='previewPicture(event)'/><br><br>
+                    <div id="logo-preview">
+                    </div>
+                    컨탠드 비디오: <input type="file" accept="video/*" name="viedo"><br><br>
+                    <input type="submit" value="등록">
+                </form>
+            </div>
+        </div>
     </div>
+
+    <!-- 연동확인 모달 -->
+    <div id="checkConnection" style="width: 100%; background: lightgray; display: none;" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close" id="closeCheckConnectionModal">&times;</span>
+            <h2>Youtube연동확인</h2>
+            <div id="youtubePlayer"></div>
+        </div>
+    </div>
+</div>
+
+
+<!--        &lt;!&ndash; 교과목명 검색 모달 &ndash;&gt;
+        <div id="findContentNameModal" style="width: 100%; background: lightgray; display: none;" class="modal-overlay">
+            <div class="modal-content" style="width: 40%;">
+                <span class="close-button1" id="closeContentModal">&times;</span>
+                <br><br>
+                <div>
+                    <div>
+                        <a href="/Course" class="new-course-link" style="margin-left: 10px">선택</a>
+                        <form action="/Course_find" method="post" id="courseNameSearchForm">
+                            <button type="button" class="new-course-link" style="margin-left: 10px" id="courseNameSearchButton">조회</button>
+                            <br><br>
+                            <div class="search-bar">
+                                <div class="search-bar-row" style="width: 100%;">
+                                    <label for="modalCourseName" style="width: 15%;">교과목명</label>
+                                    <input type="text" name="courseNameSearch" id="modalCourseName" placeholder="교과목명을 입력해주세요" style="width: 70%;">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div id="searchResultsContainer" style="max-height: 480px; overflow-y: auto;">
+                    <table>
+                        <thead>
+                        <tr><th colspan="2">교과목명</th></tr>
+                        </thead>
+                        <tbody id="searchResults">
+                        <tr th:each="course : ${courses}">
+                            <th><input type="checkbox" id="cboxAll5" name="cboxAll5" onclick="checkAll5()"></th>
+                            <td th:data-course-seq="${course.courseSeq}" th:text="${course.courseName}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>-->
+
+
 
     <!-- 회원 관리 박스 -->
     <div id="member-management" style="display: none;">
@@ -410,6 +619,7 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!-- 온라인강의 스크립트 ------------------------------------------------------------------------------------------------------------ -->
 <!-- 네이베게이션 스크립트 -->
 <script>
     const menuLinks = document.querySelectorAll(".menu-link");
@@ -498,48 +708,167 @@
         });
     });
 </script>
+<!-- 강의 목록 테이블 페이지네이션 스크립트-->
+<script>
+    function loadPage(pageNumber) {
+        $.ajax({
+            url: '/loadPage',
+            type: 'POST',
+            data: {
+                page: pageNumber
+            },
+            dataType: 'json',
+            success: function (response) {
+                var courses = response.content;
+                console.log(response);
+                console.log(response.content);
+                updateCourseTablepage(courses);
+                updatePagination(response);
+            },
+            error: function (xhr, status, errorThrown) {
+                console.log(errorThrown);
+                alert('서버와 통신 중 오류가 발생했습니다.');
+            }
+        });
+    }
+    function updateCourseTablepage(data) {
+        var table = $("#courseTable");
+        table.find("tbody").empty();
+
+        $.each(data, function (index, course) {
+            var row = "<tr class='clickable-row'><td><input type='checkbox' name='cbox'></td>"
+                + "<td>" + course.courseSeq + "</td>"
+                + "<td><a href='#' class='course-link' data-course-seq="+course.courseSeq+">" + course.courseName + "</a></td>"
+                + "<td>" + course.courseBrief + "</td>"
+                + "<td>" + course.startDateTime + "</td>"
+                + "<td>" + course.endDateTime + "</td>"
+                + "<td>" + course.statusCode.name + "</td></tr>";
+            table.append(row);
+        });
+    }
+    function updatePagination(data) {
+        var pagination = $('.pagination');
+        pagination.empty();
+
+        var totalPages = data.totalPages;
+        var currentPage = data.number;
+
+        var paginationHtml = '';
+
+        var startPage = Math.max(currentPage - 2, 0);
+        var endPage = Math.min(currentPage + 2, totalPages - 1);
+
+        paginationHtml += '<li class="' + (currentPage === 0 ? 'disabled' : '') + '">';
+        paginationHtml += '<a href="javascript:void(0);" ' + (currentPage !== 0 ? 'onclick="loadPage(0)"' : '') + '>처음</a>';
+        paginationHtml += '<span ' + (currentPage === 0 ? 'th:text="처음"' : '') + '></span>';
+        paginationHtml += '</li>';
+
+        paginationHtml += '<li class="' + (currentPage === 0 ? 'disabled' : '') + '">';
+        paginationHtml += '<a href="javascript:void(0);" ' + (currentPage !== 0 ? 'onclick="loadPage(' + (currentPage - 1) + ')"' : '') + '>이전</a>';
+        paginationHtml += '<span ' + (currentPage === 0 ? 'th:text="이전"' : '') + '></span>';
+        paginationHtml += '</li>';
+
+        for (var i = startPage; i <= endPage; i++) {
+            paginationHtml += '<li class="' + (currentPage === i ? 'active' : '') + '">';
+            paginationHtml += '<a href="javascript:void(0);" ' + 'onclick="loadPage(' + i + ')"' + '>' + (i + 1) + '</a>';
+            paginationHtml += '</li>';
+        }
+
+        paginationHtml += '<li class="' + (currentPage === totalPages - 1 ? 'disabled' : '') + '">';
+        paginationHtml += '<a href="javascript:void(0);" ' + (currentPage !== totalPages - 1 ? 'onclick="loadPage(' + (currentPage + 1) + ')"' : '') + '>다음</a>';
+        paginationHtml += '<span ' + (currentPage === totalPages - 1 ? 'th:text="다음"' : '') + '></span>';
+        paginationHtml += '</li>';
+
+        paginationHtml += '<li class="' + (currentPage === totalPages - 1 ? 'disabled' : '') + '">';
+        paginationHtml += '<a href="javascript:void(0);" ' + (currentPage !== totalPages - 1 ? 'onclick="loadPage(' + (totalPages - 1) + ')"' : '') + '>마지막</a>';
+        paginationHtml += '<span ' + (currentPage === totalPages - 1 ? 'th:text="마지막"' : '') + '></span>';
+        paginationHtml += '</li>';
+
+        pagination.html(paginationHtml);
+    }
+</script>
 <!-- 조회 script -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-    $(document).ready(function () {
-        $("#searchButton1").click(function () {
-            $.ajax({
-                type: "POST",
-                url: $("#searchForm").attr("action"),
-                data: $("#searchForm").serialize(),
-                dataType: "json",
-                success: function (data) {
-                    updateCourseTable(data);
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error:", error);
-                }
-            });
-        });
+        $(document).ready(function () {
+            $("#searchButton1").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: $("#searchForm").attr("action"),
+                    data: $("#searchForm").serialize(),
+                    dataType: "json",
+                    success: function (data) {
+                        updateCourseTable(data.content);
+                        updatePagination(data)
 
-        function updateCourseTable(data) {
-            var table = $("#courseTable");
-            table.find("tbody").empty();
-
-            $.each(data, function (index, course) {
-                var row = "<tr class='clickable-row'><td><input type='checkbox' name='cbox'></td>"
-                    + "<td>" + course.courseSeq + "</td>"
-                    + "<td><a href='#' class='course-link' data-course-seq="+course.courseSeq+">" + course.courseName + "</a></td>"
-                    + "<td>" + course.courseBrief + "</td>"
-                    + "<td>" + course.startDateTime + "</td>"
-                    + "<td>" + course.endDateTime + "</td>"
-                    + "<td>" + course.statusCode.name + "</td></tr>";
-                table.append(row);
-            });
-            $(".clickable-row").click(function () {
-                $(".clickable-row input[type='checkbox']").click(function (e) {
-                    e.stopPropagation(); // 이벤트 버블링 중단
+                        var courseTotal = data.totalElements;
+                        console.log("잘나오니:");
+                        console.log(courseTotal);
+                        $("#searchResult").text("검색결과: " + courseTotal + "건");
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error:", error);
+                    }
                 });
-                $(this).toggleClass("active");
-                $(".clickable-row").not(this).removeClass("active");
             });
-        }
-    });
+
+            function updateCourseTable(data) {
+                var table = $("#courseTable");
+                table.find("tbody").empty();
+
+                $.each(data, function (index, course) {
+                    var row = "<tr class='clickable-row'><td><input type='checkbox' name='cbox'></td>"
+                        + "<td>" + course.courseSeq + "</td>"
+                        + "<td><a href='#' class='course-link' data-course-seq="+course.courseSeq+">" + course.courseName + "</a></td>"
+                        + "<td>" + course.courseBrief + "</td>"
+                        + "<td>" + course.startDateTime + "</td>"
+                        + "<td>" + course.endDateTime + "</td>"
+                        + "<td>" + course.statusCode.name + "</td></tr>";
+                    table.append(row);
+                });
+            }
+
+            function updatePagination(data) {
+                var pagination = $('.pagination');
+                pagination.empty();
+
+                var totalPages = data.totalPages;
+                var currentPage = data.number;
+
+                var paginationHtml = '';
+
+                var startPage = Math.max(currentPage - 2, 0);
+                var endPage = Math.min(currentPage + 2, totalPages - 1);
+
+                paginationHtml += '<li class="' + (currentPage === 0 ? 'disabled' : '') + '">';
+                paginationHtml += '<a href="javascript:void(0);" ' + (currentPage !== 0 ? 'onclick="loadPage(0)"' : '') + '>처음</a>';
+                paginationHtml += '<span ' + (currentPage === 0 ? 'th:text="처음"' : '') + '></span>';
+                paginationHtml += '</li>';
+
+                paginationHtml += '<li class="' + (currentPage === 0 ? 'disabled' : '') + '">';
+                paginationHtml += '<a href="javascript:void(0);" ' + (currentPage !== 0 ? 'onclick="loadPage(' + (currentPage - 1) + ')"' : '') + '>이전</a>';
+                paginationHtml += '<span ' + (currentPage === 0 ? 'th:text="이전"' : '') + '></span>';
+                paginationHtml += '</li>';
+
+                for (var i = startPage; i <= endPage; i++) {
+                    paginationHtml += '<li class="' + (currentPage === i ? 'active' : '') + '">';
+                    paginationHtml += '<a href="javascript:void(0);" ' + 'onclick="loadPage(' + i + ')"' + '>' + (i + 1) + '</a>';
+                    paginationHtml += '</li>';
+                }
+
+                paginationHtml += '<li class="' + (currentPage === totalPages - 1 ? 'disabled' : '') + '">';
+                paginationHtml += '<a href="javascript:void(0);" ' + (currentPage !== totalPages - 1 ? 'onclick="loadPage(' + (currentPage + 1) + ')"' : '') + '>다음</a>';
+                paginationHtml += '<span ' + (currentPage === totalPages - 1 ? 'th:text="다음"' : '') + '></span>';
+                paginationHtml += '</li>';
+
+                paginationHtml += '<li class="' + (currentPage === totalPages - 1 ? 'disabled' : '') + '">';
+                paginationHtml += '<a href="javascript:void(0);" ' + (currentPage !== totalPages - 1 ? 'onclick="loadPage(' + (totalPages - 1) + ')"' : '') + '>마지막</a>';
+                paginationHtml += '<span ' + (currentPage === totalPages - 1 ? 'th:text="마지막"' : '') + '></span>';
+                paginationHtml += '</li>';
+
+                pagination.html(paginationHtml);
+            }
+        });
     });
 </script>
 <!-- 선택한 강좌 차시 리스트, 수강생 리스트 보여주는 스크립트-->
@@ -555,11 +884,22 @@
                     type: "POST",  // POST 방식으로 변경
                     url: "/CourseChapter_find?courseSeq=" + courseSeq,
                     success: function(data) {
-                        var chapters = data.chapters;
-                        var students = data.students;
+                        var chapters = data.chapters.content;
+                        var students = data.students.content;
+                        var chaptersPage = data.chapters;
+                        var studentsPage = data.students;
                         updateCourseChapters1(chapters);
                         updateCourseSelect(courseSeq);
                         updateCourseStudent(students);
+                        updatePagination1(chaptersPage);
+                        updatePagination2(studentsPage);
+
+                        var chaptersTotal = chaptersPage.totalElements; // 총 건수
+                        console.log(chaptersTotal);
+                        var studentsTotal = studentsPage.totalElements; // 총 건수
+                        console.log(studentsTotal);
+                        $("#searchResult1").text("검색결과: " + chaptersTotal + "건");
+                        $("#searchResult2").text("검색결과: " + studentsTotal + "건");
                         chapterOrderValue=1;
                     },
                     error: function(xhr, status, error) {
@@ -594,6 +934,8 @@
                 let newChapterOrderValue = courseChapter.chapterOrder + 1;
                 chapterOrderInput.val(newChapterOrderValue);
 
+                var runningTime = courseChapter.content && courseChapter.content.runningTime ? courseChapter.content.runningTime : '';
+
                 var newRow = `
             <tr class="clickable-row1">
                 <td><input type="checkbox" name="cbox1"></td>
@@ -601,23 +943,10 @@
                     ${courseChapter.chapterOrder}
                 </td>
                 <td><a href="#">${courseChapter.chapterName}</a></td>
-                <td>${courseChapter.chapterBrief}</td>
+                <td>${runningTime}</td>
             </tr>`;
                 tableBody.append(newRow);
             }
-
-            $(document).on("click", ".clickable-row1", function () {
-                var clickedRow = $(this);
-
-                // 클릭한 체크박스의 이벤트 버블링 중단
-                if ($(event.target).is("input[type='checkbox']")) {
-                    event.stopPropagation();
-                    return;
-                }
-
-                clickedRow.toggleClass("active");
-                $(".clickable-row1").not(clickedRow).removeClass("active");
-            });
         }
         function updateCourseStudent(students){
 
@@ -626,7 +955,7 @@
 
             for (const student of students) {
                 var newRow = `
-            <tr>
+            <tr class="clickable-row2">
                 <td><input type="checkbox" name="cbox2"></td>
                 <td data-student-seq="${student.student.memberSeq}" data-course-seq="${student.course.courseSeq}">${student.student.memberDivision.name}</td>
                 <td>${student.student.nameKor}</td>
@@ -646,6 +975,176 @@
             $("input[name=cbox]").prop("checked", false);
         }
     }
+
+    function updatePagination1(chaptersPage) {
+        var pagination1 = $('.pagination1');
+        pagination1.empty();
+
+        var totalPages = chaptersPage.totalPages;
+        var currentPage = chaptersPage.number;
+
+        var paginationHtml = '';
+
+        var startPage = Math.max(currentPage - 2, 0);
+        var endPage = Math.min(currentPage + 2, totalPages - 1);
+
+        paginationHtml += '<li class="' + (currentPage === 0 ? 'disabled' : '') + '">';
+        paginationHtml += '<a href="javascript:void(0);" ' + (currentPage !== 0 ? 'onclick="loadPage1(0)"' : '') + '>처음</a>';
+        paginationHtml += '<span ' + (currentPage === 0 ? 'th:text="처음"' : '') + '></span>';
+        paginationHtml += '</li>';
+
+        paginationHtml += '<li class="' + (currentPage === 0 ? 'disabled' : '') + '">';
+        paginationHtml += '<a href="javascript:void(0);" ' + (currentPage !== 0 ? 'onclick="loadPage1(' + (currentPage - 1) + ')"' : '') + '>이전</a>';
+        paginationHtml += '<span ' + (currentPage === 0 ? 'th:text="이전"' : '') + '></span>';
+        paginationHtml += '</li>';
+
+        for (var i = startPage; i <= endPage; i++) {
+            paginationHtml += '<li class="' + (currentPage === i ? 'active' : '') + '">';
+            paginationHtml += '<a href="javascript:void(0);" ' + 'onclick="loadPage1(' + i + ')"' + '>' + (i + 1) + '</a>';
+            paginationHtml += '</li>';
+        }
+
+        paginationHtml += '<li class="' + (currentPage === totalPages - 1 ? 'disabled' : '') + '">';
+        paginationHtml += '<a href="javascript:void(0);" ' + (currentPage !== totalPages - 1 ? 'onclick="loadPage1(' + (currentPage + 1) + ')"' : '') + '>다음</a>';
+        paginationHtml += '<span ' + (currentPage === totalPages - 1 ? 'th:text="다음"' : '') + '></span>';
+        paginationHtml += '</li>';
+
+        paginationHtml += '<li class="' + (currentPage === totalPages - 1 ? 'disabled' : '') + '">';
+        paginationHtml += '<a href="javascript:void(0);" ' + (currentPage !== totalPages - 1 ? 'onclick="loadPage1(' + (totalPages - 1) + ')"' : '') + '>마지막</a>';
+        paginationHtml += '<span ' + (currentPage === totalPages - 1 ? 'th:text="마지막"' : '') + '></span>';
+        paginationHtml += '</li>';
+
+        pagination1.html(paginationHtml);
+    }
+
+    function updatePagination2(studentsPage) {
+        var pagination2 = $('.pagination2');
+        pagination2.empty();
+
+        var totalPages = studentsPage.totalPages;
+        var currentPage = studentsPage.number;
+
+        var paginationHtml = '';
+
+        var startPage = Math.max(currentPage - 2, 0);
+        var endPage = Math.min(currentPage + 2, totalPages - 1);
+
+        paginationHtml += '<li class="' + (currentPage === 0 ? 'disabled' : '') + '">';
+        paginationHtml += '<a href="javascript:void(0);" ' + (currentPage !== 0 ? 'onclick="loadPage2(0)"' : '') + '>처음</a>';
+        paginationHtml += '<span ' + (currentPage === 0 ? 'th:text="처음"' : '') + '></span>';
+        paginationHtml += '</li>';
+
+        paginationHtml += '<li class="' + (currentPage === 0 ? 'disabled' : '') + '">';
+        paginationHtml += '<a href="javascript:void(0);" ' + (currentPage !== 0 ? 'onclick="loadPage2(' + (currentPage - 1) + ')"' : '') + '>이전</a>';
+        paginationHtml += '<span ' + (currentPage === 0 ? 'th:text="이전"' : '') + '></span>';
+        paginationHtml += '</li>';
+
+        for (var i = startPage; i <= endPage; i++) {
+            paginationHtml += '<li class="' + (currentPage === i ? 'active' : '') + '">';
+            paginationHtml += '<a href="javascript:void(0);" ' + 'onclick="loadPage2(' + i + ')"' + '>' + (i + 1) + '</a>';
+            paginationHtml += '</li>';
+        }
+
+        paginationHtml += '<li class="' + (currentPage === totalPages - 1 ? 'disabled' : '') + '">';
+        paginationHtml += '<a href="javascript:void(0);" ' + (currentPage !== totalPages - 1 ? 'onclick="loadPage2(' + (currentPage + 1) + ')"' : '') + '>다음</a>';
+        paginationHtml += '<span ' + (currentPage === totalPages - 1 ? 'th:text="다음"' : '') + '></span>';
+        paginationHtml += '</li>';
+
+        paginationHtml += '<li class="' + (currentPage === totalPages - 1 ? 'disabled' : '') + '">';
+        paginationHtml += '<a href="javascript:void(0);" ' + (currentPage !== totalPages - 1 ? 'onclick="loadPage2(' + (totalPages - 1) + ')"' : '') + '>마지막</a>';
+        paginationHtml += '<span ' + (currentPage === totalPages - 1 ? 'th:text="마지막"' : '') + '></span>';
+        paginationHtml += '</li>';
+
+        pagination2.html(paginationHtml);
+    }
+</script>
+<!-- 강의 차시 목록 테이블 페이지네이션 스크립트-->
+<script>
+    function loadPage1(pageNumber,selectedValue) {
+        $.ajax({
+            url: '/loadPage1',
+            type: 'POST',
+            data: {
+                page: pageNumber,
+                selectedValue: selectedValue
+            },
+            dataType: 'json',
+            success: function (response) {
+                var chapters = response.content;
+                updateCourseChapterTablepage(chapters);
+                updatePagination1(response);
+            },
+            error: function (xhr, status, errorThrown) {
+                console.log(errorThrown);
+            }
+        });
+    }
+        function updateCourseChapterTablepage(chapters) {
+            var tableBody = $("#courseChaptersTableBody");
+            tableBody.empty(); // 기존 테이블 내용 삭제
+            if (chapters.length == 0) {
+                var chapterOrderInput = $("input[name='chapterOrder']");
+                let newChapterOrderValue = chapters.length + 1;
+                chapterOrderInput.val(newChapterOrderValue);
+            }
+            // 업데이트된 데이터를 기반으로 테이블 내용 다시 생성
+            for (const courseChapter of chapters) {
+                var chapterOrderInput = $("input[name='chapterOrder']");
+                let newChapterOrderValue = courseChapter.chapterOrder + 1;
+                chapterOrderInput.val(newChapterOrderValue);
+                var runningTime = courseChapter.content && courseChapter.content.runningTime ? courseChapter.content.runningTime : '';
+                var newRow = `
+            <tr class="clickable-row1">
+                <td><input type="checkbox" name="cbox1"></td>
+                <td data-chapter-order="${courseChapter.chapterOrder}" data-course-seq="${courseChapter.course.courseSeq}">
+                    ${courseChapter.chapterOrder}
+                </td>
+                <td><a href="#">${courseChapter.chapterName}</a></td>
+                <td>${runningTime}</td>
+            </tr>`;
+                tableBody.append(newRow);
+            }
+        }
+        function updatePagination1(data) {
+        var pagination1 = $('.pagination1');
+        pagination1.empty();
+
+        var totalPages = data.totalPages;
+        var currentPage = data.number;
+
+        var paginationHtml = '';
+
+        var startPage = Math.max(currentPage - 2, 0);
+        var endPage = Math.min(currentPage + 2, totalPages - 1);
+
+        paginationHtml += '<li class="' + (currentPage === 0 ? 'disabled' : '') + '">';
+        paginationHtml += '<a href="javascript:void(0);" ' + (currentPage !== 0 ? 'onclick="loadPage1(0)"' : '') + '>처음</a>';
+        paginationHtml += '<span ' + (currentPage === 0 ? 'th:text="처음"' : '') + '></span>';
+        paginationHtml += '</li>';
+
+        paginationHtml += '<li class="' + (currentPage === 0 ? 'disabled' : '') + '">';
+        paginationHtml += '<a href="javascript:void(0);" ' + (currentPage !== 0 ? 'onclick="loadPage1(' + (currentPage - 1) + ')"' : '') + '>이전</a>';
+        paginationHtml += '<span ' + (currentPage === 0 ? 'th:text="이전"' : '') + '></span>';
+        paginationHtml += '</li>';
+
+        for (var i = startPage; i <= endPage; i++) {
+        paginationHtml += '<li class="' + (currentPage === i ? 'active' : '') + '">';
+        paginationHtml += '<a href="javascript:void(0);" ' + 'onclick="loadPage1(' + i + ')"' + '>' + (i + 1) + '</a>';
+        paginationHtml += '</li>';
+    }
+
+        paginationHtml += '<li class="' + (currentPage === totalPages - 1 ? 'disabled' : '') + '">';
+        paginationHtml += '<a href="javascript:void(0);" ' + (currentPage !== totalPages - 1 ? 'onclick="loadPage1(' + (currentPage + 1) + ')"' : '') + '>다음</a>';
+        paginationHtml += '<span ' + (currentPage === totalPages - 1 ? 'th:text="다음"' : '') + '></span>';
+        paginationHtml += '</li>';
+
+        paginationHtml += '<li class="' + (currentPage === totalPages - 1 ? 'disabled' : '') + '">';
+        paginationHtml += '<a href="javascript:void(0);" ' + (currentPage !== totalPages - 1 ? 'onclick="loadPage1(' + (totalPages - 1) + ')"' : '') + '>마지막</a>';
+        paginationHtml += '<span ' + (currentPage === totalPages - 1 ? 'th:text="마지막"' : '') + '></span>';
+        paginationHtml += '</li>';
+
+        pagination1.html(paginationHtml);
+    }
 </script>
 <!-- 강의 삭제 스크립트-->
 <script>
@@ -655,6 +1154,7 @@
             const courseSeq = $(this).closest("tr").find("[data-course-seq]").data("course-seq");
             selectedCourseSeqs.push(courseSeq);
         });
+        console.log(selectedCourseSeqs);
 
         $.ajax({
             type: "POST",
@@ -688,103 +1188,119 @@
 <!-- 강의 차시등록 모달 스크립트 -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-    // 모달을 위한 JavaScript
-    const openContentRegistration = document.getElementById("openContentRegistration");
-    const modalOverlay = document.getElementById("modalOverlay");
-    const closeModal = document.getElementById("closeModal");
+        // 모달을 위한 JavaScript
+        const openContentRegistration = document.getElementById("openContentRegistration");
+        const modalOverlay = document.getElementById("modalOverlay");
+        const closeModal = document.getElementById("closeModal");
 
-    // 전역 범위에서 chapterOrderValue 변수 선언
-    let chapterOrderValue = 0;
+        // 전역 범위에서 chapterOrderValue 변수 선언
+        let chapterOrderValue = 0;
 
-    //모달이 열릴때
-    openContentRegistration.addEventListener("click", () => {
-        console.log("버튼 클릭됨");
-        modalOverlay.style.display = "block";
-        const chapterNameInput = document.querySelector("input[name='chapterName']");
-        const chapterBriefInput = document.querySelector("input[name='chapterBrief']");
-        chapterNameInput.value = "";
-        chapterBriefInput.value = "";
-    });
+        //모달이 열릴때
+        openContentRegistration.addEventListener("click", () => {
+            console.log("버튼 클릭됨");
+            modalOverlay.style.display = "block";
+            const chapterNameInput = document.querySelector("input[name='chapterName']");
+            const chapterBriefInput = document.querySelector("input[name='chapterBrief']");
+            chapterNameInput.value = "";
+            chapterBriefInput.value = "";
+        });
 
-    //모달이 닫힐때
-    closeModal.addEventListener("click", () => {
-        modalOverlay.style.display = "none";
-        const chapterNameInput = document.querySelector("input[name='chapterName']");
-        const chapterBriefInput = document.querySelector("input[name='chapterBrief']");
-        chapterNameInput.value = "";
-        chapterBriefInput.value = "";
-    });
-
-    // 모달 콘텐츠 바깥을 클릭하면 모달 닫기
-    window.addEventListener("click", (event) => {
-        if (event.target === modalOverlay) {
+        //모달이 닫힐때
+        closeModal.addEventListener("click", () => {
             modalOverlay.style.display = "none";
             const chapterNameInput = document.querySelector("input[name='chapterName']");
             const chapterBriefInput = document.querySelector("input[name='chapterBrief']");
             chapterNameInput.value = "";
             chapterBriefInput.value = "";
-        }
-    });
-
-    const form = document.querySelector("#saveform");
-    form.addEventListener("submit", async (event) => {
-        event.preventDefault(); // 폼 제출 기본 동작 중지
-
-        const formData = new FormData(form);
-        const response = await fetch("/CourseChapter_save", {
-            method: "POST",
-            body: formData,
         });
-        if (response.ok) {
-            modalOverlay.style.display = "none"; // 모달 닫기
-            // 응답 데이터를 JSON 형태로 파싱
-            const responseData = await response.json();
-            const newRow = document.createElement("tr");
-            newRow.classList.add("clickable-row1");
-            newRow.innerHTML = `
+
+        // 모달 콘텐츠 바깥을 클릭하면 모달 닫기
+        window.addEventListener("click", (event) => {
+            if (event.target === modalOverlay) {
+                modalOverlay.style.display = "none";
+                const chapterNameInput = document.querySelector("input[name='chapterName']");
+                const chapterBriefInput = document.querySelector("input[name='chapterBrief']");
+                chapterNameInput.value = "";
+                chapterBriefInput.value = "";
+            }
+        });
+
+        const form = document.querySelector("#saveform");
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault(); // 폼 제출 기본 동작 중지
+            var selectedValue = $("select[name='courseDTO.courseSeq']").val();;
+
+            const formData = new FormData(form);
+            const response = await fetch("/CourseChapter_save", {
+                method: "POST",
+                body: formData,
+            });
+            if (response.ok) {
+                modalOverlay.style.display = "none"; // 모달 닫기
+                const responseData = await response.json();
+                const runningTime = responseData.content && responseData.content.runningTime ? responseData.content.runningTime : '';
+                const newRow = document.createElement("tr");
+                newRow.classList.add("clickable-row1");
+                newRow.innerHTML = `
                                             <td><input type="checkbox" name="cbox1"></td>
                         <td data-chapter-order="${responseData.chapterOrder}" data-course-seq="${responseData.course.courseSeq}">${responseData.chapterOrder}</td>
                                             <td><a href="#">${responseData.chapterName}</a></td>
-                                            <td>${responseData.chapterBrief}</td>
+                                            <td>${runningTime}</td>
                                         `;
-            chapterOrderValue = responseData.chapterOrder + 1; // chapterOrderValue 업데이트
-            const chapterOrderInput = document.querySelector("input[name='chapterOrder']");
-            chapterOrderInput.value = chapterOrderValue;
-
-            courseChaptersTableBody.appendChild(newRow);
-        } else {
-        }
-        $(".clickable-row1").click(function () {
-            // 클릭한 행에서 'active' 클래스 추가하고 다른 행에서 제거
-            $(this).addClass("active");
-            $(".clickable-row1").not(this).removeClass("active");
-
-            // 클릭한 체크박스의 이벤트 버블링 중단
-            $(this).find("input[type='checkbox']").click(function (e) {
-                e.stopPropagation();
-            });
+                chapterOrderValue = responseData.chapterOrder + 1; // chapterOrderValue 업데이트
+                const chapterOrderInput = document.querySelector("input[name='chapterOrder']");
+                chapterOrderInput.value = chapterOrderValue;
+                const tableBody = document.querySelector("#courseChaptersTableBody");
+                tableBody.appendChild(newRow);
+                scrollToLastPage1(selectedValue);
+            } else {
+            }
         });
-    });
+        function scrollToLastPage1(selectedValue) {
+            $.ajax({
+                url: '/chapterLastPage',
+                type: 'POST',
+                dataType: 'json',
+                data:{
+                    selectedValue: selectedValue
+                },
+                success: function (response) {
+                    var totalPages = response.totalPages;
+                    var chaptersTotal = response.totalElements;
+                    const lastPageButton = document.querySelector('.pagination1 li:last-child a');
+                    if (lastPageButton) {
+                        lastPageButton.click(); // 마지막 페이지로 이동하는 버튼 클릭
+                    }
+                    loadPage1(totalPages - 1,selectedValue);
+                    $("#searchResult1").text("검색결과: " + chaptersTotal + "건");
+                },
+                error: function (xhr, status, errorThrown) {
+                    console.log(errorThrown);
+                }
+            });
+        }
     });
 </script>
 <!-- 강의 신규등록 모달 스크립트 -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-    const form = document.querySelector("#courseSaveForm");
-    form.addEventListener("submit", async (event) => {
-        event.preventDefault(); // 폼 제출 기본 동작 중지
+        const form = document.querySelector("#courseSaveForm");
 
-        const formData = new FormData(form);
-        const response = await fetch("/Course_save", {
-            method: "POST",
-            body: formData,
-        });
-        if (response.ok) {
-            courseModelOverlay1.style.display = "none"; // 모달 닫기
-            const responseData = await response.json();
-            const newRow = document.createElement("tr");
-            newRow.classList.add("clickable-row");
-            newRow.innerHTML = `
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault(); // 폼 제출 기본 동작 중지
+
+            const formData = new FormData(form);
+            const response = await fetch("/Course_save", {
+                method: "POST",
+                body: formData,
+            });
+            if (response.ok) {
+                courseModelOverlay1.style.display = "none"; // 모달 닫기
+                const responseData = await response.json();
+                const newRow = document.createElement("tr");
+                newRow.classList.add("clickable-row");
+                newRow.innerHTML = `
                 <td><input type="checkbox" name="cbox"></td>
                 <td>${responseData.courseSeq}</td>
                 <td><a href="#" class="course-link" data-course-seq="${responseData.courseSeq}">${responseData.courseName}</a></td>
@@ -793,48 +1309,58 @@
                 <td>${responseData.endDateTime}</td>
                 <td>${responseData.statusCode.name}</td>
             `;
-            // 새로운 행을 목록에 추가
-            const tableBody = document.querySelector("#courseTable tbody");
-            tableBody.appendChild(newRow);
-        } else {
-            // 에러 처리
-        }
-        $(".clickable-row").click(function () {
-            // 클릭한 행에서 'active' 클래스 추가하고 다른 행에서 제거
-            $(this).addClass("active");
-            $(".clickable-row").not(this).removeClass("active");
-
-            // 클릭한 체크박스의 이벤트 버블링 중단
-            $(this).find("input[type='checkbox']").click(function (e) {
-                e.stopPropagation();
-            });
+                // 새로운 행을 목록에 추가
+                const tableBody = document.querySelector("#courseTable tbody");
+                tableBody.appendChild(newRow);
+                scrollToLastPage();
+            } else {
+            }
         });
-    });
+        function scrollToLastPage() {
+            $.ajax({
+                url: '/courseLastPage',
+                type: 'POST',
+                dataType: 'json',
+                success: function (response) {
+                    var totalPages = response.totalPages;
+                    var courseToTal = response.totalElements;
+                    const lastPageButton = document.querySelector('.pagination li:last-child a');
+                    if (lastPageButton) {
+                        lastPageButton.click(); // 마지막 페이지로 이동하는 버튼 클릭
+                    }
+                    loadPage(totalPages - 1);
+                    $("#searchResult").text("검색결과: " + courseToTal + "건");
+                },
+                error: function (xhr, status, errorThrown) {
+                    console.log(errorThrown);
+                }
+            });
+        }
 
         // 모달을 위한 JavaScript
         const openCourseModel1 = document.getElementById("openCourseModel");
         const courseModelOverlay1 = document.getElementById("courseModelOverlay");
         const closeCourseModel1 = document.getElementById("closeCourseModel");
 
-    //모달이 열릴때
-    openCourseModel1.addEventListener("click", () => {
-        courseModelOverlay1.style.display = "block";
-        form.reset();
-    });
+        //모달이 열릴때
+        openCourseModel1.addEventListener("click", () => {
+            courseModelOverlay1.style.display = "block";
+            form.reset();
+        });
 
-    //모달이 닫힐때
-    closeCourseModel1.addEventListener("click", () => {
-        courseModelOverlay1.style.display = "none";
-        form.reset();
-    });
-
-    // 모달 콘텐츠 바깥을 클릭하면 모달 닫기
-    window.addEventListener("click", (event) => {
-        if (event.target === courseModelOverlay1) {
+        //모달이 닫힐때
+        closeCourseModel1.addEventListener("click", () => {
             courseModelOverlay1.style.display = "none";
             form.reset();
-        }
-     });
+        });
+
+        // 모달 콘텐츠 바깥을 클릭하면 모달 닫기
+        window.addEventListener("click", (event) => {
+            if (event.target === courseModelOverlay1) {
+                courseModelOverlay1.style.display = "none";
+                form.reset();
+            }
+        });
     });
 </script>
 <!-- 차시 전체선택 스크립트-->
@@ -855,6 +1381,7 @@
         const selectedCourseSeqs = [];
         $("input[name=cbox1]:checked").each(function () {
             const chapterOrder = $(this).closest("tr").find("[data-chapter-order]").data("chapter-order");
+
             console.log(chapterOrder);
             selectedChapters.push(chapterOrder);
 
@@ -902,14 +1429,6 @@
                                     `;
             tableBody.append(newRow);
         }
-        $(".clickable-row1").click(function () {
-            $(".clickable-row1 input[type='checkbox']").click(function (e) {
-                e.stopPropagation(); // 이벤트 버블링 중단
-            });
-
-            $(this).toggleClass("active");
-            $(".clickable-row1").not(this).removeClass("active");
-        });
     }
 </script>
 <!-- 선택한 차시 목록을 보여주는 스크립트-->
@@ -917,7 +1436,6 @@
     document.addEventListener("DOMContentLoaded", function() {
         $(document).ready(function() {
             $(document).on("click", ".clickable-row1", function(e) {
-                e.preventDefault();
 
                 const chapterOrder = $(this).find("[data-chapter-order]").data("chapter-order");
                 const courseSeq = $(this).find("[data-course-seq]").data("course-seq");
@@ -931,11 +1449,20 @@
                     },
                     success: function(data) {
                         const chapterSeq = data.courseChapterCompositeKey.chapterSeq;
+
+                        var runningTime = data.content && data.content.runningTime ? data.content.runningTime : '';
+                        var thumbnailFile = data.content && data.content.thumbnailFile ? data.content.thumbnailFile : '';
+                        var videoId = data.content && data.content.videoId ? data.content.videoId : '';
+                        var supplementaryFile = data.supplementaryFile && data.supplementaryFile.fileName ? data.supplementaryFile.fileName : '';
+
                         $("#chapterDetailSeq").text(chapterSeq);
                         $("#chapterDetailCourseName").text(data.course.courseName);
                         $("#chapterDetailOrder").text(data.chapterOrder);
                         $("#chapterDetailName").text(data.chapterName);
-                        /*$("#chapterDetailContentVideoId").text(data.content.videoId);*/
+                        $("#chapterDetailRunningTime").text(runningTime);
+                        $("#chapterDetailThumbnail").text(thumbnailFile);
+                        $("#chapterDetailContentVideoId").text(videoId);
+                        $("#chapterDetailSupplementaryFile").text(supplementaryFile);
                         $("#chapterDetailBrief").text(data.chapterBrief);
                     },
                     error: function(xhr, status, error) {
@@ -945,6 +1472,87 @@
             });
         });
     });
+</script>
+<!-- 수강대상자 목록 테이블 페이지네이션 스크립트-->
+<script>
+    function loadPage2(pageNumber,selectedValue) {
+        $.ajax({
+            url: '/loadPage2',
+            type: 'POST',
+            data: {
+                page: pageNumber,
+                selectedValue: selectedValue
+            },
+            dataType: 'json',
+            success: function (response) {
+                var students = response.content;
+                updateCourseStudentsTablepage(students);
+                updatePagination2(response);
+            },
+            error: function (xhr, status, errorThrown) {
+                console.log(errorThrown);
+            }
+        });
+    }
+    function updateCourseStudentsTablepage(students){
+
+        var tableBody = $("#courseStudentTableBody");
+        tableBody.empty();
+
+        for (const student of students) {
+            var newRow = `
+            <tr class="clickable-row2">
+                <td><input type="checkbox" name="cbox2"></td>
+                <td data-student-seq="${student.student.memberSeq}" data-course-seq="${student.course.courseSeq}">${student.student.memberDivision.name}</td>
+                <td>${student.student.nameKor}</td>
+                <td>${student.student.genderCode.name}</td>
+                <td>??</td>
+                <td>??</td>
+                <td>??</td>
+            </tr>`;
+            tableBody.append(newRow);
+        }
+    }
+    function updatePagination2(data) {
+        var pagination2 = $('.pagination2');
+        pagination2.empty();
+
+        var totalPages = data.totalPages;
+        var currentPage = data.number;
+
+        var paginationHtml = '';
+
+        var startPage = Math.max(currentPage - 2, 0);
+        var endPage = Math.min(currentPage + 2, totalPages - 1);
+
+        paginationHtml += '<li class="' + (currentPage === 0 ? 'disabled' : '') + '">';
+        paginationHtml += '<a href="javascript:void(0);" ' + (currentPage !== 0 ? 'onclick="loadPage1(0)"' : '') + '>처음</a>';
+        paginationHtml += '<span ' + (currentPage === 0 ? 'th:text="처음"' : '') + '></span>';
+        paginationHtml += '</li>';
+
+        paginationHtml += '<li class="' + (currentPage === 0 ? 'disabled' : '') + '">';
+        paginationHtml += '<a href="javascript:void(0);" ' + (currentPage !== 0 ? 'onclick="loadPage1(' + (currentPage - 1) + ')"' : '') + '>이전</a>';
+        paginationHtml += '<span ' + (currentPage === 0 ? 'th:text="이전"' : '') + '></span>';
+        paginationHtml += '</li>';
+
+        for (var i = startPage; i <= endPage; i++) {
+            paginationHtml += '<li class="' + (currentPage === i ? 'active' : '') + '">';
+            paginationHtml += '<a href="javascript:void(0);" ' + 'onclick="loadPage1(' + i + ')"' + '>' + (i + 1) + '</a>';
+            paginationHtml += '</li>';
+        }
+
+        paginationHtml += '<li class="' + (currentPage === totalPages - 1 ? 'disabled' : '') + '">';
+        paginationHtml += '<a href="javascript:void(0);" ' + (currentPage !== totalPages - 1 ? 'onclick="loadPage1(' + (currentPage + 1) + ')"' : '') + '>다음</a>';
+        paginationHtml += '<span ' + (currentPage === totalPages - 1 ? 'th:text="다음"' : '') + '></span>';
+        paginationHtml += '</li>';
+
+        paginationHtml += '<li class="' + (currentPage === totalPages - 1 ? 'disabled' : '') + '">';
+        paginationHtml += '<a href="javascript:void(0);" ' + (currentPage !== totalPages - 1 ? 'onclick="loadPage1(' + (totalPages - 1) + ')"' : '') + '>마지막</a>';
+        paginationHtml += '<span ' + (currentPage === totalPages - 1 ? 'th:text="마지막"' : '') + '></span>';
+        paginationHtml += '</li>';
+
+        pagination2.html(paginationHtml);
+    }
 </script>
 <!-- 수강대상자 전체선택 스크립트-->
 <script>
@@ -987,6 +1595,7 @@
 
     function fetchAndShowStudentData() {
         const tableBody = document.querySelector("#studentTableBody");
+        var selectedValue1 = $("select[name='courseDTO.courseSeq']").val();;
         // 이전 데이터 삭제
         while (tableBody.firstChild) {
             tableBody.removeChild(tableBody.firstChild);
@@ -1008,9 +1617,34 @@
                         <td>3</td>
                     `;
                     tableBody.appendChild(newRow);
+                    scrollToLastPage2(selectedValue1);
                 });
             })
             .catch(error => console.error("An error occurred:", error));
+    }
+
+    function scrollToLastPage2(selectedValue1) {
+        $.ajax({
+            url: '/studentLastPage',
+            type: 'POST',
+            dataType: 'json',
+            data:{
+                selectedValue: selectedValue1
+            },
+            success: function (response) {
+                var totalPages = response.totalPages;
+                var studentToTal = response.totalElements;
+                const lastPageButton = document.querySelector('.pagination2 li:last-child a');
+                if (lastPageButton) {
+                    lastPageButton.click(); // 마지막 페이지로 이동하는 버튼 클릭
+                }
+                loadPage2(totalPages - 1,selectedValue1);
+                $("#searchResult2").text("검색결과: " + studentToTal + "건");
+            },
+            error: function (xhr, status, errorThrown) {
+                console.log(errorThrown);
+            }
+        });
     }
 
     openStudentRegistrationModal.addEventListener("click", () => {
@@ -1049,7 +1683,6 @@
             .then(data => {
                 if (data) {
                     closeStudentRegistrationModal.click();
-                    console.log(data);
                     updatePageData(data);
                 } else {
                     console.error("An error occurred during data processing.");
@@ -1059,7 +1692,9 @@
     }
 
     function updatePageData(data) {
-        var tableBody = document.getElementById("courseStudentTableBody");
+        var tableBody = document.getElementById("courseStudentTableBody")
+
+        console.log("모냐고"+data.length);
 
         for (const newStudent of data) {
             var newRow = document.createElement("tr");
@@ -1076,7 +1711,6 @@
 
             tableBody.appendChild(newRow);
         }
-
     }
 
 </script>
@@ -1085,8 +1719,7 @@
     document.addEventListener("DOMContentLoaded", function() {
         $(document).ready(function() {
             $(document).on("click", ".clickable-row2", function(e) {
-                e.preventDefault();
-
+                console.log("일로오나?");
                 const studentSeq = $(this).find("[data-student-seq]").data("student-seq");
                 const courseSeq = $(this).find("[data-course-seq]").data("course-seq");
 
@@ -1098,18 +1731,26 @@
                         courseSeq: courseSeq
                     },
                     success: function(data) {
-                        console.log("데이터전달성공");
+
+                        if (data.student.pictureFile && data.student.pictureFile.fileName) {
+                            var imageUrl = "../../img/member/" + data.student.pictureFile.fileName;
+                            $("#memberDetailImage").attr("src", imageUrl);
+                        }
+
                         $("#memberDetailSeq").text(data.student.memberSeq);
                         $("#memberDetailDivisionName").text(data.student.memberDivision.name);
                         $("#memberDetailName").text(data.student.nameKor);
                         $("#memberDetailGenderName").text(data.student.genderCode.name);
                         $("#memberDetailEmail").text(data.student.email);
-                        $("#memberDetailbirthDate").text(data.student.birthDate);
+                        $("#memberDetailBirthDate").text(data.student.birthDate);
+                        $("#memberDetailRegisterDate").text(data.student.registerDate);
+                        $("#memberDetailLastLoginDate").text(data.student.lastLoginDate);
                     },
                     error: function(xhr, status, error) {
                         console.error("Error:", error);
                     }
                 });
+
             });
         });
     });
@@ -1148,14 +1789,6 @@
                 console.error("Error:", error);
             }
         });
-        $(".clickable-row2").click(function () {
-            $(".clickable-row2 input[type='checkbox']").click(function (e) {
-                e.stopPropagation(); // 이벤트 버블링 중단
-            });
-
-            $(this).toggleClass("active");
-            $(".clickable-row2").not(this).removeClass("active");
-        });
     }
     function removeDeletedStudents(selectedStudents) {
         for (const studentSeq of selectedStudents) {
@@ -1163,18 +1796,340 @@
         }
     }
 </script>
-<!-- 이벤트 버블링 막는 스크립트 -->
+<!-- 강의 목록 클릭 활성화 스크립트 -->
 <script>
-    $(document).ready(function () {
-        $(".clickable-row input[type='checkbox']").click(function (e) {
-            e.stopPropagation(); // 이벤트 버블링 중단
-        });
-        $(".clickable-row").click(function () {
-            $(this).toggleClass("active");
-            $(".clickable-row").not(this).removeClass("active");
+    $(document).on("click", ".clickable-row", function () {
+        $(this).addClass("active");
+        $(".clickable-row").not(this).removeClass("active");
+
+        $(this).find("input[type='checkbox']").click(function (e) {
+            e.stopPropagation();
         });
     });
 </script>
+<!-- 강의 목록 편집 기능 스크립트 -->
+<script>
+    $(document).on("dblclick", ".clickable-row", function () {
+        var $row = $(this);
+
+        if ($row.hasClass("editing")) {
+            // 이미 편집 모드인 경우, 편집 모드를 종료하고 원래 내용으로 되돌림
+            var originalContent = $row.data("original-content");
+            $row.removeClass("editing").html(originalContent); // 원래 내용으로 변경
+            return;
+        }
+
+        // 저장해둔 원래 내용을 데이터 속성으로 저장
+        $row.find("td:not(:first-child)").each(function () {
+            var value = $(this).text();
+            $(this).data("original-content", value);
+        });
+
+        $row.addClass("editing");
+        $row.find("td:not(:first-child)").each(function (index) {
+            var value = $(this).text();
+            var inputHtml = "";
+            switch (index) {
+                case 1:
+                case 2:
+                    inputHtml = "<input type='text' value='" + value + "'>";
+                    break;
+                case 3:
+                case 4:
+                    inputHtml = "<input type='date' value='" + value + "'>";
+                    break;
+                case 5:
+                    inputHtml = "<select style='width: auto;'><option value='대기'>대기</option><option value='진행'>진행</option><option value='종료'>종료</option></select>";
+                    break;
+                default:
+                    inputHtml = value;
+                    break;
+            }
+            $(this).html(inputHtml);
+        });
+    });
+
+   $(document).on("click", "#courseUpdate", function () {
+       var $row = $(this).closest(".clickable-row");
+
+       if ($row.hasClass("editing")) {
+           // 수정 사항 처리 및 업데이트 로직 구현
+           // 예: AJAX를 사용하여 서버에 수정 사항을 전송하고 업데이트
+
+           // 편집 모드 종료
+           $row.removeClass("editing");
+           $row.find("td:not(:first-child)").each(function () {
+               var value = $(this).find("input").val();
+               $(this).html(value);
+           });
+       }
+   });
+</script>
+<!-- 강좌 차시 목록 클릭 활성화 스크립트-->
+<script>
+    $(document).on("click", ".clickable-row1", function () {
+        $(this).addClass("active");
+        $(".clickable-row1").not(this).removeClass("active");
+
+        $(this).find("input[type='checkbox']").click(function (e) {
+            e.stopPropagation();
+        });
+    });
+</script>
+<!-- 수강대상자 목록 클릭 활성화 스크립트-->
+<script>
+    $(document).on("click", ".clickable-row2", function () {
+        $(this).addClass("active");
+        $(".clickable-row2").not(this).removeClass("active");
+
+        $(this).find("input[type='checkbox']").click(function (e) {
+            e.stopPropagation();
+        });
+    });
+</script>
+<!-- ------------------------------------------------------------------------------------------------------------ -->
+
+<!-- 콘텐츠 스크립트 ------------------------------------------------------------------------------------------------------------ -->
+<script>
+    function previewPicture(event) {
+        const pictureInput = event.target;
+        const picturePreview = document.getElementById('logo-preview');
+
+        if (pictureInput.files && pictureInput.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const imgElement = document.createElement('img');
+                imgElement.src = e.target.result;
+                imgElement.style.maxWidth = '100%';
+                imgElement.style.height = "auto";
+                picturePreview.innerHTML = '';
+                picturePreview.appendChild(imgElement);
+            };
+
+            reader.readAsDataURL(pictureInput.files[0]);
+        }
+    }
+</script>
+<!-- 콘텐츠 전체선택 -->
+<script>
+    function checkAll4() {
+        if ($("#cboxAll4").is(':checked')) {
+            $("input[name=cbox4]").prop("checked", true);
+        } else {
+            $("input[name=cbox4]").prop("checked", false);
+        }
+    }
+</script>
+<!-- 그리드 적용 (*보류*) -->
+<script>
+    /*        //그리드
+            $("#contentTable").Grid({
+                //search: true,
+                pagination: {
+                    enabled: false,
+                    limit : 7
+                },
+                multiselect : true,
+                multiboxonly : false,
+                language: {
+                    'search' : {
+                        placeholder : '검색',
+                        //noResults: '검색결과가 없습니다.'
+                    },
+                    'pagination' : {
+                        'previous': '이전',
+                        'next': '다음'
+                    }
+                }
+            });*/
+</script>
+<!-- 콘텐츠 신규등록 스크립트 -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const form = document.querySelector("#contentInsert");
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault(); // 폼 제출 기본 동작 중지
+            const formData = new FormData(form);
+            const response = await fetch("/CourseChapterContent_save", {
+                method: "POST",
+                body: formData,
+            });
+            console.log("1");
+            console.log("1");
+            if (response.ok) {
+                console.log("2");
+                newContentModal.style.display = "none"; // 모달 닫기
+                const responseData = await response.json(); // JSON을 변수에 저장
+                 console.log(responseData);
+
+                const newRow = document.createElement("tr");
+                newRow.classList.add("clickable-row3");
+                newRow.innerHTML = `
+                    <td><input type="checkbox" name="cbox4"></td>
+                    <td>${responseData.contentName}</td>
+                    <td class="contentVideoId" id="${responseData.videoId}">${responseData.videoId}</td>
+                    <td>${responseData.runningTime}</td>
+                `;
+                const tableBody = document.querySelector("#contentTableBody");
+                tableBody.appendChild(newRow);
+            } else {
+                // 에러 처리
+            }
+        });
+
+        // 모달을 위한 JavaScript
+        const newContentButton = document.getElementById("newContentButton");
+        const newContentModal = document.getElementById("newContentModal");
+        const closeNewContentModal = document.getElementById("closeNewContentModal");
+
+        //모달이 열릴때
+        newContentButton.addEventListener("click", () => {
+            newContentModal.style.display = "block";
+            form.reset();
+        });
+
+        //모달이 닫힐때
+        closeNewContentModal.addEventListener("click", () => {
+            newContentModal.style.display = "none";
+            form.reset();
+        });
+
+        // 모달 콘텐츠 바깥을 클릭하면 모달 닫기
+        window.addEventListener("click", (event) => {
+            if (event.target === newContentModal) {
+                newContentModal.style.display = "none";
+                form.reset();
+            }
+        });
+    });
+</script>
+<!-- 선택한 콘텐츠 정보 보여주는 스크립트 -->
+<script>
+        $(document).ready(function() {
+            $(document).on("click", ".clickable-row3", function(e) {
+                const videoId = $(this).find(".contentVideoId").attr("id");
+                $.ajax({
+                    type: "POST",
+                    url: "/CourseChapterContent_detail",
+                    data: {
+                        videoId: videoId
+                    },
+                    success: function(data) {
+                        $("#contentName").val(data.contentName);
+                        $("#contentDescription").val(data.contentBrief);
+                        $("#videoId").val(data.videoId);
+                        //$("#courseName2").val(data.courseName);
+                        $("#runningTime").val(data.runningTime);
+                        $("#thumbnailFile").val(data.thumbnailFile);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error:", error);
+                    }
+                });
+            });
+        })
+</script>
+<!-- 콘텐츠 목록 클릭 활성화 스크립트-->
+<script>
+    $(document).on("click", ".clickable-row3", function () {
+        $(this).addClass("active");
+        $(".clickable-row3").not(this).removeClass("active");
+
+        $(this).find("input[type='checkbox']").click(function (e) {
+            e.stopPropagation();
+        });
+    });
+</script>
+<!-- 콘텐츠 삭제 스크립트-->
+<script>
+    function deleteSelectedContent() {
+        const selectedCourseContentVideoIds = [];
+        $("input[name=cbox4]:checked").each(function () {
+            const videoId = $(this).closest("tr").find(".contentVideoId").attr("id");
+            selectedCourseContentVideoIds.push(videoId);
+        });
+        console.log(selectedCourseContentVideoIds);
+
+        $.ajax({
+            type: "POST",
+            url: "/CourseContent_delete",
+            data: JSON.stringify(
+                {contentVideoIds: selectedCourseContentVideoIds}
+            ),
+            contentType: "application/json",
+            success: function (data) {
+                if (data.success) {
+                    data.deletedVideoIds.forEach(function (deletedVideoId) {
+                        $(`#${deletedVideoId}`).closest("tr").remove();
+
+                        $("#contentName").val("");
+                        $("#contentDescription").val("");
+                        $("#videoId").val("");
+                        //$("#courseName2").val("");
+                        $("#runningTime").val("");
+                        $("#thumbnailFile").val("");
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    }
+</script>
+<!-- 교과목명 찾기 모달창 스크립트 -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const findContentNameModal = document.getElementById("findContentNameModal");
+        const courseNameModal = document.getElementById("courseNameModal");
+        const closeContentModal = document.getElementById("closeContentModal");
+
+        courseNameModal.addEventListener("click", function() {
+            if (findContentNameModal) {
+                findContentNameModal.style.display = "block";
+            }
+        });
+
+        closeContentModal.addEventListener("click", function() {
+            if (findContentNameModal) {
+                findContentNameModal.style.display = "none";
+            }
+        });
+    });
+</script>
+<!-- 연동확인 모달창 스크립트 -->
+<script>
+    const modal = document.getElementById("checkConnection");
+    const openModalButton = document.getElementById("openModalButton");
+    const closeModalButton = document.getElementById("closeCheckConnectionModal");
+
+    openModalButton.addEventListener("click", function() {
+        const videoId = document.getElementById("videoId").value;
+        playVideoInModal(videoId);
+    });
+
+    closeModalButton.addEventListener("click", function() {
+        closeModal();
+    });
+
+    function playVideoInModal(videoId) {
+        const youtubePlayer = document.getElementById("youtubePlayer");
+        youtubePlayer.innerHTML = `<iframe width="700" height="500" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+        modal.style.display = "block";
+    }
+
+    function closeModal() {
+        modal.style.display = "none";
+        const youtubePlayer = document.getElementById("youtubePlayer");
+        youtubePlayer.innerHTML = "";
+    }
+
+</script>
+
+
+
+<!-- 모달 스크립트 -->
 <script>
     const courseSessionsSection = document.getElementById("courseSessionsSection");
     const enrolleesSection = document.getElementById("enrolleesSection");
@@ -1195,7 +2150,5 @@
         document.getElementById("userInfoBox").style.display = "block";
     });
 </script>
-<h2>ㅎㅎㅎㅎㅎ</h2>
 </body>
-
 </html>

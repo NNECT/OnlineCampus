@@ -5,6 +5,8 @@ import com.education.onlinecampus.data.entity.*;
 import com.education.onlinecampus.service.business.manager.CourseService;
 import com.education.onlinecampus.service.common.RepositoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +42,12 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public Page<CourseChapter> findCourseChapter(Long CourseSeq,Pageable pageable) {
+        Course course = repositoryService.getCourseRepository().findByCourseSeq(CourseSeq);
+        return repositoryService.getCourseChapterRepository().findByCourse(course,pageable);
+    }
+
+    @Override
     public CourseDTO CourseFind(Long CourseSeq){
         return repositoryService.getCourseRepository().findByCourseSeq(CourseSeq).toDTO();
     }
@@ -54,7 +62,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseChapterContentDTO courseChapterContentFindByVideoId(String videoId) {
-        return null;
+        return  repositoryService.getCourseChapterContentRepository().findById(videoId).orElseThrow().toDTO();
     }
 
     @Override
@@ -113,6 +121,11 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public Page<CourseChapter> findByCourseChapterCompositeKeyCourseSeq(Long courseSeq,Pageable pageable){
+        return repositoryService.getCourseChapterRepository().findByCourseChapterCompositeKey_CourseSeq(courseSeq,pageable);
+    }
+
+    @Override
     public List<CourseChapter> findByCourseChapterCompositeKeyCourseSeq(Long courseSeq){
         return repositoryService.getCourseChapterRepository().findByCourseChapterCompositeKey_CourseSeq(courseSeq);
     }
@@ -120,6 +133,11 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public CourseChapterContentDTO courseChapterContentSave(CourseChapterContentDTO courseChapterContentDTO) {
         return repositoryService.getCourseChapterContentRepository().save(courseChapterContentDTO.toEntity()).toDTO();
+    }
+
+    @Override
+    public void courseChapterContentDelete(CourseChapterContent courseChapterContent) {
+        repositoryService.getCourseChapterContentRepository().delete(courseChapterContent);
     }
 
     @Override
@@ -144,6 +162,16 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<CourseStudent> courseStudentFindByCourseSeq(Long courseSeq) {
         return repositoryService.getCourseStudentRepository().findByCourseStudentCompositeKey_CourseSeq(courseSeq);
+    }
+
+    @Override
+    public void deleteByCourse_courseSeqAndStudent_memberSeq(Long courseSeq,Long memberSeq) {
+        repositoryService.getCourseStudentRepository().deleteByCourse_courseSeqAndStudent_memberSeq(courseSeq,memberSeq);
+    }
+
+    @Override
+    public Page<CourseStudent> courseStudentFindByCourseSeq(Long courseSeq,Pageable pageable) {
+        return repositoryService.getCourseStudentRepository().findByCourseStudentCompositeKey_CourseSeq(courseSeq,pageable);
     }
 
     @Override
@@ -261,5 +289,31 @@ public class CourseServiceImpl implements CourseService {
         result = Math.round(result * 100) / 100.0;
 
         return Math.min(result, 100.0);
+    }
+
+    @Override
+    public List<CourseChapterContent> courseChapterContentFindAll(){
+        List<CourseChapterContent> all = repositoryService.getCourseChapterContentRepository().findAll();
+        return all;
+    }
+
+    @Override
+    public Page<Course> courseFindAllPage(Pageable pageable){
+        return repositoryService.getCourseRepository().findAll(pageable);
+    }
+
+    @Override
+    public Page<CourseChapter> courseChapterFindAllpage(Pageable pageable) {
+        return repositoryService.getCourseChapterRepository().findAll(pageable);
+    }
+
+    @Override
+    public Page<CourseStudent> courseStudentFindAllpage(Pageable pageable) {
+        return repositoryService.getCourseStudentRepository().findAll(pageable);
+    }
+
+    @Override
+    public Page<CourseStudent> courseStudentFindByCourse_courseSeq(Long courseSeq,Pageable pageable) {
+        return repositoryService.getCourseStudentRepository().findByCourse_courseSeq(courseSeq,pageable);
     }
 }

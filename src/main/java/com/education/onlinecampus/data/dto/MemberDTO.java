@@ -29,6 +29,7 @@ public class MemberDTO implements DTOMarker<Member> {
     private LocalDate lastLoginDate;
     private LocalDate registerDate;
     private FileDTO pictureFileDTO;
+    private String description;
 
     @Override
     public Member toEntity() {

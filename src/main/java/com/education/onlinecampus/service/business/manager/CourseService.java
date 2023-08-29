@@ -3,8 +3,10 @@ package com.education.onlinecampus.service.business.manager;
 import com.education.onlinecampus.data.dto.*;
 import com.education.onlinecampus.data.entity.Course;
 import com.education.onlinecampus.data.entity.CourseChapter;
+import com.education.onlinecampus.data.entity.CourseChapterContent;
 import com.education.onlinecampus.data.entity.CourseStudent;
-import com.education.onlinecampus.service.common.RepositoryService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -20,9 +22,10 @@ public interface CourseService {
     // CourseChapter
     CourseChapter findByCourseAndChapterOrder(Long courseSeq, Long chapterorder);
     List<CourseChapter> CourseChapterFindAll();
-    List<CourseChapter> findByCourseChapterCompositeKeyCourseSeq(Long courseSeq);
+    Page<CourseChapter> findByCourseChapterCompositeKeyCourseSeq(Long courseSeq, Pageable pageable);
     CourseChapterDTO courseChapterFindByCourseAndSeq(CourseDTO courseDTO, Long courseChapterSeq);
     List<CourseChapter> findCourseChapter(Long CourseSeq);
+    Page<CourseChapter> findCourseChapter(Long CourseSeq,Pageable pageable);
     List<CourseChapterDTO> courseChapterFindByCourse(CourseDTO courseDTO);
     List<List<CourseChapterDTO>> courseChapterFindAllByCourseList(List<CourseDTO> courseDTOList);
     CourseChapterDTO CourseChapterSave(CourseChapterDTO courseChapterDTO);
@@ -30,13 +33,22 @@ public interface CourseService {
 
     // CourseChapterContent
     CourseChapterContentDTO courseChapterContentFindByVideoId(String videoId);
+
+    List<CourseChapter> findByCourseChapterCompositeKeyCourseSeq(Long courseSeq);
+
     CourseChapterContentDTO courseChapterContentSave(CourseChapterContentDTO courseChapterContentDTO);
+    void courseChapterContentDelete(CourseChapterContent courseChapterContent);
+    List<CourseChapterContent> courseChapterContentFindAll();
 
     // CourseStudent
     CourseStudentDTO courseStudentFindByCourseAndMember(CourseDTO courseDTO, MemberDTO memberDTO);
     CourseStudentDTO courseStudentSave(CourseStudentDTO courseStudentDTO);
     CourseStudentDTO courseStudentFindByCourseAndStudent(CourseDTO courseDTO, MemberDTO memberDTO);
     List<CourseStudent> courseStudentFindByCourseSeq(Long courseSeq);
+
+    void deleteByCourse_courseSeqAndStudent_memberSeq(Long courseSeq, Long memberSeq);
+
+    Page<CourseStudent> courseStudentFindByCourseSeq(Long courseSeq,Pageable pageable);
     List<CourseStudent> CourseStudentAllSave(Long[] memberseqs, Long courseSeq, CourseStudentDTO courseStudentDTO);
 
     // CourseChapterStudentProgress
@@ -51,4 +63,12 @@ public interface CourseService {
     double getMemeberProgress(List<List<CourseChapterStudentProgressDTO>> courseChapterStudentProgressList);
     double getCourseProgress(MemberDTO studentDTO, CourseDTO courseDTO);
     double getChapterProgress(MemberDTO studentDTO, CourseChapterDTO courseChapterDTO);
+
+    Page<Course> courseFindAllPage(Pageable pageable);
+
+    Page<CourseChapter> courseChapterFindAllpage(Pageable pageable);
+    Page<CourseStudent> courseStudentFindAllpage(Pageable pageable);
+
+    Page<CourseStudent> courseStudentFindByCourse_courseSeq(Long courseSeq,Pageable pageable);
+
 }
