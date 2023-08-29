@@ -472,8 +472,8 @@
                         <tbody id="contentTableBody">
                         <tr class="clickable-row3" th:each="courseChapterContentList : ${courseChapterContents}">
                             <td><input type="checkbox" name="cbox4"></td>
+                            <td th:text="${courseChapterContentList.contentName}"></td>
                             <td class="contentVideoId" th:id="${courseChapterContentList.videoId}" th:text="${courseChapterContentList.videoId}"></td>
-                            <td></td>
                             <td th:text="${courseChapterContentList.runningTime}"></td>
                         </tr>
                         </tbody>
