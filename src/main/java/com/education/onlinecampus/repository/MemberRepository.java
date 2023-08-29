@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    List<Member> findByMemberDivision(CommonCode memberDivision);
+    List<Member> findByMemberDivision_code(String divisionCode);
     List<Member> findByGenderCode(CommonCode genderCode);
     List<Member> findByPictureFile(File pictureFile);
     Optional<Member> findByUsername(String username);

@@ -5,6 +5,8 @@ import com.education.onlinecampus.data.entity.*;
 import com.education.onlinecampus.service.business.manager.CourseService;
 import com.education.onlinecampus.service.common.RepositoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,8 +42,9 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<CourseChapterDTO> courseChapterFindByCourse(CourseDTO courseDTO) {
-        return null;
+    public Page<CourseChapter> findCourseChapter(Long CourseSeq,Pageable pageable) {
+        Course course = repositoryService.getCourseRepository().findByCourseSeq(CourseSeq);
+        return repositoryService.getCourseChapterRepository().findByCourse(course,pageable);
     }
 
     @Override
@@ -79,6 +82,12 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public List<CourseChapterDTO> courseChapterFindByCourse(CourseDTO courseDTO) {
+        Course course = courseDTO.toEntity();
+        return repositoryService.getCourseChapterRepository().findByCourse(course).stream().map(CourseChapter::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
     public List<List<CourseChapterDTO>> courseChapterFindAllByCourseList(List<CourseDTO> courseDTOList) {
         List<List<CourseChapterDTO>> resultList = new ArrayList<>();
         for (CourseDTO courseDTO : courseDTOList) {
@@ -109,6 +118,11 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<Course> findByCourseNameContaining(String searchKeyword, String searchKeyword1){
         return repositoryService.getCourseRepository().findByCourseNameOrCourseNameContaining(searchKeyword,searchKeyword1);
+    }
+
+    @Override
+    public Page<CourseChapter> findByCourseChapterCompositeKeyCourseSeq(Long courseSeq,Pageable pageable){
+        return repositoryService.getCourseChapterRepository().findByCourseChapterCompositeKey_CourseSeq(courseSeq,pageable);
     }
 
     @Override
@@ -151,6 +165,16 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public void deleteByCourse_courseSeqAndStudent_memberSeq(Long courseSeq,Long memberSeq) {
+        repositoryService.getCourseStudentRepository().deleteByCourse_courseSeqAndStudent_memberSeq(courseSeq,memberSeq);
+    }
+
+    @Override
+    public Page<CourseStudent> courseStudentFindByCourseSeq(Long courseSeq,Pageable pageable) {
+        return repositoryService.getCourseStudentRepository().findByCourseStudentCompositeKey_CourseSeq(courseSeq,pageable);
+    }
+
+    @Override
     public CourseChapterStudentProgressDTO courseChapterStudentProgressFindByChapterAndStudentOrCreateNewInstance(CourseChapterDTO courseChapterDTO, CourseStudentDTO courseStudentDTO) {
         CourseChapterStudentProgressDTO courseChapterStudentProgress = courseChapterStudentProgressFindByChapterAndStudent(courseChapterDTO, courseStudentDTO);
         if (courseChapterStudentProgress == null) {
@@ -182,36 +206,114 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<List<CourseChapterStudentProgressDTO>> courseChapterStudentProgressFindAllByEachCourse(MemberDTO student, List<CourseDTO> courseList) {
-        return null;
+        return courseChapterStudentProgressFindAllByEachCourse(student, courseList, courseChapterFindAllByCourseList(courseList));
     }
 
     @Override
     public List<List<CourseChapterStudentProgressDTO>> courseChapterStudentProgressFindAllByEachCourse(MemberDTO student, List<CourseDTO> courseList, List<List<CourseChapterDTO>> chapterList) {
-        return null;
+        List<List<CourseChapterStudentProgressDTO>> resultList = new ArrayList<>();
+        for (int i = 0; i < courseList.size(); i++) {
+            List<CourseChapterStudentProgressDTO> courseChapterStudentProgressDTOList = new ArrayList<>();
+            CourseStudentDTO courseStudentDTO = courseStudentFindByCourseAndStudent(courseList.get(i), student);
+            for (int j = 0; j < chapterList.get(i).size(); j++) {
+                CourseChapterDTO courseChapterDTO = chapterList.get(i).get(j);
+                courseChapterStudentProgressDTOList.add(
+                        courseChapterStudentProgressFindByChapterAndStudentOrCreateNewInstance(
+                                courseChapterDTO, courseStudentDTO
+                        )
+                );
+            }
+            resultList.add(courseChapterStudentProgressDTOList);
+        }
+        return resultList;
     }
 
     @Override
     public double getMemeberProgress(MemberDTO student) {
-        return 0;
+        return getMemeberProgress(courseChapterStudentProgressFindAllByEachCourse(student, courseFindAllByMember(student)));
     }
 
     @Override
     public double getMemeberProgress(List<List<CourseChapterStudentProgressDTO>> courseChapterStudentProgressList) {
-        return 0;
+        if (courseChapterStudentProgressList.isEmpty()) return 0.0;
+        double progress = 0.0;
+        for (List<CourseChapterStudentProgressDTO> courseChapterStudentProgressDTOS : courseChapterStudentProgressList) {
+            if (courseChapterStudentProgressDTOS.isEmpty()) continue;
+            // 각 코스 진도율 퍼센트
+            double sum = 0.0;
+            for (CourseChapterStudentProgressDTO courseChapterStudentProgressDTO : courseChapterStudentProgressDTOS) {
+                if (courseChapterStudentProgressDTO.getCompleted()) sum++;
+            }
+            progress += sum / courseChapterStudentProgressDTOS.size();
+        }
+        progress = progress * 100 / courseChapterStudentProgressList.size();
+        progress = Math.round(progress * 100) / 100.0;
+        return Math.min(progress, 100.0);
     }
 
     @Override
     public double getCourseProgress(MemberDTO studentDTO, CourseDTO courseDTO) {
-        return 0;
+        List<CourseChapterDTO> courseChapterDTOList = courseChapterFindByCourse(courseDTO);
+
+        if (courseChapterDTOList.isEmpty()) return 0.0;
+
+        List<CourseChapterStudentProgressDTO> courseChapterStudentProgressDTOList = new ArrayList<>();
+        for (CourseChapterDTO courseChapterDTO : courseChapterDTOList) {
+            courseChapterStudentProgressDTOList.add(
+                    courseChapterStudentProgressFindByChapterAndStudentOrCreateNewInstance(
+                            courseChapterDTO, courseStudentFindByCourseAndStudent(courseDTO, studentDTO)
+                    )
+            );
+        }
+
+        double result = 0.0;
+        for (CourseChapterStudentProgressDTO courseChapterStudentProgressDTO : courseChapterStudentProgressDTOList) {
+            if (courseChapterStudentProgressDTO.getCompleted()) result++;
+        }
+        result = result * 100 / courseChapterStudentProgressDTOList.size();
+        result = Math.round(result * 100) / 100.0;
+        return Math.min(result, 100.0);
     }
 
     @Override
     public double getChapterProgress(MemberDTO studentDTO, CourseChapterDTO courseChapterDTO) {
-        return 0;
+        if (courseChapterDTO.getContentDTO() == null) return 0.0;
+        if (courseChapterDTO.getContentDTO().getRunningTime() == 0) return 0.0;
+
+        CourseChapterStudentProgressDTO courseChapterStudentProgressDTO = courseChapterStudentProgressFindByChapterAndStudentOrCreateNewInstance(
+                courseChapterDTO, courseStudentFindByCourseAndStudent(courseChapterDTO.getCourseDTO(), studentDTO)
+        );
+        if (courseChapterStudentProgressDTO.getCompleted()) return 100.0;
+
+        double result = (double) (courseChapterStudentProgressDTO.getMaxPosition() * 100) / courseChapterDTO.getContentDTO().getRunningTime();
+        result = Math.round(result * 100) / 100.0;
+
+        return Math.min(result, 100.0);
     }
 
     @Override
-    public List<CourseChapterContent> courseChapterContentFindAll() {
-        return null;
+    public List<CourseChapterContent> courseChapterContentFindAll(){
+        List<CourseChapterContent> all = repositoryService.getCourseChapterContentRepository().findAll();
+        return all;
+    }
+
+    @Override
+    public Page<Course> courseFindAllPage(Pageable pageable){
+        return repositoryService.getCourseRepository().findAll(pageable);
+    }
+
+    @Override
+    public Page<CourseChapter> courseChapterFindAllpage(Pageable pageable) {
+        return repositoryService.getCourseChapterRepository().findAll(pageable);
+    }
+
+    @Override
+    public Page<CourseStudent> courseStudentFindAllpage(Pageable pageable) {
+        return repositoryService.getCourseStudentRepository().findAll(pageable);
+    }
+
+    @Override
+    public Page<CourseStudent> courseStudentFindByCourse_courseSeq(Long courseSeq,Pageable pageable) {
+        return repositoryService.getCourseStudentRepository().findByCourse_courseSeq(courseSeq,pageable);
     }
 }

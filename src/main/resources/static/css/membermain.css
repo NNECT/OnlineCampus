@@ -5,3 +5,11 @@ section h1{margin-top:80px;}
     width: 70px;
     height: 39px;
 }
+.table > tbody > tr > th,
+.table > tbody > tr > td {
+    vertical-align: middle;
+}
+.table > tbody > tr > td > .progress {
+    margin-top: auto;
+    margin-bottom: auto;
+}

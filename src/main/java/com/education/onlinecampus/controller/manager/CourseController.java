@@ -12,6 +12,10 @@ import com.education.onlinecampus.service.common.ImageService;
 import com.education.onlinecampus.service.common.YouTubeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -67,7 +71,6 @@ public class CourseController {
             if (allEmpty) {
                 // 모든 강의에 대해 courseChapter가 비어있는 경우
                 for (String s : selectedCourseSeqs) {
-                    System.out.println(s);
                     courseService.CourseDelete(courseService.CourseFind(Long.valueOf(s)).toEntity());
                 }
                 response.put("success", true);
@@ -82,11 +85,14 @@ public class CourseController {
         return response;
     }
     @PostMapping("/Course_find")
-  
     @ResponseBody
-    public List<Course> CourseFind(@RequestParam("searchcoursename") String searchcoursename,
+    public Page<Course> CourseFind(@RequestParam("searchcoursename") String searchcoursename,
                                    @RequestParam("searchcoursename1") String searchcoursename1,
                                    @RequestParam("searchcourseStatus") String searchcourseStatus) {
+        int pageNumber = 0;
+        int pageSize = 5;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
         if (searchcoursename1.equals("")) {
             searchcoursename1 = "#";
         }
@@ -110,9 +116,13 @@ public class CourseController {
                 }
             }
         }
-        return matchingCourses;
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), matchingCourses.size());
+        Page<Course> page = new PageImpl<>(matchingCourses.subList(start, end), pageable, matchingCourses.size());
+
+        return page;
     }
-  
+
     @GetMapping("/CourseChapter_save")
     public String GetCourseChapter_save(Model model){
         List<Course> courses = courseService.CourseFindAll();
@@ -123,8 +133,9 @@ public class CourseController {
     @ResponseBody
     public ResponseEntity<String> courseChapterSave(@ModelAttribute CourseChapterDTO courseChapter,Model model) {
         CourseChapter courseChapter1 = courseService.CourseChapterSave(courseChapter).toEntity();
+        List<CourseChapter> courseChapter2 = courseService.findCourseChapter(courseChapter1.getCourse().getCourseSeq());
         try {
-            String jsonResponse = objectMapper.writeValueAsString(courseChapter1);
+            String jsonResponse = objectMapper.writeValueAsString(courseChapter2.get(courseChapter2.size()-1));
             return ResponseEntity.ok(jsonResponse);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -137,7 +148,6 @@ public class CourseController {
         Map<String, Object> response = new HashMap<>();
         List<String> selectedChapters = requestData.get("chapters");
         List<String> selectedCourseSeqs = requestData.get("courseSeqs");
-
         try {
             for (int i=0;i<selectedChapters.size();i++) {
                 CourseChapter byCourseAndChapterOrder = courseService.findByCourseAndChapterOrder(Long.valueOf(selectedCourseSeqs.get(i)), Long.valueOf(selectedChapters.get(i)));
@@ -163,9 +173,7 @@ public class CourseController {
 
         try {
             for (int i = 0; i < selectedstudents.size(); i++) {
-                Long courseSeq = Long.valueOf(selectedCourseSeqs1.get(i));
-                Long studentSeq = Long.valueOf(selectedstudents.get(i));
-
+                courseService.deleteByCourse_courseSeqAndStudent_memberSeq(Long.valueOf(selectedCourseSeqs1.get(i)),Long.valueOf(selectedstudents.get(i)));
             }
             response.put("success", true);
         } catch (Exception e) {
@@ -186,28 +194,22 @@ public class CourseController {
     public String CourseChapterContent(){
         return "manager/CourseChapterContent";
     }
-
     @PostMapping("/CourseChapterContent_save")
-    @ResponseBody
-    public ResponseEntity<CourseChapterContentDTO> CourseSave(@ModelAttribute CourseChapterContentDTO courseChapterContentDTO, @RequestParam("viedo") MultipartFile multipartFile,
-                                             @RequestParam("thumbnailFile") MultipartFile thumbnailFile) throws IOException {
-        try {
-            if(thumbnailFile.isEmpty() || thumbnailFile.equals(null)){
-            }else {
-                FileDTO fileDTO = imageService.saveContentImage(thumbnailFile);
-                FileDTO fileSave = imageService.filesave(fileDTO);
-                courseChapterContentDTO.setThumbnailFileDTO(fileSave);
-            }
-            if(multipartFile.isEmpty() || multipartFile.equals(null)){
-                CourseChapterContentDTO courseChapterContentDTO1 = courseService.courseChapterContentSave(courseChapterContentDTO);
-                return ResponseEntity.ok(courseChapterContentDTO1);
-            }else {
-                CourseChapterContentDTO courseChapterContentDTO1 = youTubeService.uploadVideo(courseChapterContentDTO, multipartFile);
-                return ResponseEntity.ok(courseChapterContentDTO1);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    public String CourseChapterContentSave(@ModelAttribute CourseChapterContentDTO courseChapterContentDTO, @RequestParam("viedo") MultipartFile multipartFile,
+                                           @RequestParam("thumbnailFile") MultipartFile thumbnailFile) throws IOException {
+        if(thumbnailFile.isEmpty() || thumbnailFile.equals(null)){
+        }else {
+            FileDTO fileDTO = imageService.saveContentImage(thumbnailFile);
+            FileDTO fileSave = imageService.filesave(fileDTO);
+            courseChapterContentDTO.setThumbnailFileDTO(fileSave);
         }
+        if(multipartFile.isEmpty() || multipartFile.equals(null)){
+            courseChapterContentDTO.setVideoId("테스트아이디");
+            courseService.courseChapterContentSave(courseChapterContentDTO);
+        }else {
+            youTubeService.uploadVideo(courseChapterContentDTO, multipartFile);
+        }
+        return "redirect:/";
     }
 
     @PostMapping("CourseChapterContent_detail")
@@ -254,6 +256,10 @@ public class CourseController {
                                                                  CourseStudentDTO courseStudentDTO) {
         try {
             List<CourseStudent> courseStudents = courseService.CourseStudentAllSave(selectedMemberSeqs, courseSeq, courseStudentDTO);
+            for(CourseStudent courseStudent : courseStudents){
+                System.out.println(courseStudent.getStudent().getMemberSeq());
+            }
+            System.out.println("몇개냐"+courseStudents.size());
             return ResponseEntity.ok(courseStudents);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
@@ -264,13 +270,28 @@ public class CourseController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> CourseChapterFind(@RequestParam("courseSeq") Long courseSeq) {
         try {
+            Pageable pageable = PageRequest.of(0, 10);
+
+            Page<CourseChapter> byCourseChapterCompositeKeyCourseSeqPage = courseService.findByCourseChapterCompositeKeyCourseSeq(courseSeq, pageable);
+            Page<CourseStudent> byCourseStudentCompositeKeyCourseSeq = courseService.courseStudentFindByCourseSeq(courseSeq, pageable);
+
             Map<String, Object> response = new HashMap<>();
 
-            List<CourseChapter> byCourseChapterCompositeKeyCourseSeq = courseService.findByCourseChapterCompositeKeyCourseSeq(courseSeq);
-            List<CourseStudent> byCourseStudentCompositeKeyCourseSeq = courseService.courseStudentFindByCourseSeq(courseSeq);
+            // 강의 데이터와 페이지 정보를 따로 담아서 전달
+            Map<String, Object> chapterResponse = new HashMap<>();
+            chapterResponse.put("content", byCourseChapterCompositeKeyCourseSeqPage.getContent());
+            chapterResponse.put("totalPages", byCourseChapterCompositeKeyCourseSeqPage.getTotalPages());
+            chapterResponse.put("number", byCourseChapterCompositeKeyCourseSeqPage.getNumber());
+            chapterResponse.put("totalElements", byCourseChapterCompositeKeyCourseSeqPage.getTotalElements());
+            response.put("chapters", chapterResponse);
 
-            response.put("chapters", byCourseChapterCompositeKeyCourseSeq);
-            response.put("students", byCourseStudentCompositeKeyCourseSeq);
+            // 학생 데이터와 페이지 정보를 따로 담아서 전달
+            Map<String, Object> studentResponse = new HashMap<>();
+            studentResponse.put("content", byCourseStudentCompositeKeyCourseSeq.getContent());
+            studentResponse.put("totalPages", byCourseStudentCompositeKeyCourseSeq.getTotalPages());
+            studentResponse.put("number", byCourseStudentCompositeKeyCourseSeq.getNumber());
+            studentResponse.put("totalElements",byCourseStudentCompositeKeyCourseSeq.getTotalElements());
+            response.put("students", studentResponse);
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -282,8 +303,6 @@ public class CourseController {
     @ResponseBody
     public ResponseEntity<CourseChapter> CourseChapterDetail(@RequestParam("chapterOrder") Long chapterOrder, @RequestParam("courseSeq") Long courseSeq) {
         try {
-            System.out.println(chapterOrder);
-            System.out.println(courseSeq);
             CourseChapter byCourseCourseSeqAndChapterOrder = courseService.findByCourseAndChapterOrder(courseSeq, chapterOrder);
 
             return ResponseEntity.ok(byCourseCourseSeqAndChapterOrder);
@@ -296,8 +315,6 @@ public class CourseController {
     @ResponseBody
     public ResponseEntity<CourseStudent> CourseStudentDetail(@RequestParam("studentSeq") Long studentSeq, @RequestParam("courseSeq") Long courseSeq) {
         try {
-            System.out.println(studentSeq);
-            System.out.println(courseSeq);
             CourseStudentDTO byCourseStudentCompositeKeyCourseSeqAndCourseStudentCompositeKeyStudentSeq =
                     courseService.courseStudentFindByCourseAndStudent(courseService.CourseFind(courseSeq), memberService.findBySeq(studentSeq));
             return ResponseEntity.ok(byCourseStudentCompositeKeyCourseSeqAndCourseStudentCompositeKeyStudentSeq.toEntity());

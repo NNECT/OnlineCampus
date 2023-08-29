@@ -301,7 +301,7 @@ th {
 td input[type="checkbox"] {
     margin: 0;
 }
-.pagination {
+.pagination1 {
     text-align: center;
     margin-top: 10px;
     font-size: 14px;
@@ -535,4 +535,96 @@ body {
 .active {
     border: 2px solid #3498db;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.pagination {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.pagination li {
+    margin: 0 5px;
+}
+
+.pagination a, .pagination span {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #f2f2f2;
+    color: #333;
+    text-decoration: none;
+    border-radius: 3px;
+}
+
+.pagination a:hover {
+    background-color: #ddd;
+}
+
+.pagination .active a {
+    background-color: #007bff;
+    color: #fff;
+    cursor: default;
+}
+
+.pagination1 {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.pagination1 li {
+    margin: 0 5px;
+}
+
+.pagination1 a, .pagination span {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #f2f2f2;
+    color: #333;
+    text-decoration: none;
+    border-radius: 3px;
+}
+
+.pagination1 a:hover {
+    background-color: #ddd;
+}
+
+.pagination1 .active a {
+    background-color: #007bff;
+    color: #fff;
+    cursor: default;
+}
+
+.pagination2 {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.pagination2 li {
+    margin: 0 5px;
+}
+
+.pagination2 a, .pagination span {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #f2f2f2;
+    color: #333;
+    text-decoration: none;
+    border-radius: 3px;
+}
+
+.pagination2 a:hover {
+    background-color: #ddd;
+}
+
+.pagination2 .active a {
+    background-color: #007bff;
+    color: #fff;
+    cursor: default;
 }

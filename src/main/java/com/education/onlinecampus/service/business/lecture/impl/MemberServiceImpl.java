@@ -33,6 +33,6 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public List<Member> MemberfindAll(){
-        return  repositoryService.getMemberRepository().findAll();
+        return  repositoryService.getMemberRepository().findByMemberDivision_code("M003");
     }
 }
