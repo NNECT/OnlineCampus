@@ -12,46 +12,6 @@
     <script src="https://unpkg.com/jquery/dist/jquery.min.js"></script>
     <script src="https://unpkg.com/gridjs-jquery/dist/gridjs.production.min.js"></script>
     <script src="https://unpkg.com/gridjs/dist/locale/ko.js"></script>
-    <style>
-        .active {
-            border: 2px solid #3498db;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        h2[style*="font-size: 24px"] {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        form {
-            margin-top: 20px;
-        }
-
-        select,
-        input[type="text"],
-        input[type="datetime-local"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        input[type="submit"] {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            padding: 10px 15px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-    </style>
 </head>
 <body>
 <!-- 헤더 -->
@@ -510,7 +470,7 @@
                         </tr>
                         </thead>
                         <tbody id="contentTableBody">
-                        <tr class="clickable-row3" th:each="courseChapterContentList : ${courseChapterContentList}">
+                        <tr class="clickable-row3" th:each="courseChapterContentList : ${courseChapterContents}">
                             <td><input type="checkbox" name="cbox4"></td>
                             <td class="contentVideoId" th:id="${courseChapterContentList.videoId}" th:text="${courseChapterContentList.videoId}"></td>
                             <td></td>
