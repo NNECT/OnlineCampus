@@ -206,6 +206,8 @@ public class CourseController {
                 courseChapterContentDTO.setThumbnailFileDTO(fileSave);
             }
             if(multipartFile.isEmpty() || multipartFile.equals(null)){
+                courseChapterContentDTO.setVideoId("테스트아이디");
+                courseChapterContentDTO.setRunningTime(9);
                 CourseChapterContentDTO courseChapterContentDTO1 = courseService.courseChapterContentSave(courseChapterContentDTO);
                 return ResponseEntity.ok(courseChapterContentDTO1);
             }else {
