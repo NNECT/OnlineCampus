@@ -24,6 +24,7 @@ public interface CourseService {
     List<CourseChapter> findByCourseChapterCompositeKeyCourseSeq(Long courseSeq);
     CourseChapterDTO courseChapterFindByCourseAndSeq(CourseDTO courseDTO, Long courseChapterSeq);
     List<CourseChapter> findCourseChapter(Long CourseSeq);
+    List<CourseChapterDTO> courseChapterFindByCourse(CourseDTO courseDTO);
     List<List<CourseChapterDTO>> courseChapterFindAllByCourseList(List<CourseDTO> courseDTOList);
     CourseChapterDTO CourseChapterSave(CourseChapterDTO courseChapterDTO);
     void CourseChapterDelete(CourseChapter courseChapter);
@@ -32,6 +33,7 @@ public interface CourseService {
     CourseChapterContentDTO courseChapterContentFindByVideoId(String videoId);
     CourseChapterContentDTO courseChapterContentSave(CourseChapterContentDTO courseChapterContentDTO);
     void courseChapterContentDelete(CourseChapterContent courseChapterContent);
+    List<CourseChapterContent> courseChapterContentFindAll();
 
     // CourseStudent
     CourseStudentDTO courseStudentFindByCourseAndMember(CourseDTO courseDTO, MemberDTO memberDTO);
@@ -45,5 +47,12 @@ public interface CourseService {
     CourseChapterStudentProgressDTO courseChapterStudentProgressFindByChapterAndStudent(CourseChapterDTO courseChapterDTO, CourseStudentDTO courseStudentDTO);
     CourseChapterStudentProgressDTO courseChapterStudentProgressSave(CourseChapterStudentProgressDTO courseChapterStudentProgressDTO);
 
-    List<CourseChapterContent> courseChapterContentFindAll();
+    List<List<CourseChapterStudentProgressDTO>> courseChapterStudentProgressFindAllByEachCourse(MemberDTO student, List<CourseDTO> courseList);
+    List<List<CourseChapterStudentProgressDTO>> courseChapterStudentProgressFindAllByEachCourse(MemberDTO student, List<CourseDTO> courseList, List<List<CourseChapterDTO>> chapterList);
+
+    double getMemeberProgress(MemberDTO student);
+    double getMemeberProgress(List<List<CourseChapterStudentProgressDTO>> courseChapterStudentProgressList);
+    double getCourseProgress(MemberDTO studentDTO, CourseDTO courseDTO);
+    double getChapterProgress(MemberDTO studentDTO, CourseChapterDTO courseChapterDTO);
+
 }

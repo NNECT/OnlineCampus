@@ -40,6 +40,11 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public List<CourseChapterDTO> courseChapterFindByCourse(CourseDTO courseDTO) {
+        return null;
+    }
+
+    @Override
     public CourseDTO CourseFind(Long CourseSeq){
         return repositoryService.getCourseRepository().findByCourseSeq(CourseSeq).toDTO();
     }
@@ -54,7 +59,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseChapterContentDTO courseChapterContentFindByVideoId(String videoId) {
-        return null;
+        return  repositoryService.getCourseChapterContentRepository().findById(videoId).orElseThrow().toDTO();
     }
 
     @Override
@@ -113,10 +118,6 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseChapterContentDTO courseChapterContentSave(CourseChapterContentDTO courseChapterContentDTO) {
-        if (courseChapterContentDTO.getVideoId() != null){
-            String videoId = courseChapterContentDTO.getVideoId();
-            courseChapterContentDTO.setVideoId(videoId+1);
-        }
         return repositoryService.getCourseChapterContentRepository().save(courseChapterContentDTO.toEntity()).toDTO();
     }
 
@@ -180,7 +181,37 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<CourseChapterContent> courseChapterContentFindAll(){
-        return repositoryService.getCourseChapterContentRepository().findAll();
+    public List<List<CourseChapterStudentProgressDTO>> courseChapterStudentProgressFindAllByEachCourse(MemberDTO student, List<CourseDTO> courseList) {
+        return null;
+    }
+
+    @Override
+    public List<List<CourseChapterStudentProgressDTO>> courseChapterStudentProgressFindAllByEachCourse(MemberDTO student, List<CourseDTO> courseList, List<List<CourseChapterDTO>> chapterList) {
+        return null;
+    }
+
+    @Override
+    public double getMemeberProgress(MemberDTO student) {
+        return 0;
+    }
+
+    @Override
+    public double getMemeberProgress(List<List<CourseChapterStudentProgressDTO>> courseChapterStudentProgressList) {
+        return 0;
+    }
+
+    @Override
+    public double getCourseProgress(MemberDTO studentDTO, CourseDTO courseDTO) {
+        return 0;
+    }
+
+    @Override
+    public double getChapterProgress(MemberDTO studentDTO, CourseChapterDTO courseChapterDTO) {
+        return 0;
+    }
+
+    @Override
+    public List<CourseChapterContent> courseChapterContentFindAll() {
+        return null;
     }
 }

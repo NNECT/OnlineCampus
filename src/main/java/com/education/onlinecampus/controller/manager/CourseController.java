@@ -67,6 +67,7 @@ public class CourseController {
             if (allEmpty) {
                 // 모든 강의에 대해 courseChapter가 비어있는 경우
                 for (String s : selectedCourseSeqs) {
+                    System.out.println(s);
                     courseService.CourseDelete(courseService.CourseFind(Long.valueOf(s)).toEntity());
                 }
                 response.put("success", true);
@@ -185,6 +186,7 @@ public class CourseController {
     public String CourseChapterContent(){
         return "manager/CourseChapterContent";
     }
+
     @PostMapping("/CourseChapterContent_save")
     @ResponseBody
     public ResponseEntity<CourseChapterContentDTO> CourseSave(@ModelAttribute CourseChapterContentDTO courseChapterContentDTO, @RequestParam("viedo") MultipartFile multipartFile,
@@ -197,7 +199,6 @@ public class CourseController {
                 courseChapterContentDTO.setThumbnailFileDTO(fileSave);
             }
             if(multipartFile.isEmpty() || multipartFile.equals(null)){
-                courseChapterContentDTO.setVideoId("테스트아이디");
                 CourseChapterContentDTO courseChapterContentDTO1 = courseService.courseChapterContentSave(courseChapterContentDTO);
                 return ResponseEntity.ok(courseChapterContentDTO1);
             }else {
@@ -224,25 +225,16 @@ public class CourseController {
     @ResponseBody
     public Map<String, Object> deleteSelectedCourseContent(@RequestBody Map<String, List<String>> map) {
         Map<String, Object> response = new HashMap<>();
-        List<String> selectedCourseSeqs = map.get("courseSeqs");
+        List<String> contentVideoIds = map.get("contentVideoIds");
+
         try {
-            boolean allEmpty = true;
-            for (String s : selectedCourseSeqs) {
-                List<CourseChapter> courseChapter = courseService.findCourseChapter(Long.valueOf(s));
-                if (!courseChapter.isEmpty()) {
-                    allEmpty = false;
-                    break; // 하나라도 비어있지 않은 경우 루프를 종료
-                }
+            List<String> deletedVideoIds = new ArrayList<>();
+            for (String s : contentVideoIds) {
+                courseService.courseChapterContentDelete(courseService.courseChapterContentFindByVideoId(s).toEntity());
+                deletedVideoIds.add(s);
             }
-            if (allEmpty) {
-                // 모든 강의에 대해 courseChapter가 비어있는 경우
-                for (String s : selectedCourseSeqs) {
-                    courseService.CourseDelete(courseService.CourseFind(Long.valueOf(s)).toEntity());
-                }
-                response.put("success", true);
-            } else {
-                response.put("success", false);
-            }
+            response.put("success", true);
+            response.put("deletedVideoIds", deletedVideoIds);
         } catch (Exception e) {
             response.put("success", false);
             response.put("message", "An error occurred during deletion.");
