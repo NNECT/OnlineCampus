@@ -64,8 +64,6 @@ public interface CourseService {
     double getCourseProgress(MemberDTO studentDTO, CourseDTO courseDTO);
     double getChapterProgress(MemberDTO studentDTO, CourseChapterDTO courseChapterDTO);
 
-    List<CourseChapterContent> courseChapterContentFindAll();
-
     Page<Course> courseFindAllPage(Pageable pageable);
 
     Page<CourseChapter> courseChapterFindAllpage(Pageable pageable);

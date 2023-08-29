@@ -1955,9 +1955,12 @@
                 method: "POST",
                 body: formData,
             });
+            console.log("1");
             if (response.ok) {
+                console.log("2");
                 newContentModal.style.display = "none"; // 모달 닫기
                 const responseData = await response.json(); // JSON을 변수에 저장
+                 console.log(responseData);
 
                 const newRow = document.createElement("tr");
                 newRow.classList.add("clickable-row3");

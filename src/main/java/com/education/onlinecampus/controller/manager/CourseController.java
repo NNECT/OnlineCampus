@@ -195,22 +195,29 @@ public class CourseController {
         return "manager/CourseChapterContent";
     }
     @PostMapping("/CourseChapterContent_save")
-    public String CourseChapterContentSave(@ModelAttribute CourseChapterContentDTO courseChapterContentDTO, @RequestParam("viedo") MultipartFile multipartFile,
-                                           @RequestParam("thumbnailFile") MultipartFile thumbnailFile) throws IOException {
-        if(thumbnailFile.isEmpty() || thumbnailFile.equals(null)){
-        }else {
-            FileDTO fileDTO = imageService.saveContentImage(thumbnailFile);
-            FileDTO fileSave = imageService.filesave(fileDTO);
-            courseChapterContentDTO.setThumbnailFileDTO(fileSave);
+    @ResponseBody
+    public ResponseEntity<CourseChapterContentDTO> CourseSave(@ModelAttribute CourseChapterContentDTO courseChapterContentDTO,
+                                                              @RequestParam("viedo") MultipartFile multipartFile,
+                                                              @RequestParam("thumbnailFile") MultipartFile thumbnailFile) throws IOException {
+        try {
+            if(thumbnailFile.isEmpty() || thumbnailFile.equals(null)){
+            }else {
+                FileDTO fileDTO = imageService.saveContentImage(thumbnailFile);
+                FileDTO fileSave = imageService.filesave(fileDTO);
+                courseChapterContentDTO.setThumbnailFileDTO(fileSave);
+            }
+            if(multipartFile.isEmpty() || multipartFile.equals(null)){
+                CourseChapterContentDTO courseChapterContentDTO1 = courseService.courseChapterContentSave(courseChapterContentDTO);
+                return ResponseEntity.ok(courseChapterContentDTO1);
+            }else {
+                CourseChapterContentDTO courseChapterContentDTO1 = youTubeService.uploadVideo(courseChapterContentDTO, multipartFile);
+                return ResponseEntity.ok(courseChapterContentDTO1);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        if(multipartFile.isEmpty() || multipartFile.equals(null)){
-            courseChapterContentDTO.setVideoId("테스트아이디");
-            courseService.courseChapterContentSave(courseChapterContentDTO);
-        }else {
-            youTubeService.uploadVideo(courseChapterContentDTO, multipartFile);
-        }
-        return "redirect:/";
     }
+
 
     @PostMapping("CourseChapterContent_detail")
     @ResponseBody

@@ -88,16 +88,11 @@ public class MemberController {
                     Pageable pageable = PageRequest.of(pageNumber, pageSize);
                     Page<Course> courses1 = courseService.courseFindAllPage(pageable);
                     model.addAttribute("courses",courses1);
-                    System.out.println("총"+courses1.getTotalElements());
 
                     List<CourseChapterContent> courseChapterContents = courseService.courseChapterContentFindAll();
                     model.addAttribute("courseChapterContents",courseChapterContents);
 
                     model.addAttribute("loggedInMember", loggedInMember);
-                    List<Course> courses = courseService.CourseFindAll();
-                    model.addAttribute("courses",courses);
-                    List<CourseChapterContent> courseChapterContents = courseService.courseChapterContentFindAll();
-                    model.addAttribute("courseChapterContentList",courseChapterContents);
                     return "/manager/manager_main";
                 }
                 case "M002":
