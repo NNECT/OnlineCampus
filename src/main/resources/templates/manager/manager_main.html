@@ -472,8 +472,8 @@
                         <tbody id="contentTableBody">
                         <tr class="clickable-row3" th:each="courseChapterContentList : ${courseChapterContents}">
                             <td><input type="checkbox" name="cbox4"></td>
+                            <td th:text="${courseChapterContentList.contentName}"></td>
                             <td class="contentVideoId" th:id="${courseChapterContentList.videoId}" th:text="${courseChapterContentList.videoId}"></td>
-                            <td></td>
                             <td th:text="${courseChapterContentList.runningTime}"></td>
                         </tr>
                         </tbody>
@@ -551,19 +551,19 @@
         <!-- 콘텐츠 신규등록 모달 -->
         <div id="newContentModal" style="width: 100%; background: lightgray; display: none;" class="modal-overlay">
             <div class="modal-content" style="width: 40%; max-height: 700px; overflow-y: auto;">
-                <span class="close-button1" id="closeNewContentModal">&times;</span>
-                <h2>강의컨탠트등록</h2>
-                <form action="" method="post" enctype="multipart/form-data" id="contentInsert">
-                    컨탠트 이름: <input name="contentName"><br>
-                    컨탠트 설명: <input name="contentBrief"><br><br>
+                <span class="close-button1" id="closeNewContentModal" style="font-size: 24px; cursor: pointer;">&times;</span>
+                <h2 style="font-size: 24px; margin-bottom: 15px;">강의컨탠트등록</h2>
+                <form action="" method="post" enctype="multipart/form-data" id="contentInsert" style="font-size: 14px;">
+                    컨탠트 이름: <input name="contentName" style="width: 90%; padding: 10px; border: 1px solid lightgray; border-radius: 5px; margin-bottom: 10px;"><br>
+                    컨탠트 설명: <input name="contentBrief" style="width: 90%; padding: 10px; border: 1px solid lightgray; border-radius: 5px; margin-bottom: 10px;"><br>
                     썸네일 파일: <input type="file" accept="image/*" name="thumbnailFile" id="logo-upload"
-                                   onchange='previewPicture(event)'/><br><br>
-                    <div id="logo-preview">
-                    </div>
-                    컨탠드 비디오: <input type="file" accept="video/*" name="viedo"><br><br>
-                    <input type="submit" value="등록">
-                </form>
-            </div>
+                                   onchange='previewPicture(event)' style="width: 90%; padding: 10px; border: 1px solid lightgray; border-radius: 5px; margin-bottom: 10px;"><br>
+    <div id="logo-preview" style="width: 90%; border: 1px solid lightgray; border-radius: 5px; padding: 10px; margin-bottom: 10px;"></div>
+            컨탠드 비디오: <input type="file" accept="video/*" name="video" style="width: 90%; padding: 10px; border: 1px solid lightgray; border-radius: 5px; margin-bottom: 10px;"><br>
+            <input type="submit" value="등록" style="background-color: #007bff; color: white; border: none; border-radius: 4px; padding: 10px 15px; cursor: pointer;">
+            </form>
+
+        </div>
         </div>
     </div>
 
