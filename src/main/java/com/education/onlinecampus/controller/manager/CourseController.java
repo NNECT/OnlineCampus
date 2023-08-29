@@ -1,7 +1,6 @@
 package com.education.onlinecampus.controller.manager;
 
 import com.education.onlinecampus.data.dto.*;
-import com.education.onlinecampus.data.entity.CommonCode;
 import com.education.onlinecampus.data.entity.Course;
 import com.education.onlinecampus.data.entity.CourseChapter;
 import com.education.onlinecampus.data.entity.CourseStudent;
@@ -24,9 +23,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -43,7 +42,7 @@ public class CourseController {
         return "manager/Course";}
     @PostMapping("/Course_save")
     @ResponseBody
-    public ResponseEntity<String> CourseSave(@ModelAttribute CourseDTO courseDTO,Model model) {
+    public ResponseEntity<String> CourseSave(@ModelAttribute CourseDTO courseDTO) {
         CommonCodeDTO byId = commonCodeService.findByCode(courseDTO.getStatusCodeDTO().getCode());
         courseDTO.setStatusCodeDTO(byId);
         Course course = courseService.CourseSave(courseDTO);
