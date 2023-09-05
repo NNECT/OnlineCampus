@@ -33,23 +33,23 @@ YouTube API를 활용한 온라인 동영상 강의 시스템
 * IDE (Integrated Development Environment)
   * IntelliJ IDEA
 * 데이터베이스 관리
-  * MySQL 8.0
+  * MySQL `8.0`
 * 프레임워크/라이브러리
-  * Spring Boot 2.7.14
+  * Spring Boot `2.7.14`
   * Spring Security
-  * Lombok 1.18.16
-  * MapStruct 1.5.5.Final
-  * Google OAuth Client 1.34.1
-  * Google API Service YouTube v3-rev20210915-1.32.1
-  * JavaCV 1.5.9
+  * Lombok `1.18.16`
+  * MapStruct `1.5.5.Final`
+  * Google OAuth Client `1.34.1`
+  * Google API Service YouTube `v3-rev20210915-1.32.1`
+  * JavaCV `1.5.9`
 * 프론트엔드
   * Thymeleaf
   * CSS
   * JavaScript
-  * JQuery 3.7.0
-  * BootStrap 3.3.2
-  * BootStrap 5.0.0
-  * FontAwesome 5.15.3
+  * JQuery `3.7.0`
+  * BootStrap `3.3.2`
+  * BootStrap `5.0.0`
+  * FontAwesome `5.15.3`
 * 협업 도구
   * GitHub
   * Slack
