@@ -56,5 +56,11 @@ YouTube API를 활용한 온라인 동영상 강의 시스템
 * ERD (Entity-Relationship Diagram)
   * ERDCloud
 
-## 5. 개발 기간
+## 5. Git 미포함 파일
+### 5.1. client_secret.json
+* Google API Client 계정정보 보안 파일
+### 5.2. token
+* Google OAuth Refresh Token 저장 파일
+
+## 6. 개발 기간
 * 2023.08.04 ~ 2023.08.27
